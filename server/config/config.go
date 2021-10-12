@@ -18,7 +18,7 @@ const (
 )
 
 var configPaths = [...]string{
-	"$CREDIT_APP_HOME/server/config",
+	"./config",
 	"/configuration",
 }
 

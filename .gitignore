@@ -17,6 +17,7 @@ docs/*.png
 # vendor/
 
 pkg/
+bin/
 
 client/admin/node_modules/
 client/mobile/node_modules/
