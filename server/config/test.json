@@ -1,0 +1,23 @@
+{
+  "art_image_bucket": "test-private-upload-bucket",
+  "dailyco_api_key": "9c374dedc4f704cd3bb8a87f5fd9ddd8be79d6d310a4227a16caa0c07a8cf416",
+  "dgraph": "alpha:9080",
+  "elastic_addr": "http://elasticsearch:9200",
+  "elastic_schema": "http",
+  "gohook_num_cmd_workers": 1,
+  "google_service_account_path": "/dev/credentials/testcreds.json",
+  "local_jwt_auth_secret": "jwt-is-great-between-servers-but-worse-in-browsers-because-it-offers-worse-security-than-sessions-and-is-more-work-and-provides-less-control",
+  "log_level": "debug",
+  "postgres": "host=db port=5432 user=hookapi dbname=test_hook password=abcdefg sslmode=disable",
+  "private_customer_uploads_bucket": "test-private-upload-bucket",
+  "rabbitmq_host": "rabbitmq-broker",
+  "rabbitmq_user": "rabbithook",
+  "rabbitmq_pass": "rabbitshh",
+  "redis_max_idle_connections": 3,
+  "redis_address": "redis",
+  "scrape_bucket": "devart-test",
+  "sendgrid_api_key": "test_n/a",
+  "stripe_key": "test_n/a",
+  "timeout_multiplier": 20.0,
+  "use_local_auth_bypass": true
+}

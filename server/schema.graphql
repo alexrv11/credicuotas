@@ -1,0 +1,14 @@
+# GraphQL schema example
+#
+# https://gqlgen.com/getting-started/
+
+
+scalar Map
+
+type Query {
+  hello: String!
+}
+
+type Mutation {
+  signupPhone(phone: String!): Boolean!
+}

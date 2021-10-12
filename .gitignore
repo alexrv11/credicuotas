@@ -16,8 +16,8 @@ docs/*.png
 # Dependency directories (remove the comment below to include it)
 # vendor/
 
- pkg/
+pkg/
 
- client/admin/node_modules
- client/mobile/node_modules
+client/admin/node_modules/
+client/mobile/node_modules/
 
