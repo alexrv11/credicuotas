@@ -5,13 +5,14 @@ FROM golang:1.15.14-buster AS prod-build
 COPY . /code
 WORKDIR /code
 ENV GO111MODULE=on
+ENV GOPROXY=direct
+ENV GOSUMDB=off
+
 RUN go get -d -v ./...
 RUN go generate ./...
 RUN go build -v -o /usr/local/bin/gocredit ./main/main.go
 
-
-# perhaps use alpine here, for runtime image?
-FROM debian:buster
+FROM debian:buster AS gocredit
 RUN apt-get update && apt-get install -y \
   joe \
   vim \
@@ -25,10 +26,8 @@ COPY --from=prod-build /usr/local/bin/gocredit /usr/local/bin/gocredit
 COPY --from=prod-build /code/config/default.json /config/default.json
 
 # port exposed for when it runs as server. When started as a worker, it is ignored.
-EXPOSE 8081
+EXPOSE 8181
 EXPOSE 9000
-
-# todo: run as non-root user?
 
 
 # NOTE: to start as bckground worker, use: ENTRYPOINT [ "/usr/local/bin/gocredit", "work" ]

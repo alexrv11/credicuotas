@@ -12,3 +12,7 @@ type Query {
 type Mutation {
   signupPhone(phone: String!): Boolean!
 }
+
+type User {
+  name: String
+}
