@@ -23,11 +23,9 @@ var configPaths = [...]string{
 }
 
 var environmentsPermitted = map[string]string{
-	"dev":         EnvDev,
 	"development": EnvDev,
 	"test":        EnvTest,
 	"production":  EnvProd,
-	"prod":        EnvProd, // note: not switching from abbreviated-upcase because production systems are using it this way
 }
 
 func Configure() {
