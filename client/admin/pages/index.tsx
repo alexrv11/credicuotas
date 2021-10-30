@@ -16,8 +16,6 @@ export default function Index() {
         <Link href="/about" color="secondary">
           nosotros
         </Link>
-        <ProTip />
-        <Copyright />
       </Box>
     </Container>
   );
