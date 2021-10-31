@@ -1,5 +1,13 @@
 version: "3.5"
 services:
+  admin-frontend:
+    build: 
+      context: ./client/admin
+      dockerfile: Dockerfile
+    ports:
+      - 3000:3000
+    volumes:
+      - .:/admin-frontend
   web-server:
     container_name: dockerdev
     build: ./server

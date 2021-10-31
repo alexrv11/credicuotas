@@ -1,7 +1,7 @@
 
 import styles from "./footer.module.css"
-import ProTip from "../src/ProTip"
-import Copyright from "../src/Copyright"
+import ProTip from "./ProTip"
+import Copyright from "./Copyright"
 
 export default function Footer() {
   return (
