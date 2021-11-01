@@ -33,7 +33,7 @@ spec:
     spec:
       containers:
       - name: gke-credicuotas
-        image: gcr.io/$PROJECT_ID/$IMAGE:$GITHUB_SHA
+        image: OCATION-docker.pkg.dev/PROJECT_ID/REPOSITORY/IMAGE:TAG
         ports:
         - containerPort: 3000
         resources:
