@@ -22,7 +22,7 @@ env:
   GKE_CLUSTER: my-first-cluster-1
   GKE_ZONE: us-central1-c
   DEPLOYMENT_NAME: gke-credicuotas
-  IMAGE: admin-frontend
+  IMAGE: gke-credicuotas
 
 jobs:
   setup-build-publish-deploy:
