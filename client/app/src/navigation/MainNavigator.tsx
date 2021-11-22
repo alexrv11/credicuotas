@@ -95,7 +95,7 @@ const MainFlow = () => {
 const MainNavigator = () => {
     return (
         <NavigationContainer>
-            <AppStack.Navigator initialRouteName="MainFlow" screenOptions={{headerShown: false}}>
+            <AppStack.Navigator initialRouteName="SignInFlow" screenOptions={{headerShown: false}}>
                 <AppStack.Screen name="SignInFlow" component={SignInFlow} />
                 <AppStack.Screen name="MainFlow" component={MainFlow} />
             </AppStack.Navigator>
