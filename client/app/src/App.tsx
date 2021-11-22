@@ -10,7 +10,6 @@
 
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import {
   ScrollView,
   StatusBar,
@@ -19,23 +18,15 @@ import {
   useColorScheme,
   View,
 } from 'react-native';
-import HomeScreen from './screens/HomeScreen';
-import SignInScreen from './screens/SignInScreen';
+import MainNavigator from './navigation';
 
 
-const Stack = createNativeStackNavigator();
 
 const App = () => {
   const isDarkMode = useColorScheme() === 'dark';
 
   return (
-    <NavigationContainer>
-      <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
-      <Stack.Navigator initialRouteName="SignIn">
-        <Stack.Screen name="SignIn" component={SignInScreen} />
-        <Stack.Screen name="Home" component={HomeScreen} />
-      </Stack.Navigator>
-    </NavigationContainer>
+    <MainNavigator/>
   );
 };
 

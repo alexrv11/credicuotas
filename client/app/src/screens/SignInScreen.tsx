@@ -1,13 +1,13 @@
 import React from 'react';
 import { Text, TouchableOpacity, SafeAreaView } from 'react-native';
 
-const SignInScreen = () => {
+const SignInScreen = ({ navigation }) => {
     return (
         <SafeAreaView style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
             <Text>
                 Sign in screen
             </Text>
-            <TouchableOpacity onPress={() => console.log("click home")}><Text>Home</Text></TouchableOpacity>
+            <TouchableOpacity onPress={() => navigation.navigate('MainFlow')}><Text>Home</Text></TouchableOpacity>
         </SafeAreaView>
     );
 }
