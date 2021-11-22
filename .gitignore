@@ -23,3 +23,6 @@ client/admin/node_modules/
 client/mobile/node_modules/
 
 .DS_Store
+
+
+**/google-services.json
