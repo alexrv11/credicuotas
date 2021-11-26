@@ -20,13 +20,18 @@ import {
 } from 'react-native';
 import MainNavigator from './navigation';
 
+import magic from "@app/auth/magic-api";
+
 
 
 const App = () => {
   const isDarkMode = useColorScheme() === 'dark';
 
   return (
-    <MainNavigator/>
+    <>
+      <magic.Relayer />
+      <MainNavigator/>
+    </>
   );
 };
 

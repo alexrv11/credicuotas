@@ -1,0 +1,18 @@
+ITERACION 1 -> 10/11/2021 - 24-11/2021 (Incepcion)
+
+Acuerdos:
+
+1. Completar el marco teorico, principalmenete el modelo de negocios
+2. Applicacion: 
+- completar el modelo de la aplicacion
+- Codificacion de la 1ra pantalla
+ 
+3. Iniciar documentacion marco practico
+
+
+ITERACION 2 -> 24/11/2021 - 08/12/2021 (Elaboracion)
+ITERACION 3 -> 08/12/2021 - 22/12/2021 (Construccion)
+ITERACION 4 -> 22/12/2021 - 05/01/2022 (Construccion)
+ITERACION 5 -> 05/01/2022 - 19/01/2022 (Transicion)
+ITERACION 6 -> 19/01/2022 - 02/02/2022 (Test)
+
