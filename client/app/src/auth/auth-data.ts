@@ -1,9 +1,9 @@
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const ACCESS_TOKEN_KEY = "access_token_key";
+const ACCESS_TOKEN_KEY = 'access_token_key';
 
 export const storeData = async (value: string) => {
-  console.log("setting access token into data store");
+  console.log('setting access token into data store');
   try {
     await AsyncStorage.setItem(ACCESS_TOKEN_KEY, value);
   } catch (e) {

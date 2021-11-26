@@ -9,20 +9,10 @@
  */
 
 import React from 'react';
-import { NavigationContainer } from '@react-navigation/native';
-import {
-  ScrollView,
-  StatusBar,
-  StyleSheet,
-  Text,
-  useColorScheme,
-  View,
-} from 'react-native';
+import {useColorScheme} from 'react-native';
 import MainNavigator from './navigation';
 
-import magic from "@app/auth/magic-api";
-
-
+import magic from '@app/auth/magic-api';
 
 const App = () => {
   const isDarkMode = useColorScheme() === 'dark';
