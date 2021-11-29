@@ -12,7 +12,7 @@ import React from 'react';
 import {useColorScheme} from 'react-native';
 import MainNavigator from './navigation';
 
-import magic from '@app/auth/magic-api';
+import magic from '@app/auth/magic';
 
 const App = () => {
   const isDarkMode = useColorScheme() === 'dark';
