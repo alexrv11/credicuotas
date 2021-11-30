@@ -10,7 +10,7 @@ type Query {
 }
 
 type Mutation {
-  signupPhone(phone: String!): Boolean!
+  signInByEmail(email: String!): Boolean!
 }
 
 type User {

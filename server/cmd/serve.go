@@ -34,10 +34,8 @@ var serveCmd = &cobra.Command{
 		if config.Env() == "PROD" {
 			// Profiler initialization
 			if err := profiler.Start(profiler.Config{
-				Service:        "hookapi",
+				Service:        "porvenirapi",
 				ServiceVersion: "1.0.0",
-				// ProjectID must be set if not running on GCP.
-				// ProjectID: "my-project",
 			}); err != nil {
 				logger.With(zap.Stack("stack-trace")).Error(zap.Error(err))
 			}
@@ -51,14 +49,16 @@ var serveCmd = &cobra.Command{
 		router := chi.NewRouter()
 		router.Use(middleware.Recoverer)
 		router.Use(middleware.Logger)
-		router.Use(middlewares.TaxiFriendContext)
+		router.Use(middlewares.AppContext)
 		router.Get("/", playground.Handler("GraphQL playground", "/query"))
 
-		srv := handler.NewDefaultServer(graph.NewExecutableSchema(graph.Config{Resolvers: &graph.Resolver{}}))
+		resolver := graph.NewResolver(provider)
 
-		router.Handle("/query", srv)
+		srv := handler.NewDefaultServer(graph.NewExecutableSchema(graph.Config{Resolvers: resolver}))
 
-		logger.Infof("connect to http://localhost:%s/ for GraphQL playground", port)
+		router.Handle("/graphql", srv)
+
+		logger.Infof("connect to http://localhost:%s/graphql for GraphQL playground", port)
 		logger.Fatal(zap.Error(http.ListenAndServe(":"+port, router)))
 	},
 }

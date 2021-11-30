@@ -10,6 +10,7 @@ import (
 type Provider struct {
 	db *gorm.DB
 	logger *zap.SugaredLogger
+	email Email
 }
 
 func NewProvider() *Provider {
@@ -32,4 +33,12 @@ func (p *Provider) Logger() *zap.SugaredLogger {
 		p.logger = config.RootAppLogger()
 	}
 	return p.logger
+}
+
+func (p *Provider) Email() Email {
+	if p.email == nil {
+		p.email = &SandGridEmail{}
+	}
+
+	return p.email
 }
