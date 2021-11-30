@@ -1,12 +1,12 @@
 import React from 'react';
-import {StyleSheet, TouchableOpacity} from 'react-native';
-import {Text} from 'react-native';
+import { StyleSheet, TouchableOpacity } from 'react-native';
+import { Text } from 'react-native';
 
-const PrimaryButton = ({onPress, disabled, text}) => {
+const PrimaryButton = ({ onPress, disabled, text }) => {
   return (
     <TouchableOpacity
       disabled={disabled}
-      style={disabled ? {...styles.button, ...styles.disable} : styles.button}
+      style={disabled ? { ...styles.button, ...styles.disable } : styles.button}
       onPress={onPress}>
       <Text style={styles.textButton}>{text}</Text>
     </TouchableOpacity>
