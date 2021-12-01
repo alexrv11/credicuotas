@@ -1,0 +1,20 @@
+overwrite: true
+schema: "../../server/schema.graphql"
+documents:
+  - "src/api/graphql/*/*.ts"
+generates:
+  "src/api/graphql/generated/graphql.ts":
+    plugins:
+      - typescript
+      - typescript-operations
+      - typescript-react-apollo
+    config:
+      scalars:
+        HookTime: number
+      withHOC: false
+      withHooks: true
+      withComponent: false
+      nonOptionalTypename: true
+      apolloClientVersion: 3
+      apolloReactHooksImportFrom: "@apollo/client"
+      apolloReactCommonImportFrom: "@apollo/client"

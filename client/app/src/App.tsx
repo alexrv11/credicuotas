@@ -9,19 +9,15 @@
  */
 
 import React from 'react';
-import {useColorScheme} from 'react-native';
 import MainNavigator from './navigation';
 
-import magic from '@app/auth/magic';
+import GraphqlProvider from 'api/graphql/apollo-provider';
 
 const App = () => {
-  const isDarkMode = useColorScheme() === 'dark';
-
   return (
-    <>
-      <magic.Relayer />
-      <MainNavigator/>
-    </>
+    <GraphqlProvider>
+      <MainNavigator />
+    </GraphqlProvider>
   );
 };
 
