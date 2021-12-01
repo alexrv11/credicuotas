@@ -1,20 +1,31 @@
-import { useState } from 'react';
+import { useContext, useState, useCallback } from 'react';
 import PrimaryButton from 'components/PrimaryButton';
 import Spacer from 'components/Spacer';
 import React from 'react';
 import { SafeAreaView, StyleSheet, View } from 'react-native';
 import { Input, Text, Image } from 'react-native-elements';
+import { AuthContext } from 'context/AuthContext';
+import { useSignInByEmailMutation } from 'api/graphql/generated/graphql';
 
 const SignInScreen = ({ navigation }) => {
-  const [emailInputFocus, setEmailInputFocus] = useState(false);
+  const [email, setEmail] = useState('');
+  const { signin } = useContext(AuthContext);
+
+  const [signInByEmailMutation, { data, loading, error }] =
+    useSignInByEmailMutation({ variables: { email } });
+
+  const onSubmit = useCallback(() => {
+    signInByEmailMutation({ variables: { email } });
+  }, [signInByEmailMutation, email]);
 
   return (
-    <SafeAreaView
-      style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <View style={styles.header}>
         <Image source={require('../assets/logo.png')} style={styles.logo} />
         <Spacer />
-        <Text style={styles.description}>Accede a un prestamo de forma simple y rapida</Text>
+        <Text style={styles.description}>
+          Accede a un prestamo de forma simple y rapida
+        </Text>
       </View>
       <Spacer />
       <Spacer />
@@ -22,12 +33,15 @@ const SignInScreen = ({ navigation }) => {
         <Text style={styles.inputLabel}>Ingresa tu correo</Text>
         <Input
           placeholder="ejemplo@direccion.com"
-          autoCapitalize='none'
+          autoCapitalize="none"
+          autoCorrect={false}
           underlineColorAndroid="transparent"
           leftIcon={{ type: 'material', name: 'email', color: '#070D99' }}
+          value={email}
+          onChangeText={setEmail}
         />
         <PrimaryButton
-          onPress={() => navigation.navigate('MainFlow')}
+          onPress={onSubmit}
           text="Iniciar Session"
           disabled={false}
         />

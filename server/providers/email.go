@@ -9,19 +9,19 @@ import (
 )
 
 type Email interface {
-	Send()
+	Send(email string)
 }
 
 type SandGridEmail struct {
 
 }
 
-func (s *SandGridEmail) Send()  {
+func (s *SandGridEmail) Send(email string)  {
 	senderName := viper.GetString("EMAIL_SENDER_NAME")
 	senderAddress := viper.GetString("EMAIL_SENDER_ADDRESS")
 	emailSigninTemplateID := viper.GetString("EMAIL_SIGN_IN_TEMPLATE_ID")
 	from := mail.NewEmail(senderName, senderAddress)
-	to := mail.NewEmail("", "alex.ventura.quiroz@gmail.com")
+	to := mail.NewEmail("", email)
 
 	message := mail.NewV3Mail()
 	message.SetFrom(from)

@@ -12,11 +12,14 @@ import React from 'react';
 import MainNavigator from './navigation';
 
 import GraphqlProvider from 'api/graphql/apollo-provider';
+import { AuthProvider } from 'context/AuthContext';
 
 const App = () => {
   return (
     <GraphqlProvider>
-      <MainNavigator />
+      <AuthProvider>
+        <MainNavigator />
+      </AuthProvider>
     </GraphqlProvider>
   );
 };
