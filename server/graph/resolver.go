@@ -1,6 +1,9 @@
 package graph
 
-import "github.com/alexrv11/credicuotas/server/providers"
+import (
+	"github.com/alexrv11/credicuotas/server/providers"
+	"github.com/alexrv11/credicuotas/server/services"
+)
 
 // This file will not be regenerated automatically.
 //
@@ -9,10 +12,11 @@ import "github.com/alexrv11/credicuotas/server/providers"
 
 type Resolver struct{
 	provider *providers.Provider
+	core *services.Core
 }
 
-func NewResolver(provider *providers.Provider) *Resolver {
-	return &Resolver{provider: provider}
+func NewResolver(provider *providers.Provider, core *services.Core) *Resolver {
+	return &Resolver{provider: provider, core: core}
 }
 
 func (r *Resolver) Mutation() MutationResolver {

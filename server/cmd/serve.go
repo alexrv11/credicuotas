@@ -7,6 +7,7 @@ import (
 	"github.com/alexrv11/credicuotas/server/graph"
 	"github.com/alexrv11/credicuotas/server/middlewares"
 	"github.com/alexrv11/credicuotas/server/providers"
+	"github.com/alexrv11/credicuotas/server/services"
 	"go.uber.org/zap"
 	"net/http"
 	"os"
@@ -30,6 +31,7 @@ var serveCmd = &cobra.Command{
 	Long:  `lol`,
 	Run: func(cmd *cobra.Command, args []string) {
 		provider := providers.NewProvider()
+		core :=  services.NewCore()
 		logger := provider.Logger()
 		if config.Env() == "PROD" {
 			// Profiler initialization
@@ -52,7 +54,7 @@ var serveCmd = &cobra.Command{
 		router.Use(middlewares.AppContext)
 		router.Get("/", playground.Handler("GraphQL playground", "/query"))
 
-		resolver := graph.NewResolver(provider)
+		resolver := graph.NewResolver(provider, core)
 
 		srv := handler.NewDefaultServer(graph.NewExecutableSchema(graph.Config{Resolvers: resolver}))
 

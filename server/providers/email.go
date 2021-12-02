@@ -7,14 +7,12 @@ import (
 )
 
 type Email interface {
-	Send(email string) error
+	SendSignInCode(email string, code string) error
 }
 
-type SandGridEmail struct {
+type SandGridEmail struct {}
 
-}
-
-func (s *SandGridEmail) Send(email string) error {
+func (s *SandGridEmail) SendSignInCode(email, code string) error {
 	senderName := viper.GetString("EMAIL_SENDER_NAME")
 	senderAddress := viper.GetString("EMAIL_SENDER_ADDRESS")
 	emailSigninTemplateID := viper.GetString("EMAIL_SIGN_IN_TEMPLATE_ID")
@@ -24,7 +22,7 @@ func (s *SandGridEmail) Send(email string) error {
 	message := mail.NewV3Mail()
 	message.SetFrom(from)
 	message.TemplateID = emailSigninTemplateID
-	personalization := &mail.Personalization{DynamicTemplateData: map[string]interface{}{"code_signin": "234567"}}
+	personalization := &mail.Personalization{DynamicTemplateData: map[string]interface{}{"code_signin": code}}
 	personalization.AddTos(to)
 	message.AddPersonalizations(personalization)
 

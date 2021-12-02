@@ -7,10 +7,13 @@ import "context"
 
 type mutationResolver struct{ *Resolver }
 
-func (mutation *mutationResolver) SignInByEmail(ctx context.Context, email string) (bool, error) {
-	emailProvider := mutation.provider.Email()
+func (r *mutationResolver) SignInByEmail(ctx context.Context, email string) (bool, error) {
 
-	emailProvider.Send(email)
+	err := r.core.Auth.SignIn(r.provider, email)
+
+	if err != nil {
+		return false, err
+	}
 
 	return true, nil
 }
