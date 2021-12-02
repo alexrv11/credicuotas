@@ -19,7 +19,6 @@ var migrateCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		provider := providers.NewProvider()
 		logger := provider.Logger()
-		logger.Infow("Running legacy database migrations")
 
 		rollbackLast, _ := cmd.Flags().GetBool("rollback-last")
 		rollbackTo, _ := cmd.Flags().GetString("rollback-to")

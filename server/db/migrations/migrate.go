@@ -21,7 +21,10 @@ func MigrateDB(provider *providers.Provider, migrateOpts *MigrateOpts) error {
 	opts.UseTransaction = true
 
 	m := gormigrate.New(
-		dbClient, opts, []*gormigrate.Migration{},
+		dbClient, opts, []*gormigrate.Migration{
+			m0001_create_user_table(),
+			m0002_create_session_otp_code_table(),
+		},
 	)
 
 	if migrateOpts.RollbackLast {

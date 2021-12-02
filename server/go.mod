@@ -12,6 +12,7 @@ require (
 	github.com/spf13/cobra v1.2.1
 	github.com/spf13/viper v1.9.0
 	github.com/vektah/gqlparser/v2 v2.1.0
+	github.com/xlzd/gotp v0.0.0-20181030022105-c8557ba2c119 // indirect
 	go.uber.org/zap v1.19.1
 	gorm.io/driver/postgres v1.1.2
 	gorm.io/gorm v1.21.16

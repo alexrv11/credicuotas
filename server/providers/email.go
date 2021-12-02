@@ -1,22 +1,20 @@
 package providers
 
 import (
-	"fmt"
 	"github.com/sendgrid/sendgrid-go"
 	"github.com/sendgrid/sendgrid-go/helpers/mail"
 	"github.com/spf13/viper"
-	"log"
 )
 
 type Email interface {
-	Send(email string)
+	Send(email string) error
 }
 
 type SandGridEmail struct {
 
 }
 
-func (s *SandGridEmail) Send(email string)  {
+func (s *SandGridEmail) Send(email string) error {
 	senderName := viper.GetString("EMAIL_SENDER_NAME")
 	senderAddress := viper.GetString("EMAIL_SENDER_ADDRESS")
 	emailSigninTemplateID := viper.GetString("EMAIL_SIGN_IN_TEMPLATE_ID")
@@ -32,12 +30,7 @@ func (s *SandGridEmail) Send(email string)  {
 
 	client := sendgrid.NewSendClient(viper.GetString("SENDGRID_API_KEY"))
 
-	response, err := client.Send(message)
-	if err != nil {
-		log.Println(err)
-	} else {
-		fmt.Println(response.StatusCode)
-		fmt.Println(response.Body)
-		fmt.Println(response.Headers)
-	}
+	_, err := client.Send(message)
+
+	return err
 }

@@ -10,9 +10,7 @@ import (
 	"time"
 )
 
-// Creates a new db connection. A single connection should be shared with the entire app/process.
-// Unless you are creating a cobra command line utility you probably should not be calling this (and even then.)
-func OpenGormDatabaseConnection() (*gorm.DB, error) {
+func CreateGormClient() (*gorm.DB, error) {
 	log := config.RootAppLogger()
 	log.Infow("Initializing gorm postgres connection...")
 	var gormLog logger.Interface
@@ -27,7 +25,7 @@ func OpenGormDatabaseConnection() (*gorm.DB, error) {
 		)
 	}
 	res, connErr := gorm.Open(
-		postgres.Open(viper.GetString("postgres")),
+		postgres.Open(viper.GetString("POSTGRES_URL")),
 		&gorm.Config{FullSaveAssociations: true, Logger: gormLog})
 	if connErr != nil {
 		log.With(zap.Stack("stack-trace")).Errorw(

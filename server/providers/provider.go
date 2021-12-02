@@ -19,7 +19,7 @@ func NewProvider() *Provider {
 
 func (p *Provider) GormClient() *gorm.DB  {
 	if p.db == nil {
-		client, err := connection.OpenGormDatabaseConnection()
+		client, err := connection.CreateGormClient()
 		if err == nil {
 			p.db = client
 		}
