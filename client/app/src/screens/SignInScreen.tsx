@@ -1,4 +1,4 @@
-import { useContext, useState, useCallback } from 'react';
+import { useContext, useState, useCallback, useEffect } from 'react';
 import PrimaryButton from 'components/PrimaryButton';
 import Spacer from 'components/Spacer';
 import React from 'react';
@@ -6,17 +6,30 @@ import { SafeAreaView, StyleSheet, View } from 'react-native';
 import { Input, Text, Image } from 'react-native-elements';
 import { AuthContext } from 'context/AuthContext';
 import { useSignInByEmailMutation } from 'api/graphql/generated/graphql';
+import Loading from 'components/Loading';
 
 const SignInScreen = ({ navigation }) => {
   const [email, setEmail] = useState('');
   const { signin } = useContext(AuthContext);
 
-  const [signInByEmailMutation, { data, loading, error }] =
-    useSignInByEmailMutation({ variables: { email } });
+  const [signInByEmailMutation, { data, loading: loadingSign, error }] =
+    useSignInByEmailMutation({
+      variables: { email },
+    });
 
   const onSubmit = useCallback(() => {
     signInByEmailMutation({ variables: { email } });
   }, [signInByEmailMutation, email]);
+
+  useEffect(() => {
+    if (data) {
+      navigation.navigate('VerifyCode');
+    }
+  }, [data, navigation, loadingSign]);
+
+  if (loadingSign) {
+    return <Loading />;
+  }
 
   return (
     <SafeAreaView style={styles.container}>

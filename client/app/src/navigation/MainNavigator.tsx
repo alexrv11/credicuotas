@@ -10,6 +10,7 @@ import HomeScreen from '../screens/HomeScreen';
 import SignInScreen from '../screens/SignInScreen';
 import LoanScreen from '../screens/LoanScreen';
 import ProfileScreen from '../screens/ProfileScreen';
+import VerifySignInCodeScreen from 'screens/VerifySignInCodeScreen';
 
 const AppStack = createNativeStackNavigator();
 
@@ -21,10 +22,15 @@ const DEFAULT_SCREEN_OPTIONS = {
 
 const SignInFlow = () => {
   return (
-    <SignInStack.Navigator initialRouteName="SignIn">
+    <SignInStack.Navigator initialRouteName="VerifyCode">
       <SignInStack.Screen
         name="SignIn"
         component={SignInScreen}
+        options={DEFAULT_SCREEN_OPTIONS}
+      />
+      <SignInStack.Screen
+        name="VerifyCode"
+        component={VerifySignInCodeScreen}
         options={DEFAULT_SCREEN_OPTIONS}
       />
     </SignInStack.Navigator>
