@@ -19,9 +19,9 @@ const PingCode = ({ hidden, onComplete, codeSize }) => {
   };
 
   return (
-    <View>
-      <SecurityCodeInput hidden={hidden} elements={elements} title="" />
+    <View style={styles.pad}>
       <Spacer />
+      <SecurityCodeInput hidden={hidden} elements={elements} title="" />
       <PadNumber
         onPressDigit={key => {
           if (index < elements.length) {
@@ -44,5 +44,12 @@ const PingCode = ({ hidden, onComplete, codeSize }) => {
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  pad: {
+    flex: 3,
+    justifyContent: 'space-between',
+  },
+});
 
 export default PingCode;

@@ -8,10 +8,6 @@ import Spacer from './Spacer';
 const SecurityCodeInput = ({ title, elements, hidden }) => {
   return (
     <View style={styles.container}>
-      <Spacer>
-        <Icon name="lock" size={24} color="#1a237e" type="material" />
-      </Spacer>
-      <Text style={styles.title}>{title}</Text>
       <FlatList
         horizontal
         data={elements}

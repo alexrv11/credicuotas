@@ -37,5 +37,5 @@ export const { Provider: AuthProvider, Context: AuthContext } =
     {
       signin,
     },
-    { token: '', errorMessage: '', userId: '' },
+    { token: '', errorMessage: '', userId: '', userEmail: 'alex.rv11@gmaial' },
   );
