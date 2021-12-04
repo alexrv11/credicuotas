@@ -11,8 +11,8 @@ const authReducer = (state, action) => {
   switch (action.type) {
     case 'add_error':
       return { ...state, errorMessage: action.payload };
-    case 'signin':
-      return { errorMessage: '', token: action.payload };
+    case 'signEmail':
+      return { userEmail: action.payload };
     case 'clear_error_message':
       return { ...state, errorMessage: '' };
     default:
@@ -20,22 +20,22 @@ const authReducer = (state, action) => {
   }
 };
 
-const signin = dispatch => async email => {
+const signEmail = dispatch => async email => {
   try {
-    const response = { data: { token: 'mock-token' } };
-    await AsyncStorage.setItem('token', response.data.token);
-    dispatch({ type: 'signin', payload: response.data.token });
+    await AsyncStorage.setItem('user-email', email);
+    dispatch({ type: 'signEmail', payload: email });
   } catch (error) {
     console.log(error);
     dispatch({ type: 'add_error', payload: error.message });
   }
 };
 
+
 export const { Provider: AuthProvider, Context: AuthContext } =
   createDataContext(
     authReducer,
     {
-      signin,
+      signEmail,
     },
-    { token: '', errorMessage: '', userId: '', userEmail: 'alex.rv11@gmaial' },
+    { token: '', errorMessage: '', userId: '', userEmail: '' },
   );

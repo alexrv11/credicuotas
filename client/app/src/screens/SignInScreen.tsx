@@ -10,7 +10,7 @@ import Loading from 'components/Loading';
 
 const SignInScreen = ({ navigation }) => {
   const [email, setEmail] = useState('');
-  const { signin } = useContext(AuthContext);
+  const { signEmail } = useContext(AuthContext);
 
   const [signInByEmailMutation, { data, loading: loadingSign, error }] =
     useSignInByEmailMutation({
@@ -23,11 +23,12 @@ const SignInScreen = ({ navigation }) => {
 
   useEffect(() => {
     if (data) {
+      signEmail(email);
       navigation.navigate('VerifyCode');
     }
-  }, [data, navigation, loadingSign]);
+  }, [data, navigation, signEmail, email]);
 
-  if (loadingSign) {
+  if (loadingSign && !data) {
     return <Loading />;
   }
 

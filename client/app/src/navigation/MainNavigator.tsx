@@ -22,7 +22,7 @@ const DEFAULT_SCREEN_OPTIONS = {
 
 const SignInFlow = () => {
   return (
-    <SignInStack.Navigator initialRouteName="VerifyCode">
+    <SignInStack.Navigator initialRouteName="SignIn">
       <SignInStack.Screen
         name="SignIn"
         component={SignInScreen}
