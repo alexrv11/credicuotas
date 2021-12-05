@@ -6,5 +6,5 @@ type SessionOtpCode struct {
 	gorm.Model
 	User *User
 	UserID uint
-	Timestamp int
+	Code string
 }

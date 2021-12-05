@@ -5,12 +5,17 @@
 
 scalar Map
 
+type Credential {
+  accessToken: String!
+}
+
 type Query {
   hello: String!
 }
 
 type Mutation {
-  signInByEmail(email: String!): Boolean!
+  sendCodeByEmail(email: String!): Boolean!
+  signInWithCode(email: String!, code: String!): Credential!
 }
 
 type User {

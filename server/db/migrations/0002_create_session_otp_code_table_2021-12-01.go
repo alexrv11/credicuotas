@@ -8,7 +8,7 @@ import (
 // m0002_create_session_otp_code_table
 func m0002_create_session_otp_code_table() *gormigrate.Migration {
 	return &gormigrate.Migration{
-		ID: "202112020002",
+		ID: "202112020004",
 		Migrate: func(tx *gorm.DB) error {
 			type User struct {
 				gorm.Model
@@ -18,7 +18,7 @@ func m0002_create_session_otp_code_table() *gormigrate.Migration {
 				gorm.Model
 				User User `json:"user,omitempty" gorm:"foreignKey:UserID;references:ID"`
 				UserID uint
-				Timestamp int
+				Code string
 			}
 
 			return tx.AutoMigrate(&SessionOtpCode{})
