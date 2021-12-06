@@ -145,5 +145,7 @@ func (a *AuthImpl) verifySessionCode(provider *providers.Provider, user dbmodel.
 		return true, nil
 	}
 
+	//TODO remove session otp from db
+
 	return false, nil
 }

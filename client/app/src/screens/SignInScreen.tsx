@@ -4,29 +4,29 @@ import Spacer from 'components/Spacer';
 import React from 'react';
 import { SafeAreaView, StyleSheet, View } from 'react-native';
 import { Input, Text, Image } from 'react-native-elements';
-import { AuthContext } from 'context/AuthContext';
-import { useSignInByEmailMutation } from 'api/graphql/generated/graphql';
 import Loading from 'components/Loading';
+import { useSendCodeByEmailMutation } from 'api/graphql/generated/graphql';
+import { useAuth } from 'context/AuthContext';
 
 const SignInScreen = ({ navigation }) => {
   const [email, setEmail] = useState('');
-  const { signEmail } = useContext(AuthContext);
+  const { setUserEmail } = useAuth();
 
-  const [signInByEmailMutation, { data, loading: loadingSign, error }] =
-    useSignInByEmailMutation({
+  const [sendCodeMutation, { data, loading: loadingSign, error }] =
+    useSendCodeByEmailMutation({
       variables: { email },
     });
 
   const onSubmit = useCallback(() => {
-    signInByEmailMutation({ variables: { email } });
-  }, [signInByEmailMutation, email]);
+    sendCodeMutation({ variables: { email } });
+  }, [sendCodeMutation, email]);
 
   useEffect(() => {
     if (data) {
-      signEmail(email);
+      setUserEmail(email);
       navigation.navigate('VerifyCode');
     }
-  }, [data, navigation, signEmail, email]);
+  }, [data, navigation, setUserEmail, email]);
 
   if (loadingSign && !data) {
     return <Loading />;

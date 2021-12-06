@@ -1,12 +1,29 @@
-import React, { useContext } from 'react';
+import React, { useContext, useCallback, useEffect, useMemo } from 'react';
 import Pincode from 'components/PingCode';
 import { SafeAreaView, StyleSheet, View } from 'react-native';
 import { Avatar, Text } from 'react-native-elements';
-import { AuthContext } from 'context/AuthContext';
+import { AuthContext, useAuth } from 'context/AuthContext';
 import Spacer from 'components/Spacer';
+import { useSignInWithCodeMutation } from 'api/graphql/generated/graphql';
 
 const VerifySignInCodeScreen = ({ route, navigation }) => {
-  const {state: {userEmail}} = useContext(AuthContext);
+  const {userEmail, setError} = useAuth()
+
+  const [signInMutation, { data, loading, error }] =
+    useSignInWithCodeMutation();
+
+  const signIn = (email: string, code: string) => {
+    signInMutation({ variables: { email, code } });
+  };
+
+  useEffect(() => {
+    console.log(error);
+    if (error) {
+      console.log('set error');
+      setError('', 'invalid_code');
+    }
+  }, [error, setError]);
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
@@ -19,13 +36,15 @@ const VerifySignInCodeScreen = ({ route, navigation }) => {
           containerStyle={styles.avatarContainer}
         />
         <Spacer />
-        <Text style={styles.textAvatar}>Te enviamos un codigo de seis digitos al email</Text>
+        <Text style={styles.textAvatar}>
+          Te enviamos un codigo de seis digitos al email
+        </Text>
         <Text style={styles.textEmail}>{userEmail}</Text>
       </View>
       <Pincode
         codeSize={6}
-        onComplete={code => {
-          console.log('code', code);
+        onComplete={(code: string) => {
+          signIn(userEmail || '', code);
         }}
       />
     </SafeAreaView>

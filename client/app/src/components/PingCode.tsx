@@ -1,10 +1,15 @@
-import React, { useState } from 'react';
+import { AuthContext } from 'context/AuthContext';
+import React, { useState, useContext } from 'react';
 import { StyleSheet, View } from 'react-native';
 import PadNumber from './PadNumber';
 import SecurityCodeInput from './SecurityCodeInput';
 import Spacer from './Spacer';
+import { useEffect } from 'react';
+import { useAuth } from '../context/AuthContext';
 
 const PingCode = ({ hidden, onComplete, codeSize }) => {
+  const { error } = useAuth();
+
   const [index, setIndex] = useState(0);
   var initCodes = [];
   for (let i = 0; i < codeSize; i++) {
@@ -12,11 +17,17 @@ const PingCode = ({ hidden, onComplete, codeSize }) => {
   }
   const [elements, setElements] = useState(initCodes);
 
-  const setElement = (i, newValue) => {
+  const setElement = (i: number, newValue: string) => {
     var values = [...elements];
     values[i].code = newValue;
     setElements(values);
   };
+
+  useEffect(() => {
+    if (error) {
+      setElements(initCodes);
+    }
+  }, [error, initCodes]);
 
   return (
     <View style={styles.pad}>
