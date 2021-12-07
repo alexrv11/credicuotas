@@ -1,13 +1,15 @@
-import React, { useContext, useCallback, useEffect, useMemo } from 'react';
+import React, { useEffect } from 'react';
 import Pincode from 'components/PingCode';
+import { StackActions } from '@react-navigation/native';
 import { SafeAreaView, StyleSheet, View } from 'react-native';
 import { Avatar, Text } from 'react-native-elements';
-import { AuthContext, useAuth } from 'context/AuthContext';
+import { useAuth } from 'context/AuthContext';
 import Spacer from 'components/Spacer';
 import { useSignInWithCodeMutation } from 'api/graphql/generated/graphql';
+import Loading from 'components/Loading';
 
 const VerifySignInCodeScreen = ({ route, navigation }) => {
-  const {userEmail, setError} = useAuth()
+  const { userEmail, setError, setToken } = useAuth();
 
   const [signInMutation, { data, loading, error }] =
     useSignInWithCodeMutation();
@@ -20,9 +22,22 @@ const VerifySignInCodeScreen = ({ route, navigation }) => {
     console.log(error);
     if (error) {
       console.log('set error');
-      setError('', 'invalid_code');
+      setError(error);
     }
   }, [error, setError]);
+
+  useEffect(() => {
+    const token = data?.signInWithCode?.accessToken;
+    if (token) {
+      setToken(token);
+      navigation.dispatch(StackActions.replace('MainFlow'));
+    }
+  }, [data, setToken, navigation]);
+
+  if (loading) {
+    console.log('loading');
+    return <Loading />;
+  }
 
   return (
     <SafeAreaView style={styles.container}>

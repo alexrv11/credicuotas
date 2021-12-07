@@ -16,22 +16,18 @@ const AppStack = createNativeStackNavigator();
 
 const SignInStack = createNativeStackNavigator();
 
-const DEFAULT_SCREEN_OPTIONS = {
-  headerShown: false,
-};
-
 const SignInFlow = () => {
   return (
     <SignInStack.Navigator initialRouteName="SignIn">
       <SignInStack.Screen
         name="SignIn"
         component={SignInScreen}
-        options={DEFAULT_SCREEN_OPTIONS}
+        options={{ headerShown: false }}
       />
       <SignInStack.Screen
         name="VerifyCode"
         component={VerifySignInCodeScreen}
-        options={DEFAULT_SCREEN_OPTIONS}
+        options={{ title: '' }}
       />
     </SignInStack.Navigator>
   );

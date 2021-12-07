@@ -41,8 +41,6 @@ const SignInScreen = ({ navigation }) => {
           Accede a un prestamo de forma simple y rapida
         </Text>
       </View>
-      <Spacer />
-      <Spacer />
       <View style={styles.form}>
         <Text style={styles.inputLabel}>Ingresa tu correo</Text>
         <Input
@@ -66,16 +64,17 @@ const SignInScreen = ({ navigation }) => {
 
 const styles = StyleSheet.create({
   container: {
-    margin: 25,
-    marginBottom: 5,
-    flex: 1,
+    marginHorizontal: 20,
+    flex: 5,
     alignItems: 'center',
     justifyContent: 'flex-start',
   },
   form: {
     width: '100%',
+    flex: 3,
   },
   header: {
+    flex: 2,
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',

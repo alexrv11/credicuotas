@@ -6,12 +6,11 @@ import SecurityCodeInput from './SecurityCodeInput';
 import Spacer from './Spacer';
 import { useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
-
+var initCodes = [];
 const PingCode = ({ hidden, onComplete, codeSize }) => {
   const { error } = useAuth();
 
   const [index, setIndex] = useState(0);
-  var initCodes = [];
   for (let i = 0; i < codeSize; i++) {
     initCodes[i] = { key: `${i}`, code: '' };
   }
@@ -27,7 +26,7 @@ const PingCode = ({ hidden, onComplete, codeSize }) => {
     if (error) {
       setElements(initCodes);
     }
-  }, [error, initCodes]);
+  }, [error, setElements]);
 
   return (
     <View style={styles.pad}>
