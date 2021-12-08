@@ -1,0 +1,104 @@
+<mxfile host="65bd71144e" pages="1">
+    <diagram id="zVugtnegKcuDvvwisIva" name="Page-1">
+        <mxGraphModel dx="557" dy="680" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="2" value="Cliente&lt;br&gt;" style="shape=umlActor;verticalLabelPosition=bottom;labelBackgroundColor=none;verticalAlign=top;html=1;outlineConnect=0;fontColor=#000021;" parent="1" vertex="1">
+                    <mxGeometry x="60" y="150" width="30" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="3" value="Asessior de credito" style="shape=umlActor;verticalLabelPosition=bottom;labelBackgroundColor=none;verticalAlign=top;html=1;outlineConnect=0;fontColor=#000021;" parent="1" vertex="1">
+                    <mxGeometry x="510" y="50" width="30" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="4" value="Gerencia comercial" style="shape=umlActor;verticalLabelPosition=bottom;labelBackgroundColor=none;verticalAlign=top;html=1;outlineConnect=0;fontColor=#000021;" parent="1" vertex="1">
+                    <mxGeometry x="708" y="390" width="30" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="6" value="" style="endArrow=classic;html=1;" parent="1" edge="1">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="100" y="200" as="sourcePoint"/>
+                        <mxPoint x="170" y="200" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="21" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="8" target="12" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="8" value="formulario&lt;br&gt;Solitidud&lt;br&gt;credito" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;fillColor=none;strokeColor=#000021;" parent="1" vertex="1">
+                    <mxGeometry x="170" y="161" width="80" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="23" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="12" target="22" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="12" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#F7FAFC;strokeColor=#6c8ebf;" parent="1" vertex="1">
+                    <mxGeometry x="270" y="141" width="460" height="119" as="geometry"/>
+                </mxCell>
+                <mxCell id="14" value="&lt;span style=&quot;white-space: normal&quot;&gt;Verificacion de documento e informacion del usuario&lt;/span&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F7FAFC;fontColor=#141414;strokeColor=#141414;" parent="1" vertex="1">
+                    <mxGeometry x="300" y="171" width="90" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="17" value="evaluacion historial crediticion" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F7FAFC;fontColor=#141414;strokeColor=#141414;" parent="1" vertex="1">
+                    <mxGeometry x="414" y="169" width="90" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="18" value="evaluacion fuentes de ingreso" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F7FAFC;fontColor=#141414;strokeColor=#141414;" parent="1" vertex="1">
+                    <mxGeometry x="523" y="169" width="90" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="19" value="preparacion de carpeta crediticia" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F7FAFC;fontColor=#141414;strokeColor=#141414;" parent="1" vertex="1">
+                    <mxGeometry x="630" y="169" width="80" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="26" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=1;" parent="1" source="22" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="70" y="240" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="44" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.45;entryY=-0.017;entryDx=0;entryDy=0;entryPerimeter=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" parent="1" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="501" y="367" as="sourcePoint"/>
+                        <mxPoint x="500" y="409" as="targetPoint"/>
+                        <Array as="points">
+                            <mxPoint x="500" y="367"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="22" value="Pre aprobada?" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;strokeColor=#141414;fontColor=#141414;fillColor=none;" parent="1" vertex="1">
+                    <mxGeometry x="460" y="287" width="80" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="27" value="observaciones en la solicitud" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontColor=#000021;" parent="1" vertex="1">
+                    <mxGeometry x="200" y="298" width="90" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="32" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=1;" parent="1" source="28" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="660" y="440" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="35" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="510" y="520" as="targetPoint"/>
+                        <mxPoint x="510" y="472" as="sourcePoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="28" value="Si el monto es mayor a 7000bs" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F7FAFC;fontColor=#141414;" parent="1" vertex="1">
+                    <mxGeometry x="445" y="410" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="29" value="No" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1">
+                    <mxGeometry x="410" y="300" width="40" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="30" value="Si" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=1" parent="1" vertex="1">
+                    <mxGeometry x="450" y="370" width="40" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="33" value="ultima revision y aprobacion del prestamo" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1">
+                    <mxGeometry x="590" y="355" width="110" height="70" as="geometry"/>
+                </mxCell>
+                <mxCell id="34" value="No" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1">
+                    <mxGeometry x="572" y="442" width="40" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="36" value="Gerencia General" style="shape=umlActor;verticalLabelPosition=bottom;labelBackgroundColor=none;verticalAlign=top;html=1;outlineConnect=0;fillColor=#F7FAFC;fontColor=#000021;" parent="1" vertex="1">
+                    <mxGeometry x="500" y="530" width="30" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="40" value="Si" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=1" parent="1" vertex="1">
+                    <mxGeometry x="475" y="474" width="40" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="42" value="montos mayores a 7000bs, es necesario la aprobacion por generencia general" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1">
+                    <mxGeometry x="580" y="560" width="130" height="20" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>
