@@ -14,3 +14,17 @@
 
 ``npx prisma db push``
 
+## mobile app
+
+``cd  client/app``
+``yarn install``
+
+### react native run ios device
+
+``cd ios && pod install``
+``yarn android``
+
+### react native run android device
+
+``yarn android``
+
