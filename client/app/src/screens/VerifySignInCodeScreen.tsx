@@ -7,21 +7,26 @@ import { useAuth } from 'context/AuthContext';
 import Spacer from 'components/Spacer';
 import { useSignInWithCodeMutation } from 'api/graphql/generated/graphql';
 import Loading from 'components/Loading';
+import { useState } from 'react';
 
 const VerifySignInCodeScreen = ({ route, navigation }) => {
   const { userEmail, setError, setToken } = useAuth();
+  const [loading, setLoading] = useState(false);
 
-  const [signInMutation, { data, loading, error }] =
+  const [signInMutation, { data, loading: apiLoading, error }] =
     useSignInWithCodeMutation();
 
   const signIn = (email: string, code: string) => {
-    signInMutation({ variables: { email, code } });
+    signInMutation({ variables: { email, code } }).catch((er) => {
+      setLoading(false);
+      console.log(er);
+    });
   };
 
   useEffect(() => {
     console.log(error);
     if (error) {
-      console.log('set error');
+      console.log('set error', error);
       setError(error);
     }
   }, [error, setError]);
@@ -29,13 +34,17 @@ const VerifySignInCodeScreen = ({ route, navigation }) => {
   useEffect(() => {
     const token = data?.signInWithCode?.accessToken;
     if (token) {
+      setLoading(false);
       setToken(token);
       navigation.dispatch(StackActions.replace('MainFlow'));
     }
-  }, [data, setToken, navigation]);
+
+    if (apiLoading) {
+      setLoading(apiLoading);
+    }
+  }, [data, apiLoading, setLoading, setToken, navigation]);
 
   if (loading) {
-    console.log('loading');
     return <Loading />;
   }
 

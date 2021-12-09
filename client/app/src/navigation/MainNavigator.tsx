@@ -27,7 +27,9 @@ const SignInFlow = () => {
       <SignInStack.Screen
         name="VerifyCode"
         component={VerifySignInCodeScreen}
-        options={{ title: '' }}
+        options={{
+          title: '',
+        }}
       />
     </SignInStack.Navigator>
   );

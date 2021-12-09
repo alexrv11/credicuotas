@@ -9,6 +9,7 @@ import { useAuth } from '../context/AuthContext';
 var initCodes = [];
 const PingCode = ({ hidden, onComplete, codeSize }) => {
   const { error } = useAuth();
+  const [errorText, setErrorText] = useState('');
 
   const [index, setIndex] = useState(0);
   for (let i = 0; i < codeSize; i++) {
@@ -25,15 +26,16 @@ const PingCode = ({ hidden, onComplete, codeSize }) => {
   useEffect(() => {
     if (error) {
       setElements(initCodes);
+      setErrorText('El codigo no es valido');
     }
   }, [error, setElements]);
 
   return (
     <View style={styles.pad}>
-      <Spacer />
-      <SecurityCodeInput hidden={hidden} elements={elements} title="" />
+      <SecurityCodeInput hidden={hidden} elements={elements} title="" errorText={errorText}/>
       <PadNumber
         onPressDigit={key => {
+          setErrorText('');
           if (index < elements.length) {
             setElement(index, key);
             setIndex(index + 1);
@@ -58,7 +60,7 @@ const PingCode = ({ hidden, onComplete, codeSize }) => {
 const styles = StyleSheet.create({
   pad: {
     flex: 3,
-    justifyContent: 'space-between',
+    justifyContent: 'space-around',
   },
 });
 

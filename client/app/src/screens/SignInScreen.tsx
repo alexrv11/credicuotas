@@ -7,28 +7,43 @@ import { Input, Text, Image } from 'react-native-elements';
 import Loading from 'components/Loading';
 import { useSendCodeByEmailMutation } from 'api/graphql/generated/graphql';
 import { useAuth } from 'context/AuthContext';
+import { validateEmail } from '../utils/fields-validator';
 
 const SignInScreen = ({ navigation }) => {
-  const [email, setEmail] = useState('');
-  const { setUserEmail } = useAuth();
+  const { setUserEmail, userEmail: email } = useAuth();
+  const [loading, setLoading] = useState(false);
+  const [disable, setDisable] = useState(true);
 
-  const [sendCodeMutation, { data, loading: loadingSign, error }] =
-    useSendCodeByEmailMutation({
-      variables: { email },
-    });
+  const [sendCodeMutation, { data, error }] = useSendCodeByEmailMutation({
+    variables: { email },
+  });
 
   const onSubmit = useCallback(() => {
     sendCodeMutation({ variables: { email } });
+    setLoading(true);
   }, [sendCodeMutation, email]);
 
   useEffect(() => {
     if (data) {
-      setUserEmail(email);
       navigation.navigate('VerifyCode');
+      setLoading(false);
     }
   }, [data, navigation, setUserEmail, email]);
 
-  if (loadingSign && !data) {
+  useEffect(() => {
+    if (!email) {
+      return;
+    }
+
+    if (validateEmail(email)) {
+      setDisable(false);
+      return;
+    }
+
+    setDisable(true);
+  }, [email]);
+
+  if (loading) {
     return <Loading />;
   }
 
@@ -50,12 +65,12 @@ const SignInScreen = ({ navigation }) => {
           underlineColorAndroid="transparent"
           leftIcon={{ type: 'material', name: 'email', color: '#070D99' }}
           value={email}
-          onChangeText={setEmail}
+          onChangeText={setUserEmail}
         />
         <PrimaryButton
           onPress={onSubmit}
           text="Iniciar Session"
-          disabled={false}
+          disabled={disable}
         />
       </View>
     </SafeAreaView>

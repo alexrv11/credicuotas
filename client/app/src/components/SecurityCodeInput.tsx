@@ -5,7 +5,7 @@ import CodeInput from './CodeInput';
 import SecretInput from './SecretInput';
 import Spacer from './Spacer';
 
-const SecurityCodeInput = ({ title, elements, hidden }) => {
+const SecurityCodeInput = ({ title, elements, hidden, errorText }) => {
   return (
     <View style={styles.container}>
       <FlatList
@@ -21,6 +21,7 @@ const SecurityCodeInput = ({ title, elements, hidden }) => {
         }}
         keyExtractor={item => item.key}
       />
+      <Text style={styles.errorInput}>{errorText}</Text>
     </View>
   );
 };
@@ -37,6 +38,11 @@ const styles = StyleSheet.create({
   },
   separator: {
     width: 7,
+  },
+  errorInput: {
+    marginTop: 20,
+    color: '#611661',
+    fontSize: 18,
   },
 });
 export default SecurityCodeInput;

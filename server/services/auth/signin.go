@@ -141,11 +141,11 @@ func (a *AuthImpl) verifySessionCode(provider *providers.Provider, user dbmodel.
 	}
 
 	encoded := encode(code)
-	if encoded == sessionOtp.Code {
-		return true, nil
+	if encoded != sessionOtp.Code {
+		return false, nil
 	}
 
-	//TODO remove session otp from db
+	db.Delete(&sessionOtp)
 
-	return false, nil
+	return true, nil
 }
