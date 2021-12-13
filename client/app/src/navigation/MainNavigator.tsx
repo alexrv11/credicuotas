@@ -11,6 +11,7 @@ import SignInScreen from '../screens/SignInScreen';
 import LoanScreen from '../screens/LoanScreen';
 import ProfileScreen from '../screens/ProfileScreen';
 import VerifySignInCodeScreen from 'screens/VerifySignInCodeScreen';
+import RegisterScreen from '../screens/RegisterScreen';
 
 const AppStack = createNativeStackNavigator();
 
@@ -32,6 +33,22 @@ const SignInFlow = () => {
         }}
       />
     </SignInStack.Navigator>
+  );
+};
+
+const OnboardingStack = createNativeStackNavigator();
+
+const OnboardingFlow = () => {
+  return (
+    <OnboardingStack.Navigator initialRouteName="PersonalRegister">
+      <OnboardingStack.Screen
+        name="PersonalRegister"
+        component={RegisterScreen}
+        options={{
+          title: '',
+        }}
+      />
+    </OnboardingStack.Navigator>
   );
 };
 
@@ -98,10 +115,11 @@ const MainNavigator = () => {
   return (
     <NavigationContainer>
       <AppStack.Navigator
-        initialRouteName="SignInFlow"
+        initialRouteName="OnboardingFlow"
         screenOptions={{ headerShown: false }}>
         <AppStack.Screen name="SignInFlow" component={SignInFlow} />
         <AppStack.Screen name="MainFlow" component={MainFlow} />
+        <AppStack.Screen name="OnboardingFlow" component={OnboardingFlow} />
       </AppStack.Navigator>
     </NavigationContainer>
   );
