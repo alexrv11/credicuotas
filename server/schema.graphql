@@ -9,8 +9,16 @@ type Credential {
   accessToken: String!
 }
 
-type Query {
-  hello: String!
+
+directive @authenticated on | OBJECT | FIELD_DEFINITION | ENUM
+
+enum ApiAccess {
+  PUBLIC
+  PRIVATE
+}
+
+type Query  {
+  getUser(email: String!): String! @authenticated
 }
 
 type Mutation {
@@ -18,6 +26,9 @@ type Mutation {
   signInWithCode(email: String!, code: String!): Credential!
 }
 
+
+
 type User {
+  id: String
   name: String
 }

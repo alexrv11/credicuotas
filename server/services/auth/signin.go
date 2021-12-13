@@ -106,8 +106,10 @@ func (a *AuthImpl) SignInWithCode(provider *providers.Provider, email, code stri
 	// Create token with claims
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 
+	secret := viper.GetString("SECRET_SESSION")
+
 	// Generate encoded token and send it as response.
-	accessToken, err := token.SignedString([]byte("secret"))
+	accessToken, err := token.SignedString([]byte(secret))
 	if err != nil {
 		return "", err
 	}

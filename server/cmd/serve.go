@@ -1,6 +1,10 @@
 package cmd
 
 import (
+	"cloud.google.com/go/profiler"
+	"context"
+	"fmt"
+	"github.com/99designs/gqlgen/graphql"
 	"github.com/99designs/gqlgen/graphql/handler"
 	"github.com/99designs/gqlgen/graphql/playground"
 	"github.com/alexrv11/credicuotas/server/config"
@@ -8,12 +12,10 @@ import (
 	"github.com/alexrv11/credicuotas/server/middlewares"
 	"github.com/alexrv11/credicuotas/server/providers"
 	"github.com/alexrv11/credicuotas/server/services"
+	"github.com/spf13/cobra"
 	"go.uber.org/zap"
 	"net/http"
 	"os"
-
-	"cloud.google.com/go/profiler"
-	"github.com/spf13/cobra"
 
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
@@ -51,12 +53,26 @@ var serveCmd = &cobra.Command{
 		router := chi.NewRouter()
 		router.Use(middleware.Recoverer)
 		router.Use(middleware.Logger)
-		router.Use(middlewares.AppContext)
+		router.Use(middlewares.Authentication)
 		router.Get("/", playground.Handler("GraphQL playground", "/query"))
 
 		resolver := graph.NewResolver(provider, core)
 
-		srv := handler.NewDefaultServer(graph.NewExecutableSchema(graph.Config{Resolvers: resolver}))
+		c := graph.Config{Resolvers: resolver}
+		c.Directives.Authenticated = func(ctx context.Context, obj interface{}, next graphql.Resolver) (res interface{}, err error) {
+
+			userXid, _ := ctx.Value(middlewares.UserInfoKey).(string)
+
+			if len(userXid) == 0 {
+				return nil, fmt.Errorf("you need to login")
+			}
+
+			logger.With(zap.String("userXid", userXid)).Info("user info")
+
+			return next(ctx)
+		}
+		srv := handler.NewDefaultServer(graph.NewExecutableSchema(c))
+
 
 		router.Handle("/graphql", srv)
 
@@ -64,3 +80,4 @@ var serveCmd = &cobra.Command{
 		logger.Fatal(zap.Error(http.ListenAndServe(":"+port, router)))
 	},
 }
+

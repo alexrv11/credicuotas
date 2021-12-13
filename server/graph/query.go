@@ -4,6 +4,6 @@ import "context"
 
 type queryResolver struct{ *Resolver }
 
-func (query queryResolver) Hello(ctx context.Context) (string, error)  {
+func (query queryResolver) GetUser(ctx context.Context, email string) (string, error)  {
 	return "hello world", nil
 }
