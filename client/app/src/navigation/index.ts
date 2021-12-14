@@ -1,1 +1,1 @@
-export { default } from "./MainNavigator";
+export { default } from './MainNavigator';
