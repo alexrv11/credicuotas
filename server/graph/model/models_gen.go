@@ -13,43 +13,49 @@ type User struct {
 	Name *string `json:"name"`
 }
 
-type APIAccess string
+type OnboardingStatus string
 
 const (
-	APIAccessPublic  APIAccess = "PUBLIC"
-	APIAccessPrivate APIAccess = "PRIVATE"
+	OnboardingStatusComplete            OnboardingStatus = "COMPLETE"
+	OnboardingStatusPendingPersonalData OnboardingStatus = "PENDING_PERSONAL_DATA"
+	OnboardingStatusPendingCiFront      OnboardingStatus = "PENDING_CI_FRONT"
+	OnboardingStatusPendingCiBack       OnboardingStatus = "PENDING_CI_BACK"
+	OnboardingStatusPendingPhoneNumber  OnboardingStatus = "PENDING_PHONE_NUMBER"
 )
 
-var AllAPIAccess = []APIAccess{
-	APIAccessPublic,
-	APIAccessPrivate,
+var AllOnboardingStatus = []OnboardingStatus{
+	OnboardingStatusComplete,
+	OnboardingStatusPendingPersonalData,
+	OnboardingStatusPendingCiFront,
+	OnboardingStatusPendingCiBack,
+	OnboardingStatusPendingPhoneNumber,
 }
 
-func (e APIAccess) IsValid() bool {
+func (e OnboardingStatus) IsValid() bool {
 	switch e {
-	case APIAccessPublic, APIAccessPrivate:
+	case OnboardingStatusComplete, OnboardingStatusPendingPersonalData, OnboardingStatusPendingCiFront, OnboardingStatusPendingCiBack, OnboardingStatusPendingPhoneNumber:
 		return true
 	}
 	return false
 }
 
-func (e APIAccess) String() string {
+func (e OnboardingStatus) String() string {
 	return string(e)
 }
 
-func (e *APIAccess) UnmarshalGQL(v interface{}) error {
+func (e *OnboardingStatus) UnmarshalGQL(v interface{}) error {
 	str, ok := v.(string)
 	if !ok {
 		return fmt.Errorf("enums must be strings")
 	}
 
-	*e = APIAccess(str)
+	*e = OnboardingStatus(str)
 	if !e.IsValid() {
-		return fmt.Errorf("%s is not a valid ApiAccess", str)
+		return fmt.Errorf("%s is not a valid OnboardingStatus", str)
 	}
 	return nil
 }
 
-func (e APIAccess) MarshalGQL(w io.Writer) {
+func (e OnboardingStatus) MarshalGQL(w io.Writer) {
 	fmt.Fprint(w, strconv.Quote(e.String()))
 }

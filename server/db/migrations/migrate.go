@@ -24,6 +24,7 @@ func MigrateDB(provider *providers.Provider, migrateOpts *MigrateOpts) error {
 		dbClient, opts, []*gormigrate.Migration{
 			m0001_create_user_table(),
 			m0002_create_session_otp_code_table(),
+			m0003_create_user_documents_table(),
 		},
 	)
 

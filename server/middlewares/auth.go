@@ -3,7 +3,6 @@ package middlewares
 import (
 	"context"
 	"fmt"
-	"github.com/alexrv11/credicuotas/server/model"
 	"github.com/golang-jwt/jwt"
 	"github.com/spf13/viper"
 	"net/http"
@@ -32,7 +31,9 @@ func Authentication(next http.Handler) http.Handler {
 				return nil, fmt.Errorf("Unexpected signing method: %v", token.Header["alg"])
 			}
 
-			return viper.GetString("SECRET_SESSION"), nil
+			secret := []byte(viper.GetString("SECRET_SESSION"))
+
+			return secret, nil
 		})
 
 		if err != nil {
@@ -45,14 +46,13 @@ func Authentication(next http.Handler) http.Handler {
 			return
 		}
 
-		claims, ok := token.Claims.(*model.SessionClaims)
-
-		if !ok {
+		claims, ok := token.Claims.(jwt.MapClaims)
+		if !ok || !token.Valid {
 			next.ServeHTTP(w, r.WithContext(ctx))
 			return
 		}
 
-		ctx = context.WithValue(ctx, UserInfoKey,  claims.UserXid)
+		ctx = context.WithValue(ctx, UserInfoKey,  claims["UserXid"])
 
 		next.ServeHTTP(w, r.WithContext(ctx))
 	}

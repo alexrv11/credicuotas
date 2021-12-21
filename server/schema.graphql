@@ -12,13 +12,17 @@ type Credential {
 
 directive @authenticated on | OBJECT | FIELD_DEFINITION | ENUM
 
-enum ApiAccess {
-  PUBLIC
-  PRIVATE
+enum OnboardingStatus {
+  COMPLETE
+  PENDING_PERSONAL_DATA
+  PENDING_CI_FRONT
+  PENDING_CI_BACK
+  PENDING_PHONE_NUMBER
 }
 
 type Query  {
   getUser(email: String!): String! @authenticated
+  onboarding: OnboardingStatus! @authenticated
 }
 
 type Mutation {
