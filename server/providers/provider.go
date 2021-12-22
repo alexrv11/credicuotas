@@ -11,6 +11,7 @@ type Provider struct {
 	db *gorm.DB
 	logger *zap.SugaredLogger
 	email Email
+	sms SMS
 }
 
 func NewProvider() *Provider {
@@ -41,4 +42,12 @@ func (p *Provider) Email() Email {
 	}
 
 	return p.email
+}
+
+func (p *Provider) SMS() SMS {
+	if p.sms == nil {
+		p.sms = &TwilioClient{}
+	}
+
+	return p.sms
 }

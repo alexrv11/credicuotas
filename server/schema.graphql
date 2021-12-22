@@ -28,7 +28,9 @@ type Query  {
 type Mutation {
   sendCodeByEmail(email: String!): Boolean!
   signInWithCode(email: String!, code: String!): Credential!
-  saveUserInfo(name: String!, identifier: String!): Boolean!
+  saveUserInfo(name: String!, identifier: String!): Boolean! @authenticated
+  sendCodeByPhone(phone: String!): Boolean! @authenticated
+  savePhoneNumber(phone: String!, code: String!): Boolean! @authenticated
 }
 
 

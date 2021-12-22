@@ -13,6 +13,7 @@ require (
 	github.com/sendgrid/sendgrid-go v3.10.3+incompatible // indirect
 	github.com/spf13/cobra v1.2.1
 	github.com/spf13/viper v1.9.0
+	github.com/twilio/twilio-go v0.19.0 // indirect
 	github.com/vektah/gqlparser/v2 v2.1.0
 	github.com/xlzd/gotp v0.0.0-20181030022105-c8557ba2c119 // indirect
 	go.uber.org/zap v1.19.1

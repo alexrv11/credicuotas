@@ -23,6 +23,17 @@ func (r *mutationResolver) SendCodeByEmail(ctx context.Context, email string) (b
 }
 
 
+func (r *mutationResolver) SendCodeByPhone(ctx context.Context, phone string) (bool, error) {
+	userXid, _ := ctx.Value(middlewares.UserInfoKey).(string)
+	err := r.core.Auth.SendCodeByPhone(r.provider,userXid, phone)
+
+	if err != nil {
+		return false, err
+	}
+
+	return true, nil
+}
+
 func (r *mutationResolver) SignInWithCode(ctx context.Context, email string, code string) (*model.Credential, error) {
 	token, err := r.core.Auth.SignInWithCode(r.provider, email, code)
 
@@ -39,6 +50,18 @@ func (r *mutationResolver) SaveUserInfo(ctx context.Context, name, identifierNum
 	userXid, _ := ctx.Value(middlewares.UserInfoKey).(string)
 
 	err := r.core.User.SaveUserInfo(r.provider, userXid, name, identifierNumber)
+
+	if err != nil {
+		return false, err
+	}
+
+	return true, nil
+}
+
+
+func (r *mutationResolver) SavePhoneNumber(ctx context.Context, phone string, code string) (bool, error) {
+	userXid, _ := ctx.Value(middlewares.UserInfoKey).(string)
+	err := r.core.Auth.SavePhone(r.provider, userXid, phone, code)
 
 	if err != nil {
 		return false, err

@@ -51,8 +51,10 @@ type ComplexityRoot struct {
 	}
 
 	Mutation struct {
+		SavePhoneNumber func(childComplexity int, phone string, code string) int
 		SaveUserInfo    func(childComplexity int, name string, identifier string) int
 		SendCodeByEmail func(childComplexity int, email string) int
+		SendCodeByPhone func(childComplexity int, phone string) int
 		SignInWithCode  func(childComplexity int, email string, code string) int
 	}
 
@@ -71,6 +73,8 @@ type MutationResolver interface {
 	SendCodeByEmail(ctx context.Context, email string) (bool, error)
 	SignInWithCode(ctx context.Context, email string, code string) (*model.Credential, error)
 	SaveUserInfo(ctx context.Context, name string, identifier string) (bool, error)
+	SendCodeByPhone(ctx context.Context, phone string) (bool, error)
+	SavePhoneNumber(ctx context.Context, phone string, code string) (bool, error)
 }
 type QueryResolver interface {
 	GetUser(ctx context.Context, email string) (string, error)
@@ -99,6 +103,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Credential.AccessToken(childComplexity), true
 
+	case "Mutation.savePhoneNumber":
+		if e.complexity.Mutation.SavePhoneNumber == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_savePhoneNumber_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.SavePhoneNumber(childComplexity, args["phone"].(string), args["code"].(string)), true
+
 	case "Mutation.saveUserInfo":
 		if e.complexity.Mutation.SaveUserInfo == nil {
 			break
@@ -122,6 +138,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Mutation.SendCodeByEmail(childComplexity, args["email"].(string)), true
+
+	case "Mutation.sendCodeByPhone":
+		if e.complexity.Mutation.SendCodeByPhone == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_sendCodeByPhone_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.SendCodeByPhone(childComplexity, args["phone"].(string)), true
 
 	case "Mutation.signInWithCode":
 		if e.complexity.Mutation.SignInWithCode == nil {
@@ -262,7 +290,9 @@ type Query  {
 type Mutation {
   sendCodeByEmail(email: String!): Boolean!
   signInWithCode(email: String!, code: String!): Credential!
-  saveUserInfo(name: String!, identifier: String!): Boolean!
+  saveUserInfo(name: String!, identifier: String!): Boolean! @authenticated
+  sendCodeByPhone(phone: String!): Boolean! @authenticated
+  savePhoneNumber(phone: String!, code: String!): Boolean! @authenticated
 }
 
 
@@ -277,6 +307,30 @@ var parsedSchema = gqlparser.MustLoadSchema(sources...)
 // endregion ************************** generated!.gotpl **************************
 
 // region    ***************************** args.gotpl *****************************
+
+func (ec *executionContext) field_Mutation_savePhoneNumber_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 string
+	if tmp, ok := rawArgs["phone"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("phone"))
+		arg0, err = ec.unmarshalNString2string(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["phone"] = arg0
+	var arg1 string
+	if tmp, ok := rawArgs["code"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("code"))
+		arg1, err = ec.unmarshalNString2string(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["code"] = arg1
+	return args, nil
+}
 
 func (ec *executionContext) field_Mutation_saveUserInfo_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
@@ -314,6 +368,21 @@ func (ec *executionContext) field_Mutation_sendCodeByEmail_args(ctx context.Cont
 		}
 	}
 	args["email"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_sendCodeByPhone_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 string
+	if tmp, ok := rawArgs["phone"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("phone"))
+		arg0, err = ec.unmarshalNString2string(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["phone"] = arg0
 	return args, nil
 }
 
@@ -552,8 +621,152 @@ func (ec *executionContext) _Mutation_saveUserInfo(ctx context.Context, field gr
 	}
 	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().SaveUserInfo(rctx, args["name"].(string), args["identifier"].(string))
+		directive0 := func(rctx context.Context) (interface{}, error) {
+			ctx = rctx // use context from middleware stack in children
+			return ec.resolvers.Mutation().SaveUserInfo(rctx, args["name"].(string), args["identifier"].(string))
+		}
+		directive1 := func(ctx context.Context) (interface{}, error) {
+			if ec.directives.Authenticated == nil {
+				return nil, errors.New("directive authenticated is not implemented")
+			}
+			return ec.directives.Authenticated(ctx, nil, directive0)
+		}
+
+		tmp, err := directive1(rctx)
+		if err != nil {
+			return nil, graphql.ErrorOnPath(ctx, err)
+		}
+		if tmp == nil {
+			return nil, nil
+		}
+		if data, ok := tmp.(bool); ok {
+			return data, nil
+		}
+		return nil, fmt.Errorf(`unexpected type %T from directive, should be bool`, tmp)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(bool)
+	fc.Result = res
+	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Mutation_sendCodeByPhone(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Mutation_sendCodeByPhone_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		directive0 := func(rctx context.Context) (interface{}, error) {
+			ctx = rctx // use context from middleware stack in children
+			return ec.resolvers.Mutation().SendCodeByPhone(rctx, args["phone"].(string))
+		}
+		directive1 := func(ctx context.Context) (interface{}, error) {
+			if ec.directives.Authenticated == nil {
+				return nil, errors.New("directive authenticated is not implemented")
+			}
+			return ec.directives.Authenticated(ctx, nil, directive0)
+		}
+
+		tmp, err := directive1(rctx)
+		if err != nil {
+			return nil, graphql.ErrorOnPath(ctx, err)
+		}
+		if tmp == nil {
+			return nil, nil
+		}
+		if data, ok := tmp.(bool); ok {
+			return data, nil
+		}
+		return nil, fmt.Errorf(`unexpected type %T from directive, should be bool`, tmp)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(bool)
+	fc.Result = res
+	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Mutation_savePhoneNumber(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Mutation_savePhoneNumber_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		directive0 := func(rctx context.Context) (interface{}, error) {
+			ctx = rctx // use context from middleware stack in children
+			return ec.resolvers.Mutation().SavePhoneNumber(rctx, args["phone"].(string), args["code"].(string))
+		}
+		directive1 := func(ctx context.Context) (interface{}, error) {
+			if ec.directives.Authenticated == nil {
+				return nil, errors.New("directive authenticated is not implemented")
+			}
+			return ec.directives.Authenticated(ctx, nil, directive0)
+		}
+
+		tmp, err := directive1(rctx)
+		if err != nil {
+			return nil, graphql.ErrorOnPath(ctx, err)
+		}
+		if tmp == nil {
+			return nil, nil
+		}
+		if data, ok := tmp.(bool); ok {
+			return data, nil
+		}
+		return nil, fmt.Errorf(`unexpected type %T from directive, should be bool`, tmp)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -1971,6 +2184,16 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 			}
 		case "saveUserInfo":
 			out.Values[i] = ec._Mutation_saveUserInfo(ctx, field)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "sendCodeByPhone":
+			out.Values[i] = ec._Mutation_sendCodeByPhone(ctx, field)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "savePhoneNumber":
+			out.Values[i] = ec._Mutation_savePhoneNumber(ctx, field)
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}

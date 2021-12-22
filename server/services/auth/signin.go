@@ -19,7 +19,9 @@ import (
 
 type Auth interface {
 	SendCodeByEmail(provider *providers.Provider, email string) error
+	SendCodeByPhone(provider *providers.Provider, userXid, phone string) error
 	SignInWithCode(provider *providers.Provider, email, code string) (string, error)
+	SavePhone(provider *providers.Provider, userXid, phone, code string) error
 }
 
 type AuthImpl struct {
@@ -51,6 +53,12 @@ func (a *AuthImpl) SendCodeByEmail(provider *providers.Provider, email string) e
 
 	encoded := encode(code)
 
+	err = db.Model(&dbmodel.SessionOtpCode{}).Where("user_id = ?", user.ID).Delete(&dbmodel.SessionOtpCode{}).Error
+
+	if err != nil {
+		return err
+	}
+
 	err = db.Save(&dbmodel.SessionOtpCode{
 		Code: encoded,
 		UserID: user.ID,
@@ -61,6 +69,42 @@ func (a *AuthImpl) SendCodeByEmail(provider *providers.Provider, email string) e
 	}
 
 	err = provider.Email().SendSignInCode(email, code)
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (a *AuthImpl) SendCodeByPhone(provider *providers.Provider, userXid, phone string) error {
+	db := provider.GormClient()
+	var user dbmodel.User
+	err := db.Model(&dbmodel.User{}).Where("xid = ?", userXid).First(&user).Error
+	if errors.Is(err, gorm.ErrRecordNotFound) {
+		return fmt.Errorf("user not found")
+	}
+
+	code := generateCode(6)
+
+	encoded := encode(code)
+
+	err = db.Model(&dbmodel.SessionOtpCode{}).Where("user_id = ?", user.ID).Delete(&dbmodel.SessionOtpCode{}).Error
+
+	if err != nil {
+		return err
+	}
+
+	err = db.Save(&dbmodel.SessionOtpCode{
+		Code: encoded,
+		UserID: user.ID,
+	}).Error
+
+	if err != nil {
+		return err
+	}
+
+	err = provider.SMS().SendSMSCode(phone, code)
 
 	if err != nil {
 		return err
@@ -116,6 +160,38 @@ func (a *AuthImpl) SignInWithCode(provider *providers.Provider, email, code stri
 
 	return accessToken, nil
 }
+
+
+func (a *AuthImpl) SavePhone(provider *providers.Provider, userXid, phone, code string) error {
+	db := provider.GormClient()
+	var user dbmodel.User
+	err := db.Model(&dbmodel.User{}).Where("xid = ?", userXid).First(&user).Error
+
+	if err != nil {
+		return err
+	}
+
+	isValid, err := a.verifySessionCode(provider, user, code)
+
+	if err != nil {
+		return err
+	}
+
+	if !isValid {
+		return fmt.Errorf("invalid code")
+	}
+
+	user.Phone = phone
+
+	err = db.Save(&user).Error
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
 
 
 var table = [...]byte{'1', '2', '3', '4', '5', '6', '7', '8', '9', '0'}
