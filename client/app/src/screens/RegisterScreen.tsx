@@ -1,10 +1,12 @@
-import { useContext, useState, useCallback, useEffect } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import PrimaryButton from 'components/PrimaryButton';
+import { StackActions } from '@react-navigation/native';
 import Spacer from 'components/Spacer';
 import React from 'react';
 import { SafeAreaView, StyleSheet, View } from 'react-native';
 import { Input, Text, Image } from 'react-native-elements';
 import Loading from 'components/Loading';
+import { useSaveUserMutation } from '../api/graphql/generated/graphql';
 
 const RegisterScreen = ({ navigation }) => {
   const [name, setName] = useState('');
@@ -12,9 +14,25 @@ const RegisterScreen = ({ navigation }) => {
   const [loading, setLoading] = useState(false);
   const [disable, setDisable] = useState(true);
 
+  const [saveUserInfo, { data }] = useSaveUserMutation({
+    variables: { name, identifierNumber },
+  });
+
   const onSubmit = useCallback(() => {
-    console.log('hello register');
-  }, []);
+    saveUserInfo();
+  }, [saveUserInfo]);
+
+  useEffect(() => {
+    if (data?.saveUserInfo === true) {
+      navigation.dispatch(StackActions.replace('LoadingOnboarding'));
+    }
+  }, [data, navigation]);
+
+  useEffect(() => {
+    if (name && identifierNumber) {
+      setDisable(false);
+    }
+  }, [name, identifierNumber]);
 
   if (loading) {
     return <Loading />;
