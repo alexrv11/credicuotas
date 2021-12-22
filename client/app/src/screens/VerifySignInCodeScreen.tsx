@@ -8,6 +8,7 @@ import Spacer from 'components/Spacer';
 import { useSignInWithCodeMutation } from 'api/graphql/generated/graphql';
 import Loading from 'components/Loading';
 import { useState } from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const VerifySignInCodeScreen = ({ route, navigation }) => {
   const { userEmail, setError, setToken } = useAuth();
@@ -32,11 +33,15 @@ const VerifySignInCodeScreen = ({ route, navigation }) => {
   }, [error, setError]);
 
   useEffect(() => {
+    const saveToken = async (token: string) => {
+      await AsyncStorage.setItem('token', token);
+    };
+
     const token = data?.signInWithCode?.accessToken;
     if (token) {
       setLoading(false);
-      setToken(token);
-      navigation.dispatch(StackActions.replace('MainFlow'));
+      saveToken(token);
+      navigation.dispatch(StackActions.replace('OnboardingFlow'));
     }
 
     if (apiLoading) {
