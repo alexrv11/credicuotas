@@ -7,6 +7,7 @@ import { SafeAreaView, StyleSheet, View } from 'react-native';
 import { Input, Text, Image, Avatar } from 'react-native-elements';
 import Loading from 'components/Loading';
 import { useAuth } from '../context/AuthContext';
+import { useSendPhoneCodeMutation } from '../api/graphql/generated/graphql';
 
 const RegisterPhoneScreen = ({ navigation }) => {
   const [phone, setPhone] = useState('');
@@ -14,13 +15,18 @@ const RegisterPhoneScreen = ({ navigation }) => {
   const [loading, setLoading] = useState(false);
   const [disable, setDisable] = useState(true);
 
+  const [sendCodeByPhone] = useSendPhoneCodeMutation({
+    variables: { phone },
+  });
+
   const onSubmit = useCallback(() => {
     setUserPhone(phone);
-    navigation.dispatch(StackActions.replace('VerifyPhoneCode'));
-  }, [navigation, phone, setUserPhone]);
+    sendCodeByPhone();
+    navigation.navigate('VerifyPhoneCode');
+  }, [navigation, phone, setUserPhone, sendCodeByPhone]);
 
   useEffect(() => {
-    if (phone.length === 8) {
+    if (phone.length >= 8) {
       setDisable(false);
       return;
     }

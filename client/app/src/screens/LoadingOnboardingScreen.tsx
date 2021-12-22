@@ -1,11 +1,17 @@
 import Loading from 'components/Loading';
 import { StackActions } from '@react-navigation/native';
 import React from 'react';
-import { useOnboardingQuery } from '../api/graphql/generated/graphql';
+import { useOnboardingLazyQuery } from '../api/graphql/generated/graphql';
 import { useEffect } from 'react';
 
 const LoadingOnboardingScreen = ({ navigation }) => {
-  const {data, loading } = useOnboardingQuery();
+  const [onBoardingQuery, { data, loading }] = useOnboardingLazyQuery({
+    fetchPolicy: "no-cache"
+  });
+
+  useEffect(() => {
+    setTimeout(onBoardingQuery, 2000);
+  }, [onBoardingQuery]);
 
   useEffect(() => {
     console.log('onboarding status', data, loading);

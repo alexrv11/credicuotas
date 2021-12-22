@@ -45,7 +45,7 @@ const OnboardingStack = createNativeStackNavigator();
 
 const OnboardingFlow = () => {
   return (
-    <OnboardingStack.Navigator initialRouteName="PhoneRegister">
+    <OnboardingStack.Navigator initialRouteName="LoadingOnboarding">
       <OnboardingStack.Screen
         name="LoadingOnboarding"
         component={LoadingOnboardingScreen}
@@ -155,7 +155,7 @@ const MainNavigator = () => {
   return (
     <NavigationContainer>
       <AppStack.Navigator
-        initialRouteName="OnboardingFlow"
+        initialRouteName="SignInFlow"
         screenOptions={{ headerShown: false }}>
         <AppStack.Screen name="SignInFlow" component={SignInFlow} />
         <AppStack.Screen name="MainFlow" component={MainFlow} />

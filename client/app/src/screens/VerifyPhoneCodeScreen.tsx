@@ -5,12 +5,38 @@ import { SafeAreaView, StyleSheet, View } from 'react-native';
 import { Avatar, Text } from 'react-native-elements';
 import Spacer from 'components/Spacer';
 import Loading from 'components/Loading';
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import { useAuth } from 'context/AuthContext';
+import { useSavePhoneMutation } from '../api/graphql/generated/graphql';
 
 const VerifyPhoneCodeScreen = ({ route, navigation }) => {
   const [loading, setLoading] = useState(false);
+  const [code, setCode] = useState('');
   const { userPhone } = useAuth();
+  const [error, setError] = useState('');
+
+  const [savePhone, { data }] = useSavePhoneMutation({
+    variables: { phone: userPhone, code },
+  });
+
+  const submit = useCallback(
+    async (value: string) => {
+      try {
+        savePhone({
+          variables: { phone: userPhone, code: value },
+        });
+      } catch (err) {
+        setError(err);
+      }
+    },
+    [savePhone, userPhone],
+  );
+
+  useEffect(() => {
+    if (data?.savePhoneNumber === true) {
+      navigation.dispatch(StackActions.replace('LoadingOnboarding'));
+    }
+  }, [data, navigation]);
 
   if (loading) {
     return <Loading />;
@@ -32,10 +58,11 @@ const VerifyPhoneCodeScreen = ({ route, navigation }) => {
         </Text>
         <Text style={styles.textPhone}>{userPhone}</Text>
       </View>
+      <Text>{error}</Text>
       <Pincode
         codeSize={6}
-        onComplete={(code: string) => {
-          console.log(code);
+        onComplete={(value: string) => {
+          submit(value);
         }}
       />
     </SafeAreaView>
