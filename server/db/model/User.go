@@ -11,6 +11,7 @@ type User struct {
 	Email string
 	Name string
 	Phone string
+	IdentifierNumber string
 }
 
 func (u *User) BeforeCreate(tx *gorm.DB) error {
