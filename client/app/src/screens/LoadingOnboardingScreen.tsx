@@ -14,6 +14,11 @@ const LoadingOnboardingScreen = ({ navigation }) => {
       return;
     }
 
+    if (data?.onboarding === 'PENDING_PHONE_NUMBER') {
+      navigation.dispatch(StackActions.replace('PhoneRegister'));
+      return;
+    }
+
     if (data?.onboarding === 'COMPLETE') {
       navigation.dispatch(StackActions.replace('MainFlow'));
       return;

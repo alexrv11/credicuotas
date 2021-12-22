@@ -9,6 +9,8 @@ export interface Auth {
   setUserEmail: Dispatch<SetStateAction<undefined>>;
   error?: any;
   setError: Dispatch<SetStateAction<undefined>>;
+  setUserPhone: Dispatch<SetStateAction<undefined>>;
+  userPhone?: string;
 }
 
 const AuthContext = React.createContext({} as Auth);
@@ -22,16 +24,19 @@ function AuthProvider({ children }: React.PropsWithChildren<any>) {
   const [token, setToken] = React.useState();
   const [userId, setUserId] = React.useState();
   const [userEmail, setUserEmail] = React.useState();
+  const [userPhone, setUserPhone] = React.useState();
 
   const values = {
     error,
     token,
     userId,
     userEmail,
+    userPhone,
     setError,
     setToken,
     setUserId,
     setUserEmail,
+    setUserPhone,
   };
 
   return (

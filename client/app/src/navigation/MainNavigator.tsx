@@ -15,6 +15,8 @@ import RegisterScreen from '../screens/RegisterScreen';
 import InstructionUploadCIScreen from '../screens/InstructionUploadCIScreen';
 import CameraCaptureScreen from '../screens/CameraScan';
 import LoadingOnboardingScreen from 'screens/LoadingOnboardingScreen';
+import RegisterPhoneScreen from 'screens/RegisterPhoneScreen';
+import VerifyPhoneCodeScreen from 'screens/VerifyPhoneCodeScreen';
 
 const AppStack = createNativeStackNavigator();
 
@@ -43,7 +45,7 @@ const OnboardingStack = createNativeStackNavigator();
 
 const OnboardingFlow = () => {
   return (
-    <OnboardingStack.Navigator initialRouteName="LoadingOnboarding">
+    <OnboardingStack.Navigator initialRouteName="PhoneRegister">
       <OnboardingStack.Screen
         name="LoadingOnboarding"
         component={LoadingOnboardingScreen}
@@ -54,6 +56,20 @@ const OnboardingFlow = () => {
       <OnboardingStack.Screen
         name="PersonalRegister"
         component={RegisterScreen}
+        options={{
+          title: '',
+        }}
+      />
+      <OnboardingStack.Screen
+        name="PhoneRegister"
+        component={RegisterPhoneScreen}
+        options={{
+          title: '',
+        }}
+      />
+      <OnboardingStack.Screen
+        name="VerifyPhoneCode"
+        component={VerifyPhoneCodeScreen}
         options={{
           title: '',
         }}
@@ -139,7 +155,7 @@ const MainNavigator = () => {
   return (
     <NavigationContainer>
       <AppStack.Navigator
-        initialRouteName="SignInFlow"
+        initialRouteName="OnboardingFlow"
         screenOptions={{ headerShown: false }}>
         <AppStack.Screen name="SignInFlow" component={SignInFlow} />
         <AppStack.Screen name="MainFlow" component={MainFlow} />

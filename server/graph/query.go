@@ -27,5 +27,9 @@ func (query *queryResolver) Onboarding(ctx context.Context) (model.OnboardingSta
 		return model.OnboardingStatusPendingPersonalData, nil
 	}
 
+	if len(user.Phone) == 0 {
+		return model.OnboardingStatusPendingPhoneNumber, nil
+	}
+
 	return model.OnboardingStatusComplete, nil
 }
