@@ -13,6 +13,7 @@ import ProfileScreen from '../screens/ProfileScreen';
 import VerifySignInCodeScreen from 'screens/VerifySignInCodeScreen';
 import RegisterScreen from '../screens/RegisterScreen';
 import InstructionUploadCIScreen from '../screens/InstructionUploadCIScreen';
+import CameraCaptureScreen from '../screens/CameraScan';
 
 const AppStack = createNativeStackNavigator();
 
@@ -41,7 +42,7 @@ const OnboardingStack = createNativeStackNavigator();
 
 const OnboardingFlow = () => {
   return (
-    <OnboardingStack.Navigator initialRouteName="InstructionCI">
+    <OnboardingStack.Navigator initialRouteName="CameraScan">
       <OnboardingStack.Screen
         name="PersonalRegister"
         component={RegisterScreen}
@@ -52,6 +53,13 @@ const OnboardingFlow = () => {
       <OnboardingStack.Screen
         name="InstructionCI"
         component={InstructionUploadCIScreen}
+        options={{
+          title: '',
+        }}
+      />
+      <OnboardingStack.Screen
+        name="CameraScan"
+        component={CameraCaptureScreen}
         options={{
           title: '',
         }}
