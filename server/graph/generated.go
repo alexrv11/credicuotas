@@ -51,6 +51,7 @@ type ComplexityRoot struct {
 	}
 
 	Mutation struct {
+		SaveUserInfo    func(childComplexity int, name string, identifier string) int
 		SendCodeByEmail func(childComplexity int, email string) int
 		SignInWithCode  func(childComplexity int, email string, code string) int
 	}
@@ -69,6 +70,7 @@ type ComplexityRoot struct {
 type MutationResolver interface {
 	SendCodeByEmail(ctx context.Context, email string) (bool, error)
 	SignInWithCode(ctx context.Context, email string, code string) (*model.Credential, error)
+	SaveUserInfo(ctx context.Context, name string, identifier string) (bool, error)
 }
 type QueryResolver interface {
 	GetUser(ctx context.Context, email string) (string, error)
@@ -96,6 +98,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Credential.AccessToken(childComplexity), true
+
+	case "Mutation.saveUserInfo":
+		if e.complexity.Mutation.SaveUserInfo == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_saveUserInfo_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.SaveUserInfo(childComplexity, args["name"].(string), args["identifier"].(string)), true
 
 	case "Mutation.sendCodeByEmail":
 		if e.complexity.Mutation.SendCodeByEmail == nil {
@@ -248,6 +262,7 @@ type Query  {
 type Mutation {
   sendCodeByEmail(email: String!): Boolean!
   signInWithCode(email: String!, code: String!): Credential!
+  saveUserInfo(name: String!, identifier: String!): Boolean!
 }
 
 
@@ -262,6 +277,30 @@ var parsedSchema = gqlparser.MustLoadSchema(sources...)
 // endregion ************************** generated!.gotpl **************************
 
 // region    ***************************** args.gotpl *****************************
+
+func (ec *executionContext) field_Mutation_saveUserInfo_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 string
+	if tmp, ok := rawArgs["name"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("name"))
+		arg0, err = ec.unmarshalNString2string(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["name"] = arg0
+	var arg1 string
+	if tmp, ok := rawArgs["identifier"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("identifier"))
+		arg1, err = ec.unmarshalNString2string(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["identifier"] = arg1
+	return args, nil
+}
 
 func (ec *executionContext) field_Mutation_sendCodeByEmail_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
@@ -487,6 +526,48 @@ func (ec *executionContext) _Mutation_signInWithCode(ctx context.Context, field 
 	res := resTmp.(*model.Credential)
 	fc.Result = res
 	return ec.marshalNCredential2ᚖgithubᚗcomᚋalexrv11ᚋcredicuotasᚋserverᚋmodelᚐCredential(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Mutation_saveUserInfo(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Mutation_saveUserInfo_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().SaveUserInfo(rctx, args["name"].(string), args["identifier"].(string))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(bool)
+	fc.Result = res
+	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Query_getUser(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -1885,6 +1966,11 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 			}
 		case "signInWithCode":
 			out.Values[i] = ec._Mutation_signInWithCode(ctx, field)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "saveUserInfo":
+			out.Values[i] = ec._Mutation_saveUserInfo(ctx, field)
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}

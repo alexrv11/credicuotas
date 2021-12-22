@@ -28,6 +28,7 @@ type Query  {
 type Mutation {
   sendCodeByEmail(email: String!): Boolean!
   signInWithCode(email: String!, code: String!): Credential!
+  saveUserInfo(name: String!, identifier: String!): Boolean!
 }
 
 

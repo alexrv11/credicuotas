@@ -2,6 +2,7 @@ package graph
 
 import (
 	"context"
+	"github.com/alexrv11/credicuotas/server/middlewares"
 	"github.com/alexrv11/credicuotas/server/model"
 )
 
@@ -32,4 +33,16 @@ func (r *mutationResolver) SignInWithCode(ctx context.Context, email string, cod
 	return &model.Credential{
 		AccessToken: token,
 	}, nil
+}
+
+func (r *mutationResolver) SaveUserInfo(ctx context.Context, name, identifierNumber string) (bool, error)  {
+	userXid, _ := ctx.Value(middlewares.UserInfoKey).(string)
+
+	err := r.core.User.SaveUserInfo(r.provider, userXid, name, identifierNumber)
+
+	if err != nil {
+		return false, err
+	}
+
+	return true, nil
 }
