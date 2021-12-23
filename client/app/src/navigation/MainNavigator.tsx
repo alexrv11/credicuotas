@@ -109,6 +109,7 @@ const MainFlow = () => {
             <Icon
               name="home"
               size={size || 32}
+              color={focused ? '#050753' : '#070D99'}
               style={{
                 color: focused ? '#032924' : '#000000',
               }}
@@ -124,8 +125,9 @@ const MainFlow = () => {
             <Icon
               name="payment"
               size={size || 32}
+              color={focused ? '#050753' : '#070D99'}
               style={{
-                color: focused ? '#032924' : '#000000',
+                color: focused ? '#050753': '#070D99',
               }}
             />
           ),
@@ -140,6 +142,7 @@ const MainFlow = () => {
             <Icon
               name="account-circle"
               size={size || 32}
+              color={focused ? '#050753' : '#070D99'}
               style={{
                 color: focused ? '#032924' : '#000000',
               }}
@@ -155,7 +158,7 @@ const MainNavigator = () => {
   return (
     <NavigationContainer>
       <AppStack.Navigator
-        initialRouteName="SignInFlow"
+        initialRouteName="MainFlow"
         screenOptions={{ headerShown: false }}>
         <AppStack.Screen name="SignInFlow" component={SignInFlow} />
         <AppStack.Screen name="MainFlow" component={MainFlow} />
