@@ -17,6 +17,8 @@ import CameraCaptureScreen from '../screens/CameraScan';
 import LoadingOnboardingScreen from 'screens/LoadingOnboardingScreen';
 import RegisterPhoneScreen from 'screens/RegisterPhoneScreen';
 import VerifyPhoneCodeScreen from 'screens/VerifyPhoneCodeScreen';
+import LoanAmountScreen from '../screens/loan/LoanAmountScreen';
+import IncomeLoanScreen from '../screens/loan/IncomeLoanScreen';
 
 const AppStack = createNativeStackNavigator();
 
@@ -38,6 +40,25 @@ const SignInFlow = () => {
         }}
       />
     </SignInStack.Navigator>
+  );
+};
+
+const RegisterLoanStack = createNativeStackNavigator();
+
+const RegisterLoanFlow = () => {
+  return (
+    <RegisterLoanStack.Navigator initialRouteName="LoanAmount">
+      <RegisterLoanStack.Screen
+        name="LoanAmount"
+        component={LoanAmountScreen}
+        options={{ headerShown: false }}
+      />
+      <RegisterLoanStack.Screen
+        name="LoanIncomeType"
+        component={IncomeLoanScreen}
+        options={{ headerShown: false }}
+      />
+    </RegisterLoanStack.Navigator>
   );
 };
 
@@ -163,6 +184,7 @@ const MainNavigator = () => {
         <AppStack.Screen name="SignInFlow" component={SignInFlow} />
         <AppStack.Screen name="MainFlow" component={MainFlow} />
         <AppStack.Screen name="OnboardingFlow" component={OnboardingFlow} />
+        <AppStack.Screen name="RegisterLoanFlow" component={RegisterLoanFlow} />
       </AppStack.Navigator>
     </NavigationContainer>
   );
