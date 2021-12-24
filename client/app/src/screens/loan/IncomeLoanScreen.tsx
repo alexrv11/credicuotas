@@ -3,14 +3,17 @@ import Spacer from 'components/Spacer';
 import React from 'react';
 import { SafeAreaView, StyleSheet, View, TouchableOpacity } from 'react-native';
 import { Text, Icon } from 'react-native-elements';
+import { useLoan } from 'context/LoanContext';
 
 const IncomeLoanScreen = ({ navigation }) => {
+  const { amount, totalInstallments } = useLoan();
 
-  const onSubmit = useCallback((incomeType) => {
-    console.log('selected', incomeType);
-  }, []);
-
-
+  const onSubmit = useCallback(
+    (incomeType: String) => {
+      console.log('selected', incomeType, amount, totalInstallments);
+    },
+    [amount, totalInstallments],
+  );
 
   return (
     <SafeAreaView style={styles.container}>
@@ -71,7 +74,7 @@ const styles = StyleSheet.create({
   },
   incomeContainer: {
     height: 70,
-    marginTop: 15 ,
+    marginTop: 15,
     backgroundColor: '#bcbde5',
     color: '#0e0950',
     alignItems: 'center',

@@ -13,12 +13,15 @@ import MainNavigator from './navigation';
 
 import GraphqlProvider from 'api/graphql/apollo-provider';
 import AuthProvider from 'context/AuthContext';
+import LoanProvider from 'context/LoanContext';
 
 const App = () => {
   return (
     <GraphqlProvider>
       <AuthProvider>
-        <MainNavigator />
+        <LoanProvider>
+          <MainNavigator />
+        </LoanProvider>
       </AuthProvider>
     </GraphqlProvider>
   );

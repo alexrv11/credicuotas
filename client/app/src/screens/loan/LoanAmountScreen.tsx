@@ -6,42 +6,52 @@ import React from 'react';
 import { SafeAreaView, StyleSheet, View } from 'react-native';
 import { Input, Text, Image } from 'react-native-elements';
 import { ScrollView } from 'react-native-gesture-handler';
+import { useLoan } from 'context/LoanContext';
 
 const LoanAmountScreen = ({ navigation }) => {
-  const [amount, setAmount] = useState('');
+  const { setAmount, setTotalInstallments } = useLoan();
+  const [loanAmount, setLoanAmount] = useState('');
   const [errorAmount, setErrorAmount] = useState('');
-  const [totalInstallments, setTotalInstallments] = useState('');
+  const [loanTotalInstallments, setLoanTotalInstallments] = useState('');
   const [errorTotalInstallments, setErrorTotalInstallments] = useState('');
   const [disable, setDisable] = useState(true);
 
   const onSubmit = useCallback(() => {
-    console.log('info', amount, totalInstallments);
-  }, []);
+    setAmount(loanAmount);
+    setTotalInstallments(loanTotalInstallments);
+    navigation.dispatch(StackActions.replace('LoanIncomeType'));
+  }, [
+    loanAmount,
+    loanTotalInstallments,
+    setAmount,
+    setTotalInstallments,
+    navigation,
+  ]);
 
   useEffect(() => {
-    if (amount) {
-      const amountNumber = Number(amount);
+    if (loanAmount) {
+      const amountNumber = Number(loanAmount);
       if (amountNumber < 500 || amountNumber > 14000) {
         setErrorAmount('El monto de ser de 500 hasta 14000bs');
         setDisable(true);
         return;
       }
-      setErrorAmount("");
+      setErrorAmount('');
     }
-    if (totalInstallments) {
-      const totalNumber = Number(totalInstallments);
+    if (loanTotalInstallments) {
+      const totalNumber = Number(loanTotalInstallments);
       if (totalNumber < 4 || totalNumber > 48) {
-        setErrorTotalInstallments('El plazo de ser de 4 hasta 48 semanas');
+        setErrorTotalInstallments('El plazo debe ser de 4 hasta 48 semanas');
         setDisable(true);
         return;
       }
       setErrorTotalInstallments('');
     }
 
-    if (amount && totalInstallments) {
+    if (loanAmount && loanTotalInstallments) {
       setDisable(false);
     }
-  }, [amount, totalInstallments]);
+  }, [loanAmount, loanTotalInstallments]);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -56,8 +66,8 @@ const LoanAmountScreen = ({ navigation }) => {
             name: 'account-balance-wallet',
             color: '#070D99',
           }}
-          value={amount}
-          onChangeText={setAmount}
+          value={loanAmount}
+          onChangeText={setLoanAmount}
           keyboardType="number-pad"
         />
         <Text style={styles.inputError}>{errorAmount}</Text>
@@ -68,8 +78,8 @@ const LoanAmountScreen = ({ navigation }) => {
           autoCorrect={false}
           underlineColorAndroid="transparent"
           leftIcon={{ type: 'material', name: 'tag', color: '#070D99' }}
-          value={totalInstallments}
-          onChangeText={setTotalInstallments}
+          value={loanTotalInstallments}
+          onChangeText={setLoanTotalInstallments}
           keyboardType="number-pad"
         />
         <Text style={styles.inputError}>{errorTotalInstallments}</Text>
@@ -137,7 +147,7 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     width: '100%',
-  }
+  },
 });
 
 export default LoanAmountScreen;
