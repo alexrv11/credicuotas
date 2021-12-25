@@ -57,3 +57,5 @@ models:
       - github.com/99designs/gqlgen/graphql.Int32
   Credential:
       model: github.com/alexrv11/credicuotas/server/model.Credential
+  Loan:
+    model: github.com/alexrv11/credicuotas/server/db/model.Loan

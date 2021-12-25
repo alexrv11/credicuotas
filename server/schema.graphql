@@ -29,6 +29,7 @@ enum OnboardingStatus {
 type Query  {
   getUser(email: String!): String! @authenticated
   onboarding: OnboardingStatus! @authenticated
+  getLoans: [Loan!]! @authenticated
 }
 
 type Mutation {
@@ -40,7 +41,13 @@ type Mutation {
   saveLoan(amount: Int!, totalInstallments: Int!, incomeType: IncomeType!): Boolean! @authenticated
 }
 
-
+type Loan {
+  id: String!
+  amount: Int!
+  totalInstallments: Int!
+  incomeType: IncomeType!
+  status: String!
+}
 
 type User {
   id: String

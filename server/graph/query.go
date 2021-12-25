@@ -2,13 +2,14 @@ package graph
 
 import (
 	"context"
+	model2 "github.com/alexrv11/credicuotas/server/db/model"
 	"github.com/alexrv11/credicuotas/server/graph/model"
 	"github.com/alexrv11/credicuotas/server/middlewares"
 )
 
 type queryResolver struct{ *Resolver }
 
-func (query queryResolver) GetUser(ctx context.Context, email string) (string, error)  {
+func (query queryResolver) GetUser(ctx context.Context, email string) (string, error) {
 	return "hello world", nil
 }
 
@@ -17,7 +18,7 @@ func (query *queryResolver) Onboarding(ctx context.Context) (model.OnboardingSta
 	userXid, _ := ctx.Value(middlewares.UserInfoKey).(string)
 
 	provider := query.provider
-	user, err :=  query.core.User.GetUser(provider, userXid)
+	user, err := query.core.User.GetUser(provider, userXid)
 
 	if err != nil {
 		return model.OnboardingStatusPendingPersonalData, err
@@ -32,4 +33,10 @@ func (query *queryResolver) Onboarding(ctx context.Context) (model.OnboardingSta
 	}
 
 	return model.OnboardingStatusComplete, nil
+}
+
+func (query *queryResolver) GetLoans(ctx context.Context) ([]*model2.Loan, error) {
+	userXid, _ := ctx.Value(middlewares.UserInfoKey).(string)
+
+	return query.core.Loan.GetLoans(query.provider, userXid)
 }

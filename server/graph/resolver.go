@@ -1,6 +1,7 @@
 package graph
 
 import (
+	"github.com/alexrv11/credicuotas/server/graph/resolvers"
 	"github.com/alexrv11/credicuotas/server/providers"
 	"github.com/alexrv11/credicuotas/server/services"
 )
@@ -10,9 +11,9 @@ import (
 // It serves as dependency injection for your app, add any dependencies you require here.
 //go:generate go run github.com/99designs/gqlgen
 
-type Resolver struct{
+type Resolver struct {
 	provider *providers.Provider
-	core *services.Core
+	core     *services.Core
 }
 
 func NewResolver(provider *providers.Provider, core *services.Core) *Resolver {
@@ -25,4 +26,8 @@ func (r *Resolver) Mutation() MutationResolver {
 
 func (r *Resolver) Query() QueryResolver {
 	return &queryResolver{r}
+}
+
+func (r *Resolver) Loan() LoanResolver {
+	return &resolvers.Loan{}
 }
