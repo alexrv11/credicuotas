@@ -36,7 +36,6 @@ func Configure() {
 	viper.SetConfigType("json")
 
 	env := Env()
-	applyConfig("default")
 	applyConfig(env)
 	RootAppLogger().Infof("Gohook using ENV '%s'", env)
 }
