@@ -2,6 +2,7 @@ package graph
 
 import (
 	"context"
+	modelgen "github.com/alexrv11/credicuotas/server/graph/model"
 	"github.com/alexrv11/credicuotas/server/middlewares"
 	"github.com/alexrv11/credicuotas/server/model"
 )
@@ -62,6 +63,18 @@ func (r *mutationResolver) SaveUserInfo(ctx context.Context, name, identifierNum
 func (r *mutationResolver) SavePhoneNumber(ctx context.Context, phone string, code string) (bool, error) {
 	userXid, _ := ctx.Value(middlewares.UserInfoKey).(string)
 	err := r.core.Auth.SavePhone(r.provider, userXid, phone, code)
+
+	if err != nil {
+		return false, err
+	}
+
+	return true, nil
+}
+
+func (r *mutationResolver) SaveLoan(ctx context.Context, amount, totalInstallments int, incomeType modelgen.IncomeType) (bool, error) {
+	userXid, _ := ctx.Value(middlewares.UserInfoKey).(string)
+
+	err := r.core.Loan.Save(r.provider, userXid, amount, totalInstallments, incomeType)
 
 	if err != nil {
 		return false, err

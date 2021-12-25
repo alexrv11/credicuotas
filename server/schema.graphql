@@ -9,6 +9,12 @@ type Credential {
   accessToken: String!
 }
 
+enum IncomeType {
+  OWN_BUSINESS
+  ONW_EMPLOYEE
+  PRIVATE_COMPANY_EMPLOYEE
+  PUBLIC_EMPLOYEE
+}
 
 directive @authenticated on | OBJECT | FIELD_DEFINITION | ENUM
 
@@ -31,6 +37,7 @@ type Mutation {
   saveUserInfo(name: String!, identifier: String!): Boolean! @authenticated
   sendCodeByPhone(phone: String!): Boolean! @authenticated
   savePhoneNumber(phone: String!, code: String!): Boolean! @authenticated
+  saveLoan(amount: Int!, totalInstallments: Int!, incomeType: IncomeType!): Boolean! @authenticated
 }
 
 

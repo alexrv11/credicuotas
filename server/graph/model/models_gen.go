@@ -13,6 +13,51 @@ type User struct {
 	Name *string `json:"name"`
 }
 
+type IncomeType string
+
+const (
+	IncomeTypeOwnBusiness            IncomeType = "OWN_BUSINESS"
+	IncomeTypeOnwEmployee            IncomeType = "ONW_EMPLOYEE"
+	IncomeTypePrivateCompanyEmployee IncomeType = "PRIVATE_COMPANY_EMPLOYEE"
+	IncomeTypePublicEmployee         IncomeType = "PUBLIC_EMPLOYEE"
+)
+
+var AllIncomeType = []IncomeType{
+	IncomeTypeOwnBusiness,
+	IncomeTypeOnwEmployee,
+	IncomeTypePrivateCompanyEmployee,
+	IncomeTypePublicEmployee,
+}
+
+func (e IncomeType) IsValid() bool {
+	switch e {
+	case IncomeTypeOwnBusiness, IncomeTypeOnwEmployee, IncomeTypePrivateCompanyEmployee, IncomeTypePublicEmployee:
+		return true
+	}
+	return false
+}
+
+func (e IncomeType) String() string {
+	return string(e)
+}
+
+func (e *IncomeType) UnmarshalGQL(v interface{}) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("enums must be strings")
+	}
+
+	*e = IncomeType(str)
+	if !e.IsValid() {
+		return fmt.Errorf("%s is not a valid IncomeType", str)
+	}
+	return nil
+}
+
+func (e IncomeType) MarshalGQL(w io.Writer) {
+	fmt.Fprint(w, strconv.Quote(e.String()))
+}
+
 type OnboardingStatus string
 
 const (

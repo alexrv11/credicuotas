@@ -13,8 +13,8 @@ import (
 
 	"github.com/99designs/gqlgen/graphql"
 	"github.com/99designs/gqlgen/graphql/introspection"
-	model1 "github.com/alexrv11/credicuotas/server/graph/model"
-	"github.com/alexrv11/credicuotas/server/model"
+	"github.com/alexrv11/credicuotas/server/graph/model"
+	model1 "github.com/alexrv11/credicuotas/server/model"
 	gqlparser "github.com/vektah/gqlparser/v2"
 	"github.com/vektah/gqlparser/v2/ast"
 )
@@ -51,6 +51,7 @@ type ComplexityRoot struct {
 	}
 
 	Mutation struct {
+		SaveLoan        func(childComplexity int, amount int, totalInstallments int, incomeType model.IncomeType) int
 		SavePhoneNumber func(childComplexity int, phone string, code string) int
 		SaveUserInfo    func(childComplexity int, name string, identifier string) int
 		SendCodeByEmail func(childComplexity int, email string) int
@@ -71,14 +72,15 @@ type ComplexityRoot struct {
 
 type MutationResolver interface {
 	SendCodeByEmail(ctx context.Context, email string) (bool, error)
-	SignInWithCode(ctx context.Context, email string, code string) (*model.Credential, error)
+	SignInWithCode(ctx context.Context, email string, code string) (*model1.Credential, error)
 	SaveUserInfo(ctx context.Context, name string, identifier string) (bool, error)
 	SendCodeByPhone(ctx context.Context, phone string) (bool, error)
 	SavePhoneNumber(ctx context.Context, phone string, code string) (bool, error)
+	SaveLoan(ctx context.Context, amount int, totalInstallments int, incomeType model.IncomeType) (bool, error)
 }
 type QueryResolver interface {
 	GetUser(ctx context.Context, email string) (string, error)
-	Onboarding(ctx context.Context) (model1.OnboardingStatus, error)
+	Onboarding(ctx context.Context) (model.OnboardingStatus, error)
 }
 
 type executableSchema struct {
@@ -102,6 +104,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Credential.AccessToken(childComplexity), true
+
+	case "Mutation.saveLoan":
+		if e.complexity.Mutation.SaveLoan == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_saveLoan_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.SaveLoan(childComplexity, args["amount"].(int), args["totalInstallments"].(int), args["incomeType"].(model.IncomeType)), true
 
 	case "Mutation.savePhoneNumber":
 		if e.complexity.Mutation.SavePhoneNumber == nil {
@@ -271,6 +285,12 @@ type Credential {
   accessToken: String!
 }
 
+enum IncomeType {
+  OWN_BUSINESS
+  ONW_EMPLOYEE
+  PRIVATE_COMPANY_EMPLOYEE
+  PUBLIC_EMPLOYEE
+}
 
 directive @authenticated on | OBJECT | FIELD_DEFINITION | ENUM
 
@@ -293,6 +313,7 @@ type Mutation {
   saveUserInfo(name: String!, identifier: String!): Boolean! @authenticated
   sendCodeByPhone(phone: String!): Boolean! @authenticated
   savePhoneNumber(phone: String!, code: String!): Boolean! @authenticated
+  saveLoan(amount: Int!, totalInstallments: Int!, incomeType: IncomeType!): Boolean! @authenticated
 }
 
 
@@ -307,6 +328,39 @@ var parsedSchema = gqlparser.MustLoadSchema(sources...)
 // endregion ************************** generated!.gotpl **************************
 
 // region    ***************************** args.gotpl *****************************
+
+func (ec *executionContext) field_Mutation_saveLoan_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 int
+	if tmp, ok := rawArgs["amount"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("amount"))
+		arg0, err = ec.unmarshalNInt2int(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["amount"] = arg0
+	var arg1 int
+	if tmp, ok := rawArgs["totalInstallments"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("totalInstallments"))
+		arg1, err = ec.unmarshalNInt2int(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["totalInstallments"] = arg1
+	var arg2 model.IncomeType
+	if tmp, ok := rawArgs["incomeType"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("incomeType"))
+		arg2, err = ec.unmarshalNIncomeType2githubᚗcomᚋalexrv11ᚋcredicuotasᚋserverᚋgraphᚋmodelᚐIncomeType(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["incomeType"] = arg2
+	return args, nil
+}
 
 func (ec *executionContext) field_Mutation_savePhoneNumber_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
@@ -478,7 +532,7 @@ func (ec *executionContext) field___Type_fields_args(ctx context.Context, rawArg
 
 // region    **************************** field.gotpl *****************************
 
-func (ec *executionContext) _Credential_accessToken(ctx context.Context, field graphql.CollectedField, obj *model.Credential) (ret graphql.Marshaler) {
+func (ec *executionContext) _Credential_accessToken(ctx context.Context, field graphql.CollectedField, obj *model1.Credential) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -592,7 +646,7 @@ func (ec *executionContext) _Mutation_signInWithCode(ctx context.Context, field 
 		}
 		return graphql.Null
 	}
-	res := resTmp.(*model.Credential)
+	res := resTmp.(*model1.Credential)
 	fc.Result = res
 	return ec.marshalNCredential2ᚖgithubᚗcomᚋalexrv11ᚋcredicuotasᚋserverᚋmodelᚐCredential(ctx, field.Selections, res)
 }
@@ -783,6 +837,68 @@ func (ec *executionContext) _Mutation_savePhoneNumber(ctx context.Context, field
 	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _Mutation_saveLoan(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Mutation_saveLoan_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		directive0 := func(rctx context.Context) (interface{}, error) {
+			ctx = rctx // use context from middleware stack in children
+			return ec.resolvers.Mutation().SaveLoan(rctx, args["amount"].(int), args["totalInstallments"].(int), args["incomeType"].(model.IncomeType))
+		}
+		directive1 := func(ctx context.Context) (interface{}, error) {
+			if ec.directives.Authenticated == nil {
+				return nil, errors.New("directive authenticated is not implemented")
+			}
+			return ec.directives.Authenticated(ctx, nil, directive0)
+		}
+
+		tmp, err := directive1(rctx)
+		if err != nil {
+			return nil, graphql.ErrorOnPath(ctx, err)
+		}
+		if tmp == nil {
+			return nil, nil
+		}
+		if data, ok := tmp.(bool); ok {
+			return data, nil
+		}
+		return nil, fmt.Errorf(`unexpected type %T from directive, should be bool`, tmp)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(bool)
+	fc.Result = res
+	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _Query_getUser(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -880,7 +996,7 @@ func (ec *executionContext) _Query_onboarding(ctx context.Context, field graphql
 		if tmp == nil {
 			return nil, nil
 		}
-		if data, ok := tmp.(model1.OnboardingStatus); ok {
+		if data, ok := tmp.(model.OnboardingStatus); ok {
 			return data, nil
 		}
 		return nil, fmt.Errorf(`unexpected type %T from directive, should be github.com/alexrv11/credicuotas/server/graph/model.OnboardingStatus`, tmp)
@@ -895,7 +1011,7 @@ func (ec *executionContext) _Query_onboarding(ctx context.Context, field graphql
 		}
 		return graphql.Null
 	}
-	res := resTmp.(model1.OnboardingStatus)
+	res := resTmp.(model.OnboardingStatus)
 	fc.Result = res
 	return ec.marshalNOnboardingStatus2githubᚗcomᚋalexrv11ᚋcredicuotasᚋserverᚋgraphᚋmodelᚐOnboardingStatus(ctx, field.Selections, res)
 }
@@ -971,7 +1087,7 @@ func (ec *executionContext) _Query___schema(ctx context.Context, field graphql.C
 	return ec.marshalO__Schema2ᚖgithubᚗcomᚋ99designsᚋgqlgenᚋgraphqlᚋintrospectionᚐSchema(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _User_id(ctx context.Context, field graphql.CollectedField, obj *model1.User) (ret graphql.Marshaler) {
+func (ec *executionContext) _User_id(ctx context.Context, field graphql.CollectedField, obj *model.User) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -1003,7 +1119,7 @@ func (ec *executionContext) _User_id(ctx context.Context, field graphql.Collecte
 	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _User_name(ctx context.Context, field graphql.CollectedField, obj *model1.User) (ret graphql.Marshaler) {
+func (ec *executionContext) _User_name(ctx context.Context, field graphql.CollectedField, obj *model.User) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -2132,7 +2248,7 @@ func (ec *executionContext) ___Type_ofType(ctx context.Context, field graphql.Co
 
 var credentialImplementors = []string{"Credential"}
 
-func (ec *executionContext) _Credential(ctx context.Context, sel ast.SelectionSet, obj *model.Credential) graphql.Marshaler {
+func (ec *executionContext) _Credential(ctx context.Context, sel ast.SelectionSet, obj *model1.Credential) graphql.Marshaler {
 	fields := graphql.CollectFields(ec.OperationContext, sel, credentialImplementors)
 
 	out := graphql.NewFieldSet(fields)
@@ -2194,6 +2310,11 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 			}
 		case "savePhoneNumber":
 			out.Values[i] = ec._Mutation_savePhoneNumber(ctx, field)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "saveLoan":
+			out.Values[i] = ec._Mutation_saveLoan(ctx, field)
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
@@ -2268,7 +2389,7 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 
 var userImplementors = []string{"User"}
 
-func (ec *executionContext) _User(ctx context.Context, sel ast.SelectionSet, obj *model1.User) graphql.Marshaler {
+func (ec *executionContext) _User(ctx context.Context, sel ast.SelectionSet, obj *model.User) graphql.Marshaler {
 	fields := graphql.CollectFields(ec.OperationContext, sel, userImplementors)
 
 	out := graphql.NewFieldSet(fields)
@@ -2552,11 +2673,11 @@ func (ec *executionContext) marshalNBoolean2bool(ctx context.Context, sel ast.Se
 	return res
 }
 
-func (ec *executionContext) marshalNCredential2githubᚗcomᚋalexrv11ᚋcredicuotasᚋserverᚋmodelᚐCredential(ctx context.Context, sel ast.SelectionSet, v model.Credential) graphql.Marshaler {
+func (ec *executionContext) marshalNCredential2githubᚗcomᚋalexrv11ᚋcredicuotasᚋserverᚋmodelᚐCredential(ctx context.Context, sel ast.SelectionSet, v model1.Credential) graphql.Marshaler {
 	return ec._Credential(ctx, sel, &v)
 }
 
-func (ec *executionContext) marshalNCredential2ᚖgithubᚗcomᚋalexrv11ᚋcredicuotasᚋserverᚋmodelᚐCredential(ctx context.Context, sel ast.SelectionSet, v *model.Credential) graphql.Marshaler {
+func (ec *executionContext) marshalNCredential2ᚖgithubᚗcomᚋalexrv11ᚋcredicuotasᚋserverᚋmodelᚐCredential(ctx context.Context, sel ast.SelectionSet, v *model1.Credential) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "must not be null")
@@ -2566,13 +2687,38 @@ func (ec *executionContext) marshalNCredential2ᚖgithubᚗcomᚋalexrv11ᚋcred
 	return ec._Credential(ctx, sel, v)
 }
 
-func (ec *executionContext) unmarshalNOnboardingStatus2githubᚗcomᚋalexrv11ᚋcredicuotasᚋserverᚋgraphᚋmodelᚐOnboardingStatus(ctx context.Context, v interface{}) (model1.OnboardingStatus, error) {
-	var res model1.OnboardingStatus
+func (ec *executionContext) unmarshalNIncomeType2githubᚗcomᚋalexrv11ᚋcredicuotasᚋserverᚋgraphᚋmodelᚐIncomeType(ctx context.Context, v interface{}) (model.IncomeType, error) {
+	var res model.IncomeType
 	err := res.UnmarshalGQL(v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) marshalNOnboardingStatus2githubᚗcomᚋalexrv11ᚋcredicuotasᚋserverᚋgraphᚋmodelᚐOnboardingStatus(ctx context.Context, sel ast.SelectionSet, v model1.OnboardingStatus) graphql.Marshaler {
+func (ec *executionContext) marshalNIncomeType2githubᚗcomᚋalexrv11ᚋcredicuotasᚋserverᚋgraphᚋmodelᚐIncomeType(ctx context.Context, sel ast.SelectionSet, v model.IncomeType) graphql.Marshaler {
+	return v
+}
+
+func (ec *executionContext) unmarshalNInt2int(ctx context.Context, v interface{}) (int, error) {
+	res, err := graphql.UnmarshalInt(v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalNInt2int(ctx context.Context, sel ast.SelectionSet, v int) graphql.Marshaler {
+	res := graphql.MarshalInt(v)
+	if res == graphql.Null {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "must not be null")
+		}
+	}
+	return res
+}
+
+func (ec *executionContext) unmarshalNOnboardingStatus2githubᚗcomᚋalexrv11ᚋcredicuotasᚋserverᚋgraphᚋmodelᚐOnboardingStatus(ctx context.Context, v interface{}) (model.OnboardingStatus, error) {
+	var res model.OnboardingStatus
+	err := res.UnmarshalGQL(v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalNOnboardingStatus2githubᚗcomᚋalexrv11ᚋcredicuotasᚋserverᚋgraphᚋmodelᚐOnboardingStatus(ctx context.Context, sel ast.SelectionSet, v model.OnboardingStatus) graphql.Marshaler {
 	return v
 }
 
