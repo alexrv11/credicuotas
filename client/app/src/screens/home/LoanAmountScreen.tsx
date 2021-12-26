@@ -19,7 +19,7 @@ const LoanAmountScreen = ({ navigation }) => {
   const onSubmit = useCallback(() => {
     setAmount(loanAmount);
     setTotalInstallments(loanTotalInstallments);
-    navigation.dispatch(StackActions.replace('LoanIncomeType'));
+    navigation.navigate('LoanIncomeType');
   }, [
     loanAmount,
     loanTotalInstallments,
@@ -84,7 +84,11 @@ const LoanAmountScreen = ({ navigation }) => {
         />
         <Text style={styles.inputError}>{errorTotalInstallments}</Text>
         <View style={styles.buttonContainer}>
-          <PrimaryButton onPress={onSubmit} text="Guardar" disabled={disable} />
+          <PrimaryButton
+            onPress={onSubmit}
+            text="Continuar"
+            disabled={disable}
+          />
         </View>
       </ScrollView>
     </SafeAreaView>

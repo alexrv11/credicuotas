@@ -6,19 +6,19 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
 import { Icon } from 'react-native-elements';
 
-import HomeScreen from '../screens/HomeScreen';
-import SignInScreen from '../screens/SignInScreen';
-import LoanScreen from '../screens/LoanScreen';
-import ProfileScreen from '../screens/ProfileScreen';
+import HomeScreen from 'screens/home/HomeScreen';
+import SignInScreen from 'screens/SignInScreen';
+import LoanScreen from 'screens/LoanScreen';
+import ProfileScreen from 'screens/ProfileScreen';
 import VerifySignInCodeScreen from 'screens/VerifySignInCodeScreen';
-import RegisterScreen from '../screens/RegisterScreen';
-import InstructionUploadCIScreen from '../screens/InstructionUploadCIScreen';
-import CameraCaptureScreen from '../screens/CameraScan';
+import RegisterScreen from 'screens/RegisterScreen';
+import InstructionUploadCIScreen from 'screens/InstructionUploadCIScreen';
+import CameraCaptureScreen from 'screens/CameraScan';
 import LoadingOnboardingScreen from 'screens/LoadingOnboardingScreen';
 import RegisterPhoneScreen from 'screens/RegisterPhoneScreen';
 import VerifyPhoneCodeScreen from 'screens/VerifyPhoneCodeScreen';
-import LoanAmountScreen from '../screens/loan/LoanAmountScreen';
-import IncomeLoanScreen from '../screens/loan/IncomeLoanScreen';
+import LoanAmountScreen from 'screens/home/LoanAmountScreen';
+import IncomeLoanScreen from 'screens/home/IncomeLoanScreen';
 
 const AppStack = createNativeStackNavigator();
 
@@ -47,16 +47,24 @@ const RegisterLoanStack = createNativeStackNavigator();
 
 const RegisterLoanFlow = () => {
   return (
-    <RegisterLoanStack.Navigator initialRouteName="LoanAmount">
+    <RegisterLoanStack.Navigator
+      initialRouteName="LoanAmount"
+      screenOptions={{
+        headerShown: true,
+      }}>
       <RegisterLoanStack.Screen
         name="LoanAmount"
         component={LoanAmountScreen}
-        options={{ headerShown: false }}
+        options={{
+          title: '',
+        }}
       />
       <RegisterLoanStack.Screen
         name="LoanIncomeType"
         component={IncomeLoanScreen}
-        options={{ headerShown: false }}
+        options={{
+          title: '',
+        }}
       />
     </RegisterLoanStack.Navigator>
   );
@@ -118,12 +126,12 @@ const MainStack = createBottomTabNavigator();
 const MainFlow = () => {
   return (
     <MainStack.Navigator
-      initialRouteName="Home"
+      initialRouteName="Prestamo"
       screenOptions={{
         headerShown: false,
       }}>
       <MainStack.Screen
-        name="Home"
+        name="Inicio"
         component={HomeScreen}
         options={{
           tabBarIcon: ({ size, focused }: any) => (
@@ -139,7 +147,7 @@ const MainFlow = () => {
         }}
       />
       <MainStack.Screen
-        name="Loan"
+        name="Prestamo"
         component={LoanScreen}
         options={{
           tabBarIcon: ({ size, focused }: any) => (
@@ -148,7 +156,7 @@ const MainFlow = () => {
               size={size || 32}
               color={focused ? '#050753' : '#070D99'}
               style={{
-                color: focused ? '#050753': '#070D99',
+                color: focused ? '#050753' : '#070D99',
               }}
             />
           ),
@@ -156,7 +164,7 @@ const MainFlow = () => {
       />
 
       <MainStack.Screen
-        name="Profile"
+        name="Perfil"
         component={ProfileScreen}
         options={{
           tabBarIcon: ({ size, focused }: any) => (

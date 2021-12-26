@@ -3,13 +3,14 @@ import { View, StyleSheet, Text } from 'react-native';
 import { Avatar } from 'react-native-elements';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
-const HomeScreen = ({navigation}) => {
+const HomeScreen = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <TouchableOpacity
         style={styles.requestLoanButton}
-        onPress={() => {navigation.navigate('RegisterLoanFlow')}}
-      >
+        onPress={() => {
+          navigation.navigate('RegisterLoanFlow');
+        }}>
         <Avatar
           size={90}
           rounded

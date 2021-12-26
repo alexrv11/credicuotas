@@ -50,7 +50,7 @@ func (r *LoanImpl) Save(provider *providers.Provider, userXid string, amount, to
 		if err != nil {
 			return err
 		}
-		
+
 		return nil
 	}
 
