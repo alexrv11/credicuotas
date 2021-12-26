@@ -13,6 +13,7 @@ import (
 	"github.com/alexrv11/credicuotas/server/providers"
 	"github.com/alexrv11/credicuotas/server/services"
 	"github.com/spf13/cobra"
+	"github.com/vektah/gqlparser/v2/gqlerror"
 	"go.uber.org/zap"
 	"net/http"
 	"os"
@@ -58,6 +59,7 @@ var serveCmd = &cobra.Command{
 
 		resolver := graph.NewResolver(provider, core)
 
+
 		c := graph.Config{Resolvers: resolver}
 		c.Directives.Authenticated = func(ctx context.Context, obj interface{}, next graphql.Resolver) (res interface{}, err error) {
 
@@ -73,6 +75,13 @@ var serveCmd = &cobra.Command{
 		}
 		srv := handler.NewDefaultServer(graph.NewExecutableSchema(c))
 
+		srv.SetErrorPresenter(func(ctx context.Context, e error) *gqlerror.Error {
+			err := graphql.DefaultErrorPresenter(ctx, e)
+
+			config.RootAppLogger().Error(err)
+
+			return err
+		})
 
 		router.Handle("/graphql", srv)
 

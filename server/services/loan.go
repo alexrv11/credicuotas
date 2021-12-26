@@ -50,6 +50,8 @@ func (r *LoanImpl) Save(provider *providers.Provider, userXid string, amount, to
 		if err != nil {
 			return err
 		}
+		
+		return nil
 	}
 
 	return fmt.Errorf("the user already contains a loan request")

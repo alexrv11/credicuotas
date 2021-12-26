@@ -1,19 +1,29 @@
-import { useCallback } from 'react';
+import { useCallback, useEffect } from 'react';
 import Spacer from 'components/Spacer';
 import React from 'react';
 import { SafeAreaView, StyleSheet, View, TouchableOpacity } from 'react-native';
 import { Text, Icon } from 'react-native-elements';
 import { useLoan } from 'context/LoanContext';
+import { StackActions } from '@react-navigation/native';
+import { useSaveLoanMutation } from '../../api/graphql/generated/graphql';
 
 const IncomeLoanScreen = ({ navigation }) => {
   const { amount, totalInstallments } = useLoan();
 
+  const [saveLoan, { data, error }] = useSaveLoanMutation();
+
   const onSubmit = useCallback(
     (incomeType: String) => {
-      console.log('selected', incomeType, amount, totalInstallments);
+      saveLoan({ variables: { amount, totalInstallments, incomeType } });
     },
-    [amount, totalInstallments],
+    [amount, totalInstallments, saveLoan],
   );
+
+  useEffect(() => {
+    if (data) {
+      navigation.dispatch(StackActions.replace('MainFlow'));
+    }
+  }, [data, navigation]);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -23,7 +33,7 @@ const IncomeLoanScreen = ({ navigation }) => {
         <TouchableOpacity
           style={styles.incomeContainer}
           onPress={() => {
-            onSubmit('own-business');
+            onSubmit('OWN_BUSINESS');
           }}>
           <Icon name="business" style={styles.incomeIcon} type="material" />
           <View style={styles.incomeDescriptionContainer}>
@@ -33,7 +43,7 @@ const IncomeLoanScreen = ({ navigation }) => {
         <TouchableOpacity
           style={styles.incomeContainer}
           onPress={() => {
-            onSubmit('own-employee');
+            onSubmit('ONW_EMPLOYEE');
           }}>
           <Icon name="work" style={styles.incomeIcon} type="material" />
           <View style={styles.incomeDescriptionContainer}>
@@ -43,7 +53,7 @@ const IncomeLoanScreen = ({ navigation }) => {
         <TouchableOpacity
           style={styles.incomeContainer}
           onPress={() => {
-            onSubmit('private-company-employee');
+            onSubmit('PRIVATE_COMPANY_EMPLOYEE');
           }}>
           <Icon name="group-work" style={styles.incomeIcon} type="material" />
           <View style={styles.incomeDescriptionContainer}>
@@ -53,7 +63,7 @@ const IncomeLoanScreen = ({ navigation }) => {
         <TouchableOpacity
           style={styles.incomeContainer}
           onPress={() => {
-            onSubmit('public-employee');
+            onSubmit('PUBLIC_EMPLOYEE');
           }}>
           <Icon name="groups" style={styles.incomeIcon} type="material" />
           <View style={styles.incomeDescriptionContainer}>
