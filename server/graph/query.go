@@ -9,7 +9,7 @@ import (
 
 type queryResolver struct{ *Resolver }
 
-func (query queryResolver) GetUser(ctx context.Context, email string) (string, error) {
+func (query queryResolver) GetUser(ctx context.Context) (string, error) {
 	return "hello world", nil
 }
 

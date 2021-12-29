@@ -3,10 +3,11 @@ import { useSelector } from 'react-redux';
 import { ThemeProvider } from '@mui/material/styles';
 import { CssBaseline, StyledEngineProvider } from '@mui/material';
 
+import { ApolloProvider } from '@apollo/client';
+import client from 'api/client';
+
 // routing
 import Routes from 'routes';
-
-import AuthProvider from 'contexts/AuthContext';
 
 // defaultTheme
 import themes from 'themes';
@@ -22,9 +23,9 @@ const App = () => {
             <ThemeProvider theme={themes(customization)}>
                 <CssBaseline />
                 <NavigationScroll>
-                    <AuthProvider>
+                    <ApolloProvider client={client}>
                         <Routes />
-                    </AuthProvider>
+                    </ApolloProvider>
                 </NavigationScroll>
             </ThemeProvider>
         </StyledEngineProvider>

@@ -27,7 +27,7 @@ enum OnboardingStatus {
 }
 
 type Query  {
-  getUser(email: String!): String! @authenticated
+  getUser: String! @authenticated
   onboarding: OnboardingStatus! @authenticated
   getLoans: [Loan!]! @authenticated
 }

@@ -6,6 +6,7 @@ require (
 	cloud.google.com/go/profiler v0.1.0
 	github.com/99designs/gqlgen v0.13.0
 	github.com/go-chi/chi/v5 v5.0.3
+	github.com/go-chi/cors v1.2.0 // indirect
 	github.com/go-gormigrate/gormigrate/v2 v2.0.0
 	github.com/golang-jwt/jwt v3.2.2+incompatible // indirect
 	github.com/google/uuid v1.3.0 // indirect

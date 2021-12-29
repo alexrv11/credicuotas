@@ -1,10 +1,12 @@
+import { useQuery } from '@apollo/client';
+import GET_USER from 'api/gql/queries/get-user';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Outlet, useNavigate } from 'react-router-dom';
 
 // material-ui
 import { styled, useTheme } from '@mui/material/styles';
-import { AppBar, Box, CssBaseline, Toolbar, useMediaQuery } from '@mui/material';
+import { AppBar, Box, CircularProgress, CssBaseline, Toolbar, useMediaQuery } from '@mui/material';
 
 // project imports
 import Breadcrumbs from 'ui-component/extended/Breadcrumbs';
@@ -17,7 +19,6 @@ import { SET_MENU } from 'store/actions';
 
 // assets
 import { IconChevronRight } from '@tabler/icons';
-import { useAuth } from 'contexts/AuthContext';
 
 // styles
 const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })(({ theme, open }) => ({
@@ -63,13 +64,10 @@ const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })(({
     })
 }));
 
-// ==============================|| MAIN LAYOUT ||============================== //
-
 const MainLayout = () => {
     const theme = useTheme();
     const navigate = useNavigate();
-    const { isLoggedIn } = useAuth();
-    console.log('logged in', isLoggedIn);
+    const { loading, error, data } = useQuery(GET_USER);
     const matchDownMd = useMediaQuery(theme.breakpoints.down('lg'));
 
     // Handle left drawer
@@ -80,11 +78,19 @@ const MainLayout = () => {
     };
 
     useEffect(() => {
+        console.log(loading, error, data);
+    }, [loading, error, data]);
+
+    useEffect(() => {
         dispatch({ type: SET_MENU, opened: !matchDownMd });
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [matchDownMd]);
 
-    if (isLoggedIn) {
+    if (loading) {
+        return <CircularProgress />;
+    }
+
+    if (error || !data) {
         navigate('pages/login');
     }
 

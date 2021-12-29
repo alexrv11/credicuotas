@@ -3,9 +3,11 @@
     "version": "3.0.1",
     "private": true,
     "dependencies": {
+        "@apollo/client": "^3.5.6",
         "@emotion/cache": "^11.4.0",
         "@emotion/react": "^11.4.0",
         "@emotion/styled": "^11.3.0",
+        "@graphql-codegen/introspection": "^2.1.0",
         "@mui/icons-material": "^5.0.3",
         "@mui/lab": "^5.0.0-alpha.50",
         "@mui/material": "^5.0.3",
@@ -21,6 +23,8 @@
         "clsx": "^1.1.1",
         "formik": "^2.2.6",
         "framer-motion": "^4.1.13",
+        "graphql": "^16.2.0",
+        "graphql-tag": "^2.12.6",
         "history": "^5.0.0",
         "material-ui-popup-state": "^1.8.0",
         "prop-types": "^15.7.2",
@@ -67,6 +71,7 @@
     "devDependencies": {
         "@babel/core": "^7.14.8",
         "@babel/eslint-parser": "^7.15.8",
+        "@graphql-codegen/cli": "^2.3.0",
         "eslint": "^7.27.0",
         "eslint-config-airbnb-typescript": "^12.3.1",
         "eslint-config-prettier": "^8.3.0",

@@ -71,7 +71,7 @@ type ComplexityRoot struct {
 
 	Query struct {
 		GetLoans   func(childComplexity int) int
-		GetUser    func(childComplexity int, email string) int
+		GetUser    func(childComplexity int) int
 		Onboarding func(childComplexity int) int
 	}
 
@@ -95,7 +95,7 @@ type MutationResolver interface {
 	SaveLoan(ctx context.Context, amount int, totalInstallments int, incomeType model.IncomeType) (bool, error)
 }
 type QueryResolver interface {
-	GetUser(ctx context.Context, email string) (string, error)
+	GetUser(ctx context.Context) (string, error)
 	Onboarding(ctx context.Context) (model.OnboardingStatus, error)
 	GetLoans(ctx context.Context) ([]*model1.Loan, error)
 }
@@ -241,12 +241,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			break
 		}
 
-		args, err := ec.field_Query_getUser_args(context.TODO(), rawArgs)
-		if err != nil {
-			return 0, false
-		}
-
-		return e.complexity.Query.GetUser(childComplexity, args["email"].(string)), true
+		return e.complexity.Query.GetUser(childComplexity), true
 
 	case "Query.onboarding":
 		if e.complexity.Query.Onboarding == nil {
@@ -362,7 +357,7 @@ enum OnboardingStatus {
 }
 
 type Query  {
-  getUser(email: String!): String! @authenticated
+  getUser: String! @authenticated
   onboarding: OnboardingStatus! @authenticated
   getLoans: [Loan!]! @authenticated
 }
@@ -542,21 +537,6 @@ func (ec *executionContext) field_Query___type_args(ctx context.Context, rawArgs
 		}
 	}
 	args["name"] = arg0
-	return args, nil
-}
-
-func (ec *executionContext) field_Query_getUser_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
-	var err error
-	args := map[string]interface{}{}
-	var arg0 string
-	if tmp, ok := rawArgs["email"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("email"))
-		arg0, err = ec.unmarshalNString2string(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["email"] = arg0
 	return args, nil
 }
 
@@ -1156,17 +1136,10 @@ func (ec *executionContext) _Query_getUser(ctx context.Context, field graphql.Co
 	}
 
 	ctx = graphql.WithFieldContext(ctx, fc)
-	rawArgs := field.ArgumentMap(ec.Variables)
-	args, err := ec.field_Query_getUser_args(ctx, rawArgs)
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		directive0 := func(rctx context.Context) (interface{}, error) {
 			ctx = rctx // use context from middleware stack in children
-			return ec.resolvers.Query().GetUser(rctx, args["email"].(string))
+			return ec.resolvers.Query().GetUser(rctx)
 		}
 		directive1 := func(ctx context.Context) (interface{}, error) {
 			if ec.directives.Authenticated == nil {
