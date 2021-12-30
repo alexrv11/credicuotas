@@ -16,13 +16,13 @@ func m0004_create_loan_table() *gormigrate.Migration {
 
 			type Loan struct {
 				gorm.Model
-				Xid string `gorm:"uniqueIndex"`
-				Amount int
+				Xid               string `gorm:"uniqueIndex"`
+				Amount            int
 				TotalInstallments int
-				IncomeType string
-				Status string
-				User User `json:"user,omitempty" gorm:"foreignKey:UserID;references:ID"`
-				UserID uint
+				IncomeType        string
+				Status            string
+				User              User `json:"user,omitempty" gorm:"foreignKey:UserID;references:ID"`
+				UserID            uint
 			}
 
 			return tx.AutoMigrate(&Loan{})
