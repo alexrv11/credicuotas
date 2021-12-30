@@ -9,8 +9,10 @@ import (
 
 type queryResolver struct{ *Resolver }
 
-func (query queryResolver) GetUser(ctx context.Context) (string, error) {
-	return "hello world", nil
+func (query queryResolver) GetUser(ctx context.Context) (*model2.User, error) {
+	userXid, _ := ctx.Value(middlewares.UserInfoKey).(string)
+
+	return query.core.User.GetUser(query.provider, userXid)
 }
 
 func (query *queryResolver) Onboarding(ctx context.Context) (model.OnboardingStatus, error) {

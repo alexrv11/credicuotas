@@ -31,3 +31,7 @@ func (r *Resolver) Query() QueryResolver {
 func (r *Resolver) Loan() LoanResolver {
 	return &resolvers.Loan{}
 }
+
+func (r *Resolver) User() UserResolver {
+	return resolvers.NewUser(r.provider, r.core)
+}

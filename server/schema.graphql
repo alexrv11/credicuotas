@@ -26,8 +26,16 @@ enum OnboardingStatus {
   PENDING_PHONE_NUMBER
 }
 
+
+enum RoleAction {
+  READ
+  CREATE
+  UPDATE
+  DELETE
+}
+
 type Query  {
-  getUser: String! @authenticated
+  getUser: User! @authenticated
   onboarding: OnboardingStatus! @authenticated
   getLoans: [Loan!]! @authenticated
 }
@@ -50,6 +58,21 @@ type Loan {
 }
 
 type User {
-  id: String
-  name: String
+  id: String!
+  name: String!
+  role: Role!
+}
+
+type Role {
+  contexts: [RoleContext]!
+}
+
+type RoleContext {
+  name: String!
+  resources: [RoleResource]!
+}
+
+type RoleResource {
+  name: String!
+  actions: [RoleAction!]!
 }
