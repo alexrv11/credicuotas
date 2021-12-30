@@ -4,7 +4,7 @@ import "gorm.io/gorm"
 
 type SessionOtpCode struct {
 	gorm.Model
-	User *User
+	User   *User
 	UserID uint
-	Code string
+	Code   string
 }

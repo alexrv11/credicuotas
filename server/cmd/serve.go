@@ -9,6 +9,7 @@ import (
 	"github.com/99designs/gqlgen/graphql/playground"
 	"github.com/alexrv11/credicuotas/server/config"
 	"github.com/alexrv11/credicuotas/server/graph"
+	"github.com/alexrv11/credicuotas/server/graph/model"
 	"github.com/alexrv11/credicuotas/server/middlewares"
 	"github.com/alexrv11/credicuotas/server/providers"
 	"github.com/alexrv11/credicuotas/server/services"
@@ -35,7 +36,7 @@ var serveCmd = &cobra.Command{
 	Long:  `lol`,
 	Run: func(cmd *cobra.Command, args []string) {
 		provider := providers.NewProvider()
-		core :=  services.NewCore()
+		core := services.NewCore()
 		logger := provider.Logger()
 		if config.Env() == "PROD" {
 			// Profiler initialization
@@ -55,7 +56,7 @@ var serveCmd = &cobra.Command{
 		router := chi.NewRouter()
 
 		router.Use(cors.Handler(cors.Options{
-			AllowedOrigins:   []string{"https://*", "http://*"},
+			AllowedOrigins: []string{"https://*", "http://*"},
 			// AllowOriginFunc:  func(r *http.Request, origin string) bool { return true },
 			AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
 			AllowedHeaders:   []string{"Accept", "Authorization", "Content-Type", "X-CSRF-Token"},
@@ -70,7 +71,6 @@ var serveCmd = &cobra.Command{
 
 		resolver := graph.NewResolver(provider, core)
 
-
 		c := graph.Config{Resolvers: resolver}
 		c.Directives.Authenticated = func(ctx context.Context, obj interface{}, next graphql.Resolver) (res interface{}, err error) {
 
@@ -81,6 +81,16 @@ var serveCmd = &cobra.Command{
 			}
 
 			logger.With(zap.String("userXid", userXid)).Info("user info")
+
+			return next(ctx)
+		}
+
+		c.Directives.HasRole = func(ctx context.Context, obj interface{}, next graphql.Resolver, role model.Role) (res interface{}, err error) {
+			userRole, _ := ctx.Value(middlewares.UserInfoRoleKey).(string)
+
+			if userRole != string(role) {
+				return nil, fmt.Errorf("you need dont have access for this resource")
+			}
 
 			return next(ctx)
 		}
@@ -100,4 +110,3 @@ var serveCmd = &cobra.Command{
 		logger.Fatal(zap.Error(http.ListenAndServe(":"+port, router)))
 	},
 }
-

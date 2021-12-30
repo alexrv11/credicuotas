@@ -8,25 +8,25 @@ import (
 type LoanStatus string
 
 const (
-	LoanStatusRegister LoanStatus = "Registered"
+	LoanStatusRegister            LoanStatus = "Registered"
 	LoanStatusPendingRequirements LoanStatus = "PendingRequirements"
-	LoanStatusPendingPreApproved LoanStatus = "PendingPreApproved"
-	LoanStatusPendingRejected LoanStatus = "Rejected"
-	LoanStatusHasObservation LoanStatus = "HasObservation"
-	LoanStatusPreApproved LoanStatus = "PreApproved"
-	LoanStatusApproved LoanStatus = "Approved"
-	LoanStatusRunning LoanStatus = "Running"
+	LoanStatusPendingPreApproved  LoanStatus = "PendingPreApproved"
+	LoanStatusPendingRejected     LoanStatus = "Rejected"
+	LoanStatusHasObservation      LoanStatus = "HasObservation"
+	LoanStatusPreApproved         LoanStatus = "PreApproved"
+	LoanStatusApproved            LoanStatus = "Approved"
+	LoanStatusRunning             LoanStatus = "Running"
 )
 
 type Loan struct {
 	gorm.Model
-	Xid string
-	Amount int
+	Xid               string
+	Amount            int
 	TotalInstallments int
-	IncomeType string
-	Status string
-	User *User
-	UserID uint
+	IncomeType        string
+	Status            string
+	User              *User
+	UserID            uint
 }
 
 func (u *Loan) BeforeCreate(tx *gorm.DB) error {

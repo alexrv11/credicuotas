@@ -8,15 +8,17 @@ import (
 // m0001_create_user_table
 func m0001_create_user_table() *gormigrate.Migration {
 	return &gormigrate.Migration{
-		ID: "202112010002",
+		ID: "202112010012",
 		Migrate: func(tx *gorm.DB) error {
 			type User struct {
 				gorm.Model
-				Email string `gorm:"unique"`
-				Xid string `gorm:"uniqueIndex"`
-				Name string
-				Phone string
+				Email            string `gorm:"unique"`
+				Xid              string `gorm:"uniqueIndex"`
+				Name             string
+				Phone            string
 				IdentifierNumber string
+				Password         string
+				Role             string
 			}
 
 			return tx.AutoMigrate(&User{})

@@ -8,17 +8,17 @@ import (
 )
 
 type Provider struct {
-	db *gorm.DB
+	db     *gorm.DB
 	logger *zap.SugaredLogger
-	email Email
-	sms SMS
+	email  Email
+	sms    SMS
 }
 
 func NewProvider() *Provider {
 	return &Provider{}
 }
 
-func (p *Provider) GormClient() *gorm.DB  {
+func (p *Provider) GormClient() *gorm.DB {
 	if p.db == nil {
 		client, err := connection.CreateGormClient()
 		if err == nil {

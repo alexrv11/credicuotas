@@ -9,6 +9,15 @@ type Credential {
   accessToken: String!
 }
 
+directive @hasRole(role: Role!) on FIELD_DEFINITION
+
+enum Role {
+  ADMIN
+  CREDIT_ASSISTANT
+  MANAGER
+  USER_CLIENT
+}
+
 enum IncomeType {
   OWN_BUSINESS
   ONW_EMPLOYEE
@@ -43,6 +52,8 @@ type Query  {
 type Mutation {
   sendCodeByEmail(email: String!): Boolean!
   signInWithCode(email: String!, code: String!): Credential!
+  login(email: String!, password: String!): Credential!
+  createUser(email: String!, password: String!, name: String!, role: Role!): Boolean! @authenticated @hasRole(role: ADMIN)
   saveUserInfo(name: String!, identifier: String!): Boolean! @authenticated
   sendCodeByPhone(phone: String!): Boolean! @authenticated
   savePhoneNumber(phone: String!, code: String!): Boolean! @authenticated
@@ -63,16 +74,3 @@ type User {
   role: Role!
 }
 
-type Role {
-  contexts: [RoleContext]!
-}
-
-type RoleContext {
-  name: String!
-  resources: [RoleResource]!
-}
-
-type RoleResource {
-  name: String!
-  actions: [RoleAction!]!
-}

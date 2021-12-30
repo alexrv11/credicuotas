@@ -99,3 +99,93 @@ func (e *OnboardingStatus) UnmarshalGQL(v interface{}) error {
 func (e OnboardingStatus) MarshalGQL(w io.Writer) {
 	fmt.Fprint(w, strconv.Quote(e.String()))
 }
+
+type Role string
+
+const (
+	RoleAdmin           Role = "ADMIN"
+	RoleCreditAssistant Role = "CREDIT_ASSISTANT"
+	RoleManager         Role = "MANAGER"
+	RoleUserClient      Role = "USER_CLIENT"
+)
+
+var AllRole = []Role{
+	RoleAdmin,
+	RoleCreditAssistant,
+	RoleManager,
+	RoleUserClient,
+}
+
+func (e Role) IsValid() bool {
+	switch e {
+	case RoleAdmin, RoleCreditAssistant, RoleManager, RoleUserClient:
+		return true
+	}
+	return false
+}
+
+func (e Role) String() string {
+	return string(e)
+}
+
+func (e *Role) UnmarshalGQL(v interface{}) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("enums must be strings")
+	}
+
+	*e = Role(str)
+	if !e.IsValid() {
+		return fmt.Errorf("%s is not a valid Role", str)
+	}
+	return nil
+}
+
+func (e Role) MarshalGQL(w io.Writer) {
+	fmt.Fprint(w, strconv.Quote(e.String()))
+}
+
+type RoleAction string
+
+const (
+	RoleActionRead   RoleAction = "READ"
+	RoleActionCreate RoleAction = "CREATE"
+	RoleActionUpdate RoleAction = "UPDATE"
+	RoleActionDelete RoleAction = "DELETE"
+)
+
+var AllRoleAction = []RoleAction{
+	RoleActionRead,
+	RoleActionCreate,
+	RoleActionUpdate,
+	RoleActionDelete,
+}
+
+func (e RoleAction) IsValid() bool {
+	switch e {
+	case RoleActionRead, RoleActionCreate, RoleActionUpdate, RoleActionDelete:
+		return true
+	}
+	return false
+}
+
+func (e RoleAction) String() string {
+	return string(e)
+}
+
+func (e *RoleAction) UnmarshalGQL(v interface{}) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("enums must be strings")
+	}
+
+	*e = RoleAction(str)
+	if !e.IsValid() {
+		return fmt.Errorf("%s is not a valid RoleAction", str)
+	}
+	return nil
+}
+
+func (e RoleAction) MarshalGQL(w io.Writer) {
+	fmt.Fprint(w, strconv.Quote(e.String()))
+}

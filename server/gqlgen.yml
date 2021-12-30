@@ -61,14 +61,3 @@ models:
     model: github.com/alexrv11/credicuotas/server/db/model.Loan
   User:
     model: github.com/alexrv11/credicuotas/server/db/model.User
-    fields:
-      role:
-        resolver: true
-  RoleAction:
-    model: github.com/alexrv11/credicuotas/server/db/model.RoleAction
-  RoleResource:
-    model: github.com/alexrv11/credicuotas/server/db/model.RoleResource
-  RoleContext:
-    model: github.com/alexrv11/credicuotas/server/db/model.RoleContext
-  Role:
-    model: github.com/alexrv11/credicuotas/server/db/model.Role

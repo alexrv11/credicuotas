@@ -16,9 +16,9 @@ func m0002_create_session_otp_code_table() *gormigrate.Migration {
 
 			type SessionOtpCode struct {
 				gorm.Model
-				User User `json:"user,omitempty" gorm:"foreignKey:UserID;references:ID"`
+				User   User `json:"user,omitempty" gorm:"foreignKey:UserID;references:ID"`
 				UserID uint
-				Code string
+				Code   string
 			}
 
 			return tx.AutoMigrate(&SessionOtpCode{})

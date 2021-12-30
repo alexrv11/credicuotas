@@ -3,7 +3,8 @@ package model
 import "github.com/golang-jwt/jwt"
 
 type SessionClaims struct {
-	UserXid string
+	Xid  string
 	Name string
+	Role string
 	jwt.StandardClaims
 }

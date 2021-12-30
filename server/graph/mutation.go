@@ -2,9 +2,11 @@ package graph
 
 import (
 	"context"
+	model1 "github.com/alexrv11/credicuotas/server/db/model"
 	modelgen "github.com/alexrv11/credicuotas/server/graph/model"
 	"github.com/alexrv11/credicuotas/server/middlewares"
 	"github.com/alexrv11/credicuotas/server/model"
+	"github.com/alexrv11/credicuotas/server/services/auth"
 )
 
 // This file will be automatically regenerated based on the schema, any resolver implementations
@@ -23,10 +25,9 @@ func (r *mutationResolver) SendCodeByEmail(ctx context.Context, email string) (b
 	return true, nil
 }
 
-
 func (r *mutationResolver) SendCodeByPhone(ctx context.Context, phone string) (bool, error) {
 	userXid, _ := ctx.Value(middlewares.UserInfoKey).(string)
-	err := r.core.Auth.SendCodeByPhone(r.provider,userXid, phone)
+	err := r.core.Auth.SendCodeByPhone(r.provider, userXid, phone)
 
 	if err != nil {
 		return false, err
@@ -47,7 +48,19 @@ func (r *mutationResolver) SignInWithCode(ctx context.Context, email string, cod
 	}, nil
 }
 
-func (r *mutationResolver) SaveUserInfo(ctx context.Context, name, identifierNumber string) (bool, error)  {
+func (r *mutationResolver) Login(ctx context.Context, email string, password string) (*model.Credential, error) {
+	token, err := r.core.Auth.SignInWithPassword(r.provider, email, password)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &model.Credential{
+		AccessToken: token,
+	}, nil
+}
+
+func (r *mutationResolver) SaveUserInfo(ctx context.Context, name, identifierNumber string) (bool, error) {
 	userXid, _ := ctx.Value(middlewares.UserInfoKey).(string)
 
 	err := r.core.User.SaveUserInfo(r.provider, userXid, name, identifierNumber)
@@ -58,7 +71,6 @@ func (r *mutationResolver) SaveUserInfo(ctx context.Context, name, identifierNum
 
 	return true, nil
 }
-
 
 func (r *mutationResolver) SavePhoneNumber(ctx context.Context, phone string, code string) (bool, error) {
 	userXid, _ := ctx.Value(middlewares.UserInfoKey).(string)
@@ -75,6 +87,25 @@ func (r *mutationResolver) SaveLoan(ctx context.Context, amount, totalInstallmen
 	userXid, _ := ctx.Value(middlewares.UserInfoKey).(string)
 
 	err := r.core.Loan.Save(r.provider, userXid, amount, totalInstallments, incomeType)
+
+	if err != nil {
+		return false, err
+	}
+
+	return true, nil
+}
+
+func (r *mutationResolver) CreateUser(ctx context.Context, email, password, name string, role modelgen.Role) (bool, error) {
+
+	db := r.provider.GormClient()
+	user := &model1.User{
+		Email:    email,
+		Password: auth.Encode(password),
+		Role:     string(role),
+		Name:     name,
+	}
+
+	err := db.Save(user).Error
 
 	if err != nil {
 		return false, err

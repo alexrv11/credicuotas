@@ -10,7 +10,6 @@ import (
 
 type User interface {
 	GetUser(provider *providers.Provider, userXid string) (*model.User, error)
-	GetRole(provider *providers.Provider, userXid string) (*model.Role, error)
 	SaveUserInfo(provider *providers.Provider, userXid, name, identifierNumber string) error
 }
 
@@ -31,14 +30,6 @@ func (u *UserImpl) GetUser(provider *providers.Provider, userXid string) (*model
 	}
 
 	return &user, nil
-}
-
-func (u *UserImpl) GetRole(provider *providers.Provider, userXid string) (*model.Role, error) {
-
-	//TODO get role information from db
-	contexts := []model.RoleContext{{Name: "dashboard"}, {Name: "client"}}
-
-	return &model.Role{Name: "ADMIN", Contexts: contexts}, nil
 }
 
 func (u *UserImpl) SaveUserInfo(provider *providers.Provider, userXid, name, identifierNumber string) error {

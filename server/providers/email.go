@@ -10,7 +10,7 @@ type Email interface {
 	SendSignInCode(email string, code string) error
 }
 
-type SandGridEmail struct {}
+type SandGridEmail struct{}
 
 func (s *SandGridEmail) SendSignInCode(email, code string) error {
 	senderName := viper.GetString("EMAIL_SENDER_NAME")

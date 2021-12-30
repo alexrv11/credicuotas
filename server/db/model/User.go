@@ -21,26 +21,12 @@ type User struct {
 	Name             string
 	Phone            string
 	IdentifierNumber string
-	Role             Role
+	Role             string
+	Password         string
 }
 
 func (u *User) BeforeCreate(tx *gorm.DB) error {
 	u.Xid = uuid.New().String()
 
 	return nil
-}
-
-type RoleResource struct {
-	Name    string
-	Actions []RoleAction
-}
-
-type RoleContext struct {
-	Name      string
-	Resources []RoleResource
-}
-
-type Role struct {
-	Name     string
-	Contexts []RoleContext
 }

@@ -12,10 +12,9 @@ type SMS interface {
 }
 
 type TwilioClient struct {
-
 }
 
-func (t *TwilioClient ) SendSMSCode(phone, code string) error  {
+func (t *TwilioClient) SendSMSCode(phone, code string) error {
 	paramsClient := twilio.RestClientParams{
 		Username: viper.GetString("TWILIO_ACCOUNT_SID"),
 		Password: viper.GetString("TWILIO_AUTH_TOKEN"),

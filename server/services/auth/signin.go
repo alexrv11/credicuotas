@@ -7,6 +7,7 @@ import (
 	"errors"
 	"fmt"
 	dbmodel "github.com/alexrv11/credicuotas/server/db/model"
+	model2 "github.com/alexrv11/credicuotas/server/graph/model"
 	"github.com/alexrv11/credicuotas/server/model"
 	"github.com/alexrv11/credicuotas/server/providers"
 	"github.com/golang-jwt/jwt"
@@ -21,6 +22,7 @@ type Auth interface {
 	SendCodeByEmail(provider *providers.Provider, email string) error
 	SendCodeByPhone(provider *providers.Provider, userXid, phone string) error
 	SignInWithCode(provider *providers.Provider, email, code string) (string, error)
+	SignInWithPassword(provider *providers.Provider, email, password string) (string, error)
 	SavePhone(provider *providers.Provider, userXid, phone, code string) error
 }
 
@@ -42,6 +44,7 @@ func (a *AuthImpl) SendCodeByEmail(provider *providers.Provider, email string) e
 	err := db.Model(&dbmodel.User{}).Where("email = ?", email).First(&user).Error
 	if errors.Is(err, gorm.ErrRecordNotFound) {
 		user.Email = email
+		user.Role = string(model2.RoleUserClient)
 		err = db.Save(&user).Error
 
 		if err != nil {
@@ -51,7 +54,7 @@ func (a *AuthImpl) SendCodeByEmail(provider *providers.Provider, email string) e
 
 	code := generateCode(6)
 
-	encoded := encode(code)
+	encoded := Encode(code)
 
 	err = db.Model(&dbmodel.SessionOtpCode{}).Where("user_id = ?", user.ID).Delete(&dbmodel.SessionOtpCode{}).Error
 
@@ -60,7 +63,7 @@ func (a *AuthImpl) SendCodeByEmail(provider *providers.Provider, email string) e
 	}
 
 	err = db.Save(&dbmodel.SessionOtpCode{
-		Code: encoded,
+		Code:   encoded,
 		UserID: user.ID,
 	}).Error
 
@@ -87,7 +90,7 @@ func (a *AuthImpl) SendCodeByPhone(provider *providers.Provider, userXid, phone 
 
 	code := generateCode(6)
 
-	encoded := encode(code)
+	encoded := Encode(code)
 
 	err = db.Model(&dbmodel.SessionOtpCode{}).Where("user_id = ?", user.ID).Delete(&dbmodel.SessionOtpCode{}).Error
 
@@ -96,7 +99,7 @@ func (a *AuthImpl) SendCodeByPhone(provider *providers.Provider, userXid, phone 
 	}
 
 	err = db.Save(&dbmodel.SessionOtpCode{
-		Code: encoded,
+		Code:   encoded,
 		UserID: user.ID,
 	}).Error
 
@@ -113,7 +116,7 @@ func (a *AuthImpl) SendCodeByPhone(provider *providers.Provider, userXid, phone 
 	return nil
 }
 
-func encode(value string) string {
+func Encode(value string) string {
 	h := sha256.New()
 	h.Write([]byte(value))
 	b := h.Sum(nil) //TODO: let add some secret value here
@@ -140,9 +143,14 @@ func (a *AuthImpl) SignInWithCode(provider *providers.Provider, email, code stri
 		return "", fmt.Errorf("invalid code")
 	}
 
+	return createAccessToken(user)
+}
+
+func createAccessToken(user dbmodel.User) (string, error) {
 	claims := &model.SessionClaims{
-		UserXid: user.Xid,
-		Name:    user.Name,
+		Xid:  user.Xid,
+		Name: user.Name,
+		Role: user.Role,
 		StandardClaims: jwt.StandardClaims{
 			ExpiresAt: time.Now().Add(time.Hour * 72).Unix(),
 		},
@@ -161,6 +169,37 @@ func (a *AuthImpl) SignInWithCode(provider *providers.Provider, email, code stri
 	return accessToken, nil
 }
 
+func (a *AuthImpl) SignInWithPassword(provider *providers.Provider, email, password string) (string, error) {
+	db := provider.GormClient()
+
+	if email == viper.GetString("ADMIN_USER") && password == viper.GetString("ADMIN_PASSWORD") {
+		admin := dbmodel.User{
+			Email: email,
+			Role:  string(model2.RoleAdmin),
+			Xid:   email,
+		}
+		return createAccessToken(admin)
+	}
+
+	var user dbmodel.User
+	err := db.Model(&dbmodel.User{}).Where("email = ?", email).First(&user).Error
+
+	if err != nil {
+		return "", err
+	}
+
+	isValid, err := a.verifyPassword(provider, user, password)
+
+	if err != nil {
+		return "", err
+	}
+
+	if !isValid {
+		return "", fmt.Errorf("invalid credential")
+	}
+
+	return createAccessToken(user)
+}
 
 func (a *AuthImpl) SavePhone(provider *providers.Provider, userXid, phone, code string) error {
 	db := provider.GormClient()
@@ -192,8 +231,6 @@ func (a *AuthImpl) SavePhone(provider *providers.Provider, userXid, phone, code 
 	return nil
 }
 
-
-
 var table = [...]byte{'1', '2', '3', '4', '5', '6', '7', '8', '9', '0'}
 
 func generateCode(max int) string {
@@ -218,12 +255,21 @@ func (a *AuthImpl) verifySessionCode(provider *providers.Provider, user dbmodel.
 		return false, err
 	}
 
-	encoded := encode(code)
+	encoded := Encode(code)
 	if encoded != sessionOtp.Code {
 		return false, nil
 	}
 
 	db.Delete(&sessionOtp)
+
+	return true, nil
+}
+
+func (a *AuthImpl) verifyPassword(provider *providers.Provider, user dbmodel.User, password string) (bool, error) {
+	encoded := Encode(password)
+	if encoded != user.Password {
+		return false, nil
+	}
 
 	return true, nil
 }

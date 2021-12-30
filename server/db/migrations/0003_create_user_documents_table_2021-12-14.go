@@ -16,11 +16,11 @@ func m0003_create_user_documents_table() *gormigrate.Migration {
 
 			type Document struct {
 				gorm.Model
-				User User `json:"user,omitempty" gorm:"foreignKey:UserID;references:ID"`
-				UserID uint
-				Type string
+				User        User `json:"user,omitempty" gorm:"foreignKey:UserID;references:ID"`
+				UserID      uint
+				Type        string
 				Description string
-				Url string
+				Url         string
 			}
 
 			return tx.AutoMigrate(&Document{})
