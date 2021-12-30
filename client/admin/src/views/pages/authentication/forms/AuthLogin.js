@@ -1,4 +1,6 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+
+import { useNavigate } from 'react-router-dom';
 
 // material-ui
 import { useTheme } from '@mui/material/styles';
@@ -15,10 +17,15 @@ import AnimateButton from 'ui-component/extended/AnimateButton';
 // assets
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
+import { useMutation } from '@apollo/client';
+import LOGIN from 'api/gql/mutations/login';
 
-const FirebaseLogin = ({ ...others }) => {
+const Login = ({ ...others }) => {
     const theme = useTheme();
     const scriptedRef = useScriptRef();
+    const navigate = useNavigate();
+
+    const [login, { data, error }] = useMutation(LOGIN);
 
     const [showPassword, setShowPassword] = useState(false);
     const handleClickShowPassword = () => {
@@ -29,12 +36,20 @@ const FirebaseLogin = ({ ...others }) => {
         event.preventDefault();
     };
 
+    useEffect(() => {
+        const token = data?.login?.accessToken;
+        if (token) {
+            localStorage.setItem('token', token);
+            navigate('/admin');
+        }
+    }, [data, error, navigate]);
+
     return (
         <>
             <Formik
                 initialValues={{
-                    email: 'admin@porvenir.com',
-                    password: '123456',
+                    email: 'asesor1@porvenir.com',
+                    password: 'Control123',
                     submit: null
                 }}
                 validationSchema={Yup.object().shape({
@@ -43,6 +58,7 @@ const FirebaseLogin = ({ ...others }) => {
                 })}
                 onSubmit={async (values, { setErrors, setStatus, setSubmitting }) => {
                     try {
+                        await login({ variables: { email: values.email, password: values.password } });
                         if (scriptedRef.current) {
                             setStatus({ success: true });
                             setSubmitting(false);
@@ -141,4 +157,4 @@ const FirebaseLogin = ({ ...others }) => {
     );
 };
 
-export default FirebaseLogin;
+export default Login;
