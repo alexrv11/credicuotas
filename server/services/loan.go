@@ -83,7 +83,7 @@ func (r *LoanImpl) GetLoanOrders(provider *providers.Provider) ([]*modeldb.Loan,
 
 	loans := make([]*modeldb.Loan, 0)
 
-	err := db.Where("status != ?", modeldb.LoanStatusRunning).Find(&loans).Error
+	err := db.Preload("User").Where("status != ?", modeldb.LoanStatusRunning).Find(&loans).Error
 
 	return loans, err
 }

@@ -37,6 +37,12 @@ const LoanOrders = () => {
             editable: false
         },
         {
+            field: 'ownerName',
+            headerName: 'Cliente',
+            width: 120,
+            editable: false
+        },
+        {
             field: 'status',
             headerName: 'Estado',
             width: 120,

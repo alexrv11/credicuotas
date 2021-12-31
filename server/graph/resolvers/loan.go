@@ -32,3 +32,7 @@ func (r *Loan) IncomeType(ctx context.Context, obj *model1.Loan) (string, error)
 
 	return obj.IncomeType, nil
 }
+
+func (r *Loan) OwnerName(ctx context.Context, obj *model1.Loan) (string, error) {
+	return obj.User.Name, nil
+}

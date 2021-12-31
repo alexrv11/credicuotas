@@ -67,6 +67,7 @@ type Loan {
   totalInstallments: Int!
   incomeType: String!
   status: String!
+  ownerName: String!
 }
 
 type User {
