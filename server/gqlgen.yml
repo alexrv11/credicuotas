@@ -59,5 +59,8 @@ models:
       model: github.com/alexrv11/credicuotas/server/model.Credential
   Loan:
     model: github.com/alexrv11/credicuotas/server/db/model.Loan
+    fields:
+      incomeType:
+        resolver: true
   User:
     model: github.com/alexrv11/credicuotas/server/db/model.User

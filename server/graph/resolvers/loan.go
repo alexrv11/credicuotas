@@ -12,6 +12,23 @@ func (r *Loan) ID(ctx context.Context, obj *model1.Loan) (string, error) {
 	return obj.Xid, nil
 }
 
-func (r *Loan) IncomeType(ctx context.Context, obj *model1.Loan) (model.IncomeType, error) {
-	return model.IncomeType(obj.IncomeType), nil
+func (r *Loan) IncomeType(ctx context.Context, obj *model1.Loan) (string, error) {
+
+	if model.IncomeType(obj.IncomeType) == model.IncomeTypeOwnBusiness {
+		return "Negocio Propio", nil
+	}
+
+	if model.IncomeType(obj.IncomeType) == model.IncomeTypePrivateCompanyEmployee {
+		return "Trabajador Empresa Privada", nil
+	}
+
+	if model.IncomeType(obj.IncomeType) == model.IncomeTypeOnwEmployee {
+		return "Trabajador Independiente", nil
+	}
+
+	if model.IncomeType(obj.IncomeType) == model.IncomeTypePublicEmployee {
+		return "Servidor Publico", nil
+	}
+
+	return obj.IncomeType, nil
 }

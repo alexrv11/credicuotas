@@ -12,6 +12,7 @@ import (
 type Loan interface {
 	Save(provider *providers.Provider, userXid string, amount, totalInstallments int, incomeType model.IncomeType) error
 	GetLoans(provider *providers.Provider, userXid string) ([]*modeldb.Loan, error)
+	GetLoanOrders(provider *providers.Provider) ([]*modeldb.Loan, error)
 }
 
 type LoanImpl struct{}
@@ -73,6 +74,16 @@ func (r *LoanImpl) GetLoans(provider *providers.Provider, userXid string) ([]*mo
 	loans := make([]*modeldb.Loan, 0)
 
 	err = db.Where("user_id = ?", user.ID).Find(&loans).Error
+
+	return loans, err
+}
+
+func (r *LoanImpl) GetLoanOrders(provider *providers.Provider) ([]*modeldb.Loan, error) {
+	db := provider.GormClient()
+
+	loans := make([]*modeldb.Loan, 0)
+
+	err := db.Where("status != ?", modeldb.LoanStatusRunning).Find(&loans).Error
 
 	return loans, err
 }

@@ -47,6 +47,7 @@ type Query  {
   getUser: User! @authenticated
   onboarding: OnboardingStatus! @authenticated
   getLoans: [Loan!]! @authenticated
+  getLoanOrders: [Loan]! @authenticated
 }
 
 type Mutation {
@@ -64,7 +65,7 @@ type Loan {
   id: String!
   amount: Int!
   totalInstallments: Int!
-  incomeType: IncomeType!
+  incomeType: String!
   status: String!
 }
 

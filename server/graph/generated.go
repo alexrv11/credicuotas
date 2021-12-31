@@ -74,9 +74,10 @@ type ComplexityRoot struct {
 	}
 
 	Query struct {
-		GetLoans   func(childComplexity int) int
-		GetUser    func(childComplexity int) int
-		Onboarding func(childComplexity int) int
+		GetLoanOrders func(childComplexity int) int
+		GetLoans      func(childComplexity int) int
+		GetUser       func(childComplexity int) int
+		Onboarding    func(childComplexity int) int
 	}
 
 	User struct {
@@ -89,7 +90,7 @@ type ComplexityRoot struct {
 type LoanResolver interface {
 	ID(ctx context.Context, obj *model1.Loan) (string, error)
 
-	IncomeType(ctx context.Context, obj *model1.Loan) (model.IncomeType, error)
+	IncomeType(ctx context.Context, obj *model1.Loan) (string, error)
 }
 type MutationResolver interface {
 	SendCodeByEmail(ctx context.Context, email string) (bool, error)
@@ -105,6 +106,7 @@ type QueryResolver interface {
 	GetUser(ctx context.Context) (*model1.User, error)
 	Onboarding(ctx context.Context) (model.OnboardingStatus, error)
 	GetLoans(ctx context.Context) ([]*model1.Loan, error)
+	GetLoanOrders(ctx context.Context) ([]*model1.Loan, error)
 }
 type UserResolver interface {
 	ID(ctx context.Context, obj *model1.User) (string, error)
@@ -265,6 +267,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Mutation.SignInWithCode(childComplexity, args["email"].(string), args["code"].(string)), true
 
+	case "Query.getLoanOrders":
+		if e.complexity.Query.GetLoanOrders == nil {
+			break
+		}
+
+		return e.complexity.Query.GetLoanOrders(childComplexity), true
+
 	case "Query.getLoans":
 		if e.complexity.Query.GetLoans == nil {
 			break
@@ -420,6 +429,7 @@ type Query  {
   getUser: User! @authenticated
   onboarding: OnboardingStatus! @authenticated
   getLoans: [Loan!]! @authenticated
+  getLoanOrders: [Loan]! @authenticated
 }
 
 type Mutation {
@@ -437,7 +447,7 @@ type Loan {
   id: String!
   amount: Int!
   totalInstallments: Int!
-  incomeType: IncomeType!
+  incomeType: String!
   status: String!
 }
 
@@ -894,9 +904,9 @@ func (ec *executionContext) _Loan_incomeType(ctx context.Context, field graphql.
 		}
 		return graphql.Null
 	}
-	res := resTmp.(model.IncomeType)
+	res := resTmp.(string)
 	fc.Result = res
-	return ec.marshalNIncomeType2githubᚗcomᚋalexrv11ᚋcredicuotasᚋserverᚋgraphᚋmodelᚐIncomeType(ctx, field.Selections, res)
+	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Loan_status(ctx context.Context, field graphql.CollectedField, obj *model1.Loan) (ret graphql.Marshaler) {
@@ -1543,6 +1553,61 @@ func (ec *executionContext) _Query_getLoans(ctx context.Context, field graphql.C
 	res := resTmp.([]*model1.Loan)
 	fc.Result = res
 	return ec.marshalNLoan2ᚕᚖgithubᚗcomᚋalexrv11ᚋcredicuotasᚋserverᚋdbᚋmodelᚐLoanᚄ(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Query_getLoanOrders(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Query",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		directive0 := func(rctx context.Context) (interface{}, error) {
+			ctx = rctx // use context from middleware stack in children
+			return ec.resolvers.Query().GetLoanOrders(rctx)
+		}
+		directive1 := func(ctx context.Context) (interface{}, error) {
+			if ec.directives.Authenticated == nil {
+				return nil, errors.New("directive authenticated is not implemented")
+			}
+			return ec.directives.Authenticated(ctx, nil, directive0)
+		}
+
+		tmp, err := directive1(rctx)
+		if err != nil {
+			return nil, graphql.ErrorOnPath(ctx, err)
+		}
+		if tmp == nil {
+			return nil, nil
+		}
+		if data, ok := tmp.([]*model1.Loan); ok {
+			return data, nil
+		}
+		return nil, fmt.Errorf(`unexpected type %T from directive, should be []*github.com/alexrv11/credicuotas/server/db/model.Loan`, tmp)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.([]*model1.Loan)
+	fc.Result = res
+	return ec.marshalNLoan2ᚕᚖgithubᚗcomᚋalexrv11ᚋcredicuotasᚋserverᚋdbᚋmodelᚐLoan(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Query___type(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -3031,6 +3096,20 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 				}
 				return res
 			})
+		case "getLoanOrders":
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Query_getLoanOrders(ctx, field)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
+			})
 		case "__type":
 			out.Values[i] = ec._Query___type(ctx, field)
 		case "__schema":
@@ -3400,6 +3479,43 @@ func (ec *executionContext) marshalNInt2int(ctx context.Context, sel ast.Selecti
 	return res
 }
 
+func (ec *executionContext) marshalNLoan2ᚕᚖgithubᚗcomᚋalexrv11ᚋcredicuotasᚋserverᚋdbᚋmodelᚐLoan(ctx context.Context, sel ast.SelectionSet, v []*model1.Loan) graphql.Marshaler {
+	ret := make(graphql.Array, len(v))
+	var wg sync.WaitGroup
+	isLen1 := len(v) == 1
+	if !isLen1 {
+		wg.Add(len(v))
+	}
+	for i := range v {
+		i := i
+		fc := &graphql.FieldContext{
+			Index:  &i,
+			Result: &v[i],
+		}
+		ctx := graphql.WithFieldContext(ctx, fc)
+		f := func(i int) {
+			defer func() {
+				if r := recover(); r != nil {
+					ec.Error(ctx, ec.Recover(ctx, r))
+					ret = nil
+				}
+			}()
+			if !isLen1 {
+				defer wg.Done()
+			}
+			ret[i] = ec.marshalOLoan2ᚖgithubᚗcomᚋalexrv11ᚋcredicuotasᚋserverᚋdbᚋmodelᚐLoan(ctx, sel, v[i])
+		}
+		if isLen1 {
+			f(i)
+		} else {
+			go f(i)
+		}
+
+	}
+	wg.Wait()
+	return ret
+}
+
 func (ec *executionContext) marshalNLoan2ᚕᚖgithubᚗcomᚋalexrv11ᚋcredicuotasᚋserverᚋdbᚋmodelᚐLoanᚄ(ctx context.Context, sel ast.SelectionSet, v []*model1.Loan) graphql.Marshaler {
 	ret := make(graphql.Array, len(v))
 	var wg sync.WaitGroup
@@ -3747,6 +3863,13 @@ func (ec *executionContext) marshalOBoolean2ᚖbool(ctx context.Context, sel ast
 		return graphql.Null
 	}
 	return graphql.MarshalBoolean(*v)
+}
+
+func (ec *executionContext) marshalOLoan2ᚖgithubᚗcomᚋalexrv11ᚋcredicuotasᚋserverᚋdbᚋmodelᚐLoan(ctx context.Context, sel ast.SelectionSet, v *model1.Loan) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._Loan(ctx, sel, v)
 }
 
 func (ec *executionContext) unmarshalOString2string(ctx context.Context, v interface{}) (string, error) {
