@@ -60,6 +60,7 @@ type ComplexityRoot struct {
 		IncomeType        func(childComplexity int) int
 		OwnerName         func(childComplexity int) int
 		Status            func(childComplexity int) int
+		Timeline          func(childComplexity int) int
 		TotalInstallments func(childComplexity int) int
 	}
 
@@ -77,10 +78,24 @@ type ComplexityRoot struct {
 
 	Query struct {
 		GetClients    func(childComplexity int) int
+		GetLoan       func(childComplexity int, id string) int
 		GetLoanOrders func(childComplexity int) int
 		GetLoans      func(childComplexity int) int
 		GetUser       func(childComplexity int) int
 		Onboarding    func(childComplexity int) int
+	}
+
+	Timeline struct {
+		Approved     func(childComplexity int) int
+		PreApproved  func(childComplexity int) int
+		Requirements func(childComplexity int) int
+		Running      func(childComplexity int) int
+		Submitted    func(childComplexity int) int
+	}
+
+	TimelineItem struct {
+		CreatedDate func(childComplexity int) int
+		Status      func(childComplexity int) int
 	}
 
 	User struct {
@@ -96,6 +111,7 @@ type LoanResolver interface {
 	IncomeType(ctx context.Context, obj *model1.Loan) (string, error)
 
 	OwnerName(ctx context.Context, obj *model1.Loan) (string, error)
+	Timeline(ctx context.Context, obj *model1.Loan) (*model.Timeline, error)
 }
 type MutationResolver interface {
 	SendCodeByEmail(ctx context.Context, email string) (bool, error)
@@ -114,6 +130,7 @@ type QueryResolver interface {
 	GetLoans(ctx context.Context) ([]*model1.Loan, error)
 	GetLoanOrders(ctx context.Context) ([]*model1.Loan, error)
 	GetClients(ctx context.Context) ([]*model1.User, error)
+	GetLoan(ctx context.Context, id string) (*model1.Loan, error)
 }
 type UserResolver interface {
 	ID(ctx context.Context, obj *model1.User) (string, error)
@@ -177,6 +194,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Loan.Status(childComplexity), true
+
+	case "Loan.Timeline":
+		if e.complexity.Loan.Timeline == nil {
+			break
+		}
+
+		return e.complexity.Loan.Timeline(childComplexity), true
 
 	case "Loan.totalInstallments":
 		if e.complexity.Loan.TotalInstallments == nil {
@@ -295,6 +319,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Query.GetClients(childComplexity), true
 
+	case "Query.getLoan":
+		if e.complexity.Query.GetLoan == nil {
+			break
+		}
+
+		args, err := ec.field_Query_getLoan_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Query.GetLoan(childComplexity, args["id"].(string)), true
+
 	case "Query.getLoanOrders":
 		if e.complexity.Query.GetLoanOrders == nil {
 			break
@@ -322,6 +358,55 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Query.Onboarding(childComplexity), true
+
+	case "Timeline.approved":
+		if e.complexity.Timeline.Approved == nil {
+			break
+		}
+
+		return e.complexity.Timeline.Approved(childComplexity), true
+
+	case "Timeline.preApproved":
+		if e.complexity.Timeline.PreApproved == nil {
+			break
+		}
+
+		return e.complexity.Timeline.PreApproved(childComplexity), true
+
+	case "Timeline.requirements":
+		if e.complexity.Timeline.Requirements == nil {
+			break
+		}
+
+		return e.complexity.Timeline.Requirements(childComplexity), true
+
+	case "Timeline.running":
+		if e.complexity.Timeline.Running == nil {
+			break
+		}
+
+		return e.complexity.Timeline.Running(childComplexity), true
+
+	case "Timeline.submitted":
+		if e.complexity.Timeline.Submitted == nil {
+			break
+		}
+
+		return e.complexity.Timeline.Submitted(childComplexity), true
+
+	case "TimelineItem.createdDate":
+		if e.complexity.TimelineItem.CreatedDate == nil {
+			break
+		}
+
+		return e.complexity.TimelineItem.CreatedDate(childComplexity), true
+
+	case "TimelineItem.status":
+		if e.complexity.TimelineItem.Status == nil {
+			break
+		}
+
+		return e.complexity.TimelineItem.Status(childComplexity), true
 
 	case "User.id":
 		if e.complexity.User.ID == nil {
@@ -415,6 +500,8 @@ var sources = []*ast.Source{
 
 scalar Map
 
+scalar Time
+
 type Credential {
   accessToken: String!
 }
@@ -459,6 +546,7 @@ type Query  {
   getLoans: [Loan!]! @authenticated
   getLoanOrders: [Loan]! @authenticated
   getClients: [User]! @authenticated
+  getLoan(id: String!): Loan! @authenticated
 }
 
 type Mutation {
@@ -480,6 +568,25 @@ type Loan {
   incomeType: String!
   status: String!
   ownerName: String!
+  Timeline: Timeline!
+}
+
+type Timeline {
+  submitted: TimelineItem!
+  requirements: TimelineItem!
+  preApproved: TimelineItem!
+  approved: TimelineItem!
+  running: TimelineItem!
+}
+
+type TimelineItem {
+  createdDate: Time!
+  status: TimelineItemStatus!
+}
+
+enum TimelineItemStatus {
+  DONE
+  PENDING
 }
 
 type User {
@@ -724,6 +831,21 @@ func (ec *executionContext) field_Query___type_args(ctx context.Context, rawArgs
 		}
 	}
 	args["name"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Query_getLoan_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 string
+	if tmp, ok := rawArgs["id"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
+		arg0, err = ec.unmarshalNString2string(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["id"] = arg0
 	return args, nil
 }
 
@@ -1008,6 +1130,41 @@ func (ec *executionContext) _Loan_ownerName(ctx context.Context, field graphql.C
 	res := resTmp.(string)
 	fc.Result = res
 	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Loan_Timeline(ctx context.Context, field graphql.CollectedField, obj *model1.Loan) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Loan",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Loan().Timeline(rctx, obj)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*model.Timeline)
+	fc.Result = res
+	return ec.marshalNTimeline2ᚖgithubᚗcomᚋalexrv11ᚋcredicuotasᚋserverᚋgraphᚋmodelᚐTimeline(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Mutation_sendCodeByEmail(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -1786,6 +1943,68 @@ func (ec *executionContext) _Query_getClients(ctx context.Context, field graphql
 	return ec.marshalNUser2ᚕᚖgithubᚗcomᚋalexrv11ᚋcredicuotasᚋserverᚋdbᚋmodelᚐUser(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _Query_getLoan(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Query",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Query_getLoan_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		directive0 := func(rctx context.Context) (interface{}, error) {
+			ctx = rctx // use context from middleware stack in children
+			return ec.resolvers.Query().GetLoan(rctx, args["id"].(string))
+		}
+		directive1 := func(ctx context.Context) (interface{}, error) {
+			if ec.directives.Authenticated == nil {
+				return nil, errors.New("directive authenticated is not implemented")
+			}
+			return ec.directives.Authenticated(ctx, nil, directive0)
+		}
+
+		tmp, err := directive1(rctx)
+		if err != nil {
+			return nil, graphql.ErrorOnPath(ctx, err)
+		}
+		if tmp == nil {
+			return nil, nil
+		}
+		if data, ok := tmp.(*model1.Loan); ok {
+			return data, nil
+		}
+		return nil, fmt.Errorf(`unexpected type %T from directive, should be *github.com/alexrv11/credicuotas/server/db/model.Loan`, tmp)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*model1.Loan)
+	fc.Result = res
+	return ec.marshalNLoan2ᚖgithubᚗcomᚋalexrv11ᚋcredicuotasᚋserverᚋdbᚋmodelᚐLoan(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _Query___type(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -1855,6 +2074,251 @@ func (ec *executionContext) _Query___schema(ctx context.Context, field graphql.C
 	res := resTmp.(*introspection.Schema)
 	fc.Result = res
 	return ec.marshalO__Schema2ᚖgithubᚗcomᚋ99designsᚋgqlgenᚋgraphqlᚋintrospectionᚐSchema(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Timeline_submitted(ctx context.Context, field graphql.CollectedField, obj *model.Timeline) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Timeline",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Submitted, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*model.TimelineItem)
+	fc.Result = res
+	return ec.marshalNTimelineItem2ᚖgithubᚗcomᚋalexrv11ᚋcredicuotasᚋserverᚋgraphᚋmodelᚐTimelineItem(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Timeline_requirements(ctx context.Context, field graphql.CollectedField, obj *model.Timeline) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Timeline",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Requirements, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*model.TimelineItem)
+	fc.Result = res
+	return ec.marshalNTimelineItem2ᚖgithubᚗcomᚋalexrv11ᚋcredicuotasᚋserverᚋgraphᚋmodelᚐTimelineItem(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Timeline_preApproved(ctx context.Context, field graphql.CollectedField, obj *model.Timeline) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Timeline",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.PreApproved, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*model.TimelineItem)
+	fc.Result = res
+	return ec.marshalNTimelineItem2ᚖgithubᚗcomᚋalexrv11ᚋcredicuotasᚋserverᚋgraphᚋmodelᚐTimelineItem(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Timeline_approved(ctx context.Context, field graphql.CollectedField, obj *model.Timeline) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Timeline",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Approved, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*model.TimelineItem)
+	fc.Result = res
+	return ec.marshalNTimelineItem2ᚖgithubᚗcomᚋalexrv11ᚋcredicuotasᚋserverᚋgraphᚋmodelᚐTimelineItem(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Timeline_running(ctx context.Context, field graphql.CollectedField, obj *model.Timeline) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Timeline",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Running, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*model.TimelineItem)
+	fc.Result = res
+	return ec.marshalNTimelineItem2ᚖgithubᚗcomᚋalexrv11ᚋcredicuotasᚋserverᚋgraphᚋmodelᚐTimelineItem(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _TimelineItem_createdDate(ctx context.Context, field graphql.CollectedField, obj *model.TimelineItem) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "TimelineItem",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.CreatedDate, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(int64)
+	fc.Result = res
+	return ec.marshalNTime2int64(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _TimelineItem_status(ctx context.Context, field graphql.CollectedField, obj *model.TimelineItem) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "TimelineItem",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Status, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(model.TimelineItemStatus)
+	fc.Result = res
+	return ec.marshalNTimelineItemStatus2githubᚗcomᚋalexrv11ᚋcredicuotasᚋserverᚋgraphᚋmodelᚐTimelineItemStatus(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _User_id(ctx context.Context, field graphql.CollectedField, obj *model1.User) (ret graphql.Marshaler) {
@@ -3152,6 +3616,20 @@ func (ec *executionContext) _Loan(ctx context.Context, sel ast.SelectionSet, obj
 				}
 				return res
 			})
+		case "Timeline":
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Loan_Timeline(ctx, field, obj)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
+			})
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -3319,10 +3797,103 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 				}
 				return res
 			})
+		case "getLoan":
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Query_getLoan(ctx, field)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
+			})
 		case "__type":
 			out.Values[i] = ec._Query___type(ctx, field)
 		case "__schema":
 			out.Values[i] = ec._Query___schema(ctx, field)
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var timelineImplementors = []string{"Timeline"}
+
+func (ec *executionContext) _Timeline(ctx context.Context, sel ast.SelectionSet, obj *model.Timeline) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, timelineImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("Timeline")
+		case "submitted":
+			out.Values[i] = ec._Timeline_submitted(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "requirements":
+			out.Values[i] = ec._Timeline_requirements(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "preApproved":
+			out.Values[i] = ec._Timeline_preApproved(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "approved":
+			out.Values[i] = ec._Timeline_approved(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "running":
+			out.Values[i] = ec._Timeline_running(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var timelineItemImplementors = []string{"TimelineItem"}
+
+func (ec *executionContext) _TimelineItem(ctx context.Context, sel ast.SelectionSet, obj *model.TimelineItem) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, timelineItemImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("TimelineItem")
+		case "createdDate":
+			out.Values[i] = ec._TimelineItem_createdDate(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "status":
+			out.Values[i] = ec._TimelineItem_status(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -3688,6 +4259,10 @@ func (ec *executionContext) marshalNInt2int(ctx context.Context, sel ast.Selecti
 	return res
 }
 
+func (ec *executionContext) marshalNLoan2githubᚗcomᚋalexrv11ᚋcredicuotasᚋserverᚋdbᚋmodelᚐLoan(ctx context.Context, sel ast.SelectionSet, v model1.Loan) graphql.Marshaler {
+	return ec._Loan(ctx, sel, &v)
+}
+
 func (ec *executionContext) marshalNLoan2ᚕᚖgithubᚗcomᚋalexrv11ᚋcredicuotasᚋserverᚋdbᚋmodelᚐLoan(ctx context.Context, sel ast.SelectionSet, v []*model1.Loan) graphql.Marshaler {
 	ret := make(graphql.Array, len(v))
 	var wg sync.WaitGroup
@@ -3805,6 +4380,55 @@ func (ec *executionContext) marshalNString2string(ctx context.Context, sel ast.S
 		}
 	}
 	return res
+}
+
+func (ec *executionContext) unmarshalNTime2int64(ctx context.Context, v interface{}) (int64, error) {
+	res, err := graphql.UnmarshalInt64(v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalNTime2int64(ctx context.Context, sel ast.SelectionSet, v int64) graphql.Marshaler {
+	res := graphql.MarshalInt64(v)
+	if res == graphql.Null {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "must not be null")
+		}
+	}
+	return res
+}
+
+func (ec *executionContext) marshalNTimeline2githubᚗcomᚋalexrv11ᚋcredicuotasᚋserverᚋgraphᚋmodelᚐTimeline(ctx context.Context, sel ast.SelectionSet, v model.Timeline) graphql.Marshaler {
+	return ec._Timeline(ctx, sel, &v)
+}
+
+func (ec *executionContext) marshalNTimeline2ᚖgithubᚗcomᚋalexrv11ᚋcredicuotasᚋserverᚋgraphᚋmodelᚐTimeline(ctx context.Context, sel ast.SelectionSet, v *model.Timeline) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	return ec._Timeline(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalNTimelineItem2ᚖgithubᚗcomᚋalexrv11ᚋcredicuotasᚋserverᚋgraphᚋmodelᚐTimelineItem(ctx context.Context, sel ast.SelectionSet, v *model.TimelineItem) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	return ec._TimelineItem(ctx, sel, v)
+}
+
+func (ec *executionContext) unmarshalNTimelineItemStatus2githubᚗcomᚋalexrv11ᚋcredicuotasᚋserverᚋgraphᚋmodelᚐTimelineItemStatus(ctx context.Context, v interface{}) (model.TimelineItemStatus, error) {
+	var res model.TimelineItemStatus
+	err := res.UnmarshalGQL(v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalNTimelineItemStatus2githubᚗcomᚋalexrv11ᚋcredicuotasᚋserverᚋgraphᚋmodelᚐTimelineItemStatus(ctx context.Context, sel ast.SelectionSet, v model.TimelineItemStatus) graphql.Marshaler {
+	return v
 }
 
 func (ec *executionContext) marshalNUser2githubᚗcomᚋalexrv11ᚋcredicuotasᚋserverᚋdbᚋmodelᚐUser(ctx context.Context, sel ast.SelectionSet, v model1.User) graphql.Marshaler {

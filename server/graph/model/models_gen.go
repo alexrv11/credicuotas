@@ -8,6 +8,19 @@ import (
 	"strconv"
 )
 
+type Timeline struct {
+	Submitted    *TimelineItem `json:"submitted"`
+	Requirements *TimelineItem `json:"requirements"`
+	PreApproved  *TimelineItem `json:"preApproved"`
+	Approved     *TimelineItem `json:"approved"`
+	Running      *TimelineItem `json:"running"`
+}
+
+type TimelineItem struct {
+	CreatedDate int64              `json:"createdDate"`
+	Status      TimelineItemStatus `json:"status"`
+}
+
 type IncomeType string
 
 const (
@@ -187,5 +200,46 @@ func (e *RoleAction) UnmarshalGQL(v interface{}) error {
 }
 
 func (e RoleAction) MarshalGQL(w io.Writer) {
+	fmt.Fprint(w, strconv.Quote(e.String()))
+}
+
+type TimelineItemStatus string
+
+const (
+	TimelineItemStatusDone    TimelineItemStatus = "DONE"
+	TimelineItemStatusPending TimelineItemStatus = "PENDING"
+)
+
+var AllTimelineItemStatus = []TimelineItemStatus{
+	TimelineItemStatusDone,
+	TimelineItemStatusPending,
+}
+
+func (e TimelineItemStatus) IsValid() bool {
+	switch e {
+	case TimelineItemStatusDone, TimelineItemStatusPending:
+		return true
+	}
+	return false
+}
+
+func (e TimelineItemStatus) String() string {
+	return string(e)
+}
+
+func (e *TimelineItemStatus) UnmarshalGQL(v interface{}) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("enums must be strings")
+	}
+
+	*e = TimelineItemStatus(str)
+	if !e.IsValid() {
+		return fmt.Errorf("%s is not a valid TimelineItemStatus", str)
+	}
+	return nil
+}
+
+func (e TimelineItemStatus) MarshalGQL(w io.Writer) {
 	fmt.Fprint(w, strconv.Quote(e.String()))
 }

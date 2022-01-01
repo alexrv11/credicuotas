@@ -36,3 +36,7 @@ func (r *Loan) IncomeType(ctx context.Context, obj *model1.Loan) (string, error)
 func (r *Loan) OwnerName(ctx context.Context, obj *model1.Loan) (string, error) {
 	return obj.User.Name, nil
 }
+
+func (r *Loan) Timeline(ctx context.Context, obj *model1.Loan) (*model.Timeline, error) {
+	return nil, nil
+}

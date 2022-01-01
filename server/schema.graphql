@@ -5,6 +5,8 @@
 
 scalar Map
 
+scalar Time
+
 type Credential {
   accessToken: String!
 }
@@ -49,6 +51,7 @@ type Query  {
   getLoans: [Loan!]! @authenticated
   getLoanOrders: [Loan]! @authenticated
   getClients: [User]! @authenticated
+  getLoan(id: String!): Loan! @authenticated
 }
 
 type Mutation {
@@ -70,6 +73,25 @@ type Loan {
   incomeType: String!
   status: String!
   ownerName: String!
+  Timeline: Timeline!
+}
+
+type Timeline {
+  submitted: TimelineItem!
+  requirements: TimelineItem!
+  preApproved: TimelineItem!
+  approved: TimelineItem!
+  running: TimelineItem!
+}
+
+type TimelineItem {
+  createdDate: Time!
+  status: TimelineItemStatus!
+}
+
+enum TimelineItemStatus {
+  DONE
+  PENDING
 }
 
 type User {

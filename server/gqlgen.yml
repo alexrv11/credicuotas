@@ -55,6 +55,9 @@ models:
       - github.com/99designs/gqlgen/graphql.Int
       - github.com/99designs/gqlgen/graphql.Int64
       - github.com/99designs/gqlgen/graphql.Int32
+  Time:
+    model:
+      - github.com/99designs/gqlgen/graphql.Int64
   Credential:
       model: github.com/alexrv11/credicuotas/server/model.Credential
   Loan:

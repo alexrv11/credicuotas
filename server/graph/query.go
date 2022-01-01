@@ -50,3 +50,7 @@ func (query *queryResolver) GetLoanOrders(ctx context.Context) ([]*model2.Loan, 
 func (query *queryResolver) GetClients(ctx context.Context) ([]*model2.User, error) {
 	return nil, nil
 }
+
+func (query *queryResolver) GetLoan(ctx context.Context, id string) (*model2.Loan, error) {
+	return nil, nil
+}
