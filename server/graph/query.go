@@ -46,3 +46,7 @@ func (query *queryResolver) GetLoans(ctx context.Context) ([]*model2.Loan, error
 func (query *queryResolver) GetLoanOrders(ctx context.Context) ([]*model2.Loan, error) {
 	return query.core.Loan.GetLoanOrders(query.provider)
 }
+
+func (query *queryResolver) GetClients(ctx context.Context) ([]*model2.User, error) {
+	return nil, nil
+}

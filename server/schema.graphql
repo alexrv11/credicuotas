@@ -48,6 +48,7 @@ type Query  {
   onboarding: OnboardingStatus! @authenticated
   getLoans: [Loan!]! @authenticated
   getLoanOrders: [Loan]! @authenticated
+  getClients: [User]! @authenticated
 }
 
 type Mutation {

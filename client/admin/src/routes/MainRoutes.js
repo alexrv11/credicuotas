@@ -10,6 +10,7 @@ const DashboardDefault = Loadable(lazy(() => import('views/dashboard/Default')))
 // utilities routing
 const ClientOrders = Loadable(lazy(() => import('views/clients/LoanOrders')));
 const ClientLoans = Loadable(lazy(() => import('views/clients/Loans')));
+const ClientLoanDetails = Loadable(lazy(() => import('views/clients/LoanDetails')));
 const ClientProfiles = Loadable(lazy(() => import('views/clients/Profiles')));
 
 const MainRoutes = {
@@ -31,6 +32,10 @@ const MainRoutes = {
         {
             path: '/clients/loans',
             element: <ClientLoans />
+        },
+        {
+            path: '/clients/loans/:id',
+            element: <ClientLoanDetails />
         },
         {
             path: '/clients/profiles',
