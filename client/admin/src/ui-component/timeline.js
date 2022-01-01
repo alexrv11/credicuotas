@@ -11,7 +11,7 @@ const LoanTimeline = () => {
         <Timeline position="left">
             <TimelineItem>
                 <TimelineSeparator>
-                    <TimelineDot />
+                    <TimelineDot color="success" />
                     <TimelineConnector />
                 </TimelineSeparator>
                 <TimelineContent>Registrado</TimelineContent>

@@ -3,6 +3,8 @@ import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 
+import { useMutation } from '@apollo/client';
+
 // material-ui
 import { useTheme } from '@mui/material/styles';
 import {
@@ -38,6 +40,7 @@ import User1 from 'assets/images/users/user-round.svg';
 
 // assets
 import { IconLogout, IconSearch, IconSettings, IconUser } from '@tabler/icons';
+import LOGOUT from 'api/gql/queries/logout';
 
 // ==============================|| PROFILE MENU ||============================== //
 
@@ -45,6 +48,8 @@ const ProfileSection = () => {
     const theme = useTheme();
     const customization = useSelector((state) => state.customization);
     const navigate = useNavigate();
+
+    const [logout] = useMutation(LOGOUT);
 
     const [sdm, setSdm] = useState(true);
     const [value, setValue] = useState('');
@@ -54,7 +59,8 @@ const ProfileSection = () => {
 
     const anchorRef = useRef(null);
     const handleLogout = async () => {
-        alert('It is coming!');
+        logout();
+        window.location.reload(false);
     };
 
     const handleClose = (event) => {
