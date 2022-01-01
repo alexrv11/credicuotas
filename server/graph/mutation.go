@@ -60,6 +60,18 @@ func (r *mutationResolver) Login(ctx context.Context, email string, password str
 	}, nil
 }
 
+func (r *mutationResolver) Logout(ctx context.Context) (bool, error) {
+	userID, _ := ctx.Value(middlewares.UserInfoIdKey).(float64)
+	token, _ := ctx.Value(middlewares.UserInfoToken).(string)
+
+	err := r.core.Auth.Logout(r.provider, uint(userID), token)
+	if err != nil {
+		return false, err
+	}
+
+	return true, nil
+}
+
 func (r *mutationResolver) SaveUserInfo(ctx context.Context, name, identifierNumber string) (bool, error) {
 	userXid, _ := ctx.Value(middlewares.UserInfoKey).(string)
 

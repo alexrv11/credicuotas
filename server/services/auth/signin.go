@@ -24,6 +24,7 @@ type Auth interface {
 	SignInWithCode(provider *providers.Provider, email, code string) (string, error)
 	SignInWithPassword(provider *providers.Provider, email, password string) (string, error)
 	SavePhone(provider *providers.Provider, userXid, phone, code string) error
+	Logout(provider *providers.Provider, userID uint, token string) error
 }
 
 type AuthImpl struct {
@@ -143,14 +144,15 @@ func (a *AuthImpl) SignInWithCode(provider *providers.Provider, email, code stri
 		return "", fmt.Errorf("invalid code")
 	}
 
-	return createAccessToken(user)
+	return createAccessToken(provider, user)
 }
 
-func createAccessToken(user dbmodel.User) (string, error) {
+func createAccessToken(provider *providers.Provider, user dbmodel.User) (string, error) {
 	claims := &model.SessionClaims{
 		Xid:  user.Xid,
 		Name: user.Name,
 		Role: user.Role,
+		ID:   user.ID,
 		StandardClaims: jwt.StandardClaims{
 			ExpiresAt: time.Now().Add(time.Hour * 72).Unix(),
 		},
@@ -162,6 +164,19 @@ func createAccessToken(user dbmodel.User) (string, error) {
 
 	// Generate encoded token and send it as response.
 	accessToken, err := token.SignedString([]byte(secret))
+	if err != nil {
+		return "", err
+	}
+
+	encodedToken := Encode(accessToken)
+
+	db := provider.GormClient()
+
+	err = db.Save(&dbmodel.Session{
+		Token:  encodedToken,
+		UserID: user.ID,
+	}).Error
+
 	if err != nil {
 		return "", err
 	}
@@ -178,7 +193,7 @@ func (a *AuthImpl) SignInWithPassword(provider *providers.Provider, email, passw
 			Role:  string(model2.RoleAdmin),
 			Xid:   email,
 		}
-		return createAccessToken(admin)
+		return createAccessToken(provider, admin)
 	}
 
 	var user dbmodel.User
@@ -198,7 +213,7 @@ func (a *AuthImpl) SignInWithPassword(provider *providers.Provider, email, passw
 		return "", fmt.Errorf("invalid credential")
 	}
 
-	return createAccessToken(user)
+	return createAccessToken(provider, user)
 }
 
 func (a *AuthImpl) SavePhone(provider *providers.Provider, userXid, phone, code string) error {
@@ -272,4 +287,14 @@ func (a *AuthImpl) verifyPassword(provider *providers.Provider, user dbmodel.Use
 	}
 
 	return true, nil
+}
+
+func (a *AuthImpl) Logout(provider *providers.Provider, userID uint, token string) error {
+	db := provider.GormClient()
+	err := db.Where("user_id = ? AND token = ?", userID, token).Delete(&dbmodel.Session{}).Error
+	if err != nil {
+		return err
+	}
+
+	return nil
 }

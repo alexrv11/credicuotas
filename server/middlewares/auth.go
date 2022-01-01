@@ -3,6 +3,9 @@ package middlewares
 import (
 	"context"
 	"fmt"
+	"github.com/alexrv11/credicuotas/server/db/connection"
+	"github.com/alexrv11/credicuotas/server/db/model"
+	"github.com/alexrv11/credicuotas/server/services/auth"
 	"github.com/golang-jwt/jwt"
 	"github.com/spf13/viper"
 	"net/http"
@@ -12,6 +15,8 @@ import (
 const (
 	UserInfoKey     = "UserInfoKey"
 	UserInfoRoleKey = "UserInfoRoleKey"
+	UserInfoIdKey   = "UserInfoIdKey"
+	UserInfoToken   = "UserInfoToken"
 )
 
 func Authentication(next http.Handler) http.Handler {
@@ -41,14 +46,31 @@ func Authentication(next http.Handler) http.Handler {
 			return
 		}
 
+		encodedToken := auth.Encode(accessToken)
+		client, err := connection.CreateGormClient()
+		if err != nil {
+			next.ServeHTTP(w, r.WithContext(ctx))
+			return
+		}
+
 		claims, ok := token.Claims.(jwt.MapClaims)
 		if !ok || !token.Valid {
+			next.ServeHTTP(w, r.WithContext(ctx))
+			return
+		}
+		userID := claims["ID"]
+		var existToken model.Session
+		err = client.Model(&model.Session{}).Where("token = ? AND user_id = ?", encodedToken, userID).First(&existToken).Error
+
+		if err != nil {
 			next.ServeHTTP(w, r.WithContext(ctx))
 			return
 		}
 
 		ctx = context.WithValue(ctx, UserInfoKey, claims["Xid"])
 		ctx = context.WithValue(ctx, UserInfoRoleKey, claims["Role"])
+		ctx = context.WithValue(ctx, UserInfoIdKey, claims["ID"])
+		ctx = context.WithValue(ctx, UserInfoToken, encodedToken)
 
 		next.ServeHTTP(w, r.WithContext(ctx))
 	}

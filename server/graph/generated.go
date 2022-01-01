@@ -66,6 +66,7 @@ type ComplexityRoot struct {
 	Mutation struct {
 		CreateUser      func(childComplexity int, email string, password string, name string, role model.Role) int
 		Login           func(childComplexity int, email string, password string) int
+		Logout          func(childComplexity int) int
 		SaveLoan        func(childComplexity int, amount int, totalInstallments int, incomeType model.IncomeType) int
 		SavePhoneNumber func(childComplexity int, phone string, code string) int
 		SaveUserInfo    func(childComplexity int, name string, identifier string) int
@@ -100,6 +101,7 @@ type MutationResolver interface {
 	SendCodeByEmail(ctx context.Context, email string) (bool, error)
 	SignInWithCode(ctx context.Context, email string, code string) (*model2.Credential, error)
 	Login(ctx context.Context, email string, password string) (*model2.Credential, error)
+	Logout(ctx context.Context) (bool, error)
 	CreateUser(ctx context.Context, email string, password string, name string, role model.Role) (bool, error)
 	SaveUserInfo(ctx context.Context, name string, identifier string) (bool, error)
 	SendCodeByPhone(ctx context.Context, phone string) (bool, error)
@@ -206,6 +208,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Mutation.Login(childComplexity, args["email"].(string), args["password"].(string)), true
+
+	case "Mutation.logout":
+		if e.complexity.Mutation.Logout == nil {
+			break
+		}
+
+		return e.complexity.Mutation.Logout(childComplexity), true
 
 	case "Mutation.saveLoan":
 		if e.complexity.Mutation.SaveLoan == nil {
@@ -456,6 +465,7 @@ type Mutation {
   sendCodeByEmail(email: String!): Boolean!
   signInWithCode(email: String!, code: String!): Credential!
   login(email: String!, password: String!): Credential!
+  logout: Boolean! @authenticated
   createUser(email: String!, password: String!, name: String!, role: Role!): Boolean! @authenticated @hasRole(role: ADMIN)
   saveUserInfo(name: String!, identifier: String!): Boolean! @authenticated
   sendCodeByPhone(phone: String!): Boolean! @authenticated
@@ -1124,6 +1134,61 @@ func (ec *executionContext) _Mutation_login(ctx context.Context, field graphql.C
 	res := resTmp.(*model2.Credential)
 	fc.Result = res
 	return ec.marshalNCredential2ᚖgithubᚗcomᚋalexrv11ᚋcredicuotasᚋserverᚋmodelᚐCredential(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Mutation_logout(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		directive0 := func(rctx context.Context) (interface{}, error) {
+			ctx = rctx // use context from middleware stack in children
+			return ec.resolvers.Mutation().Logout(rctx)
+		}
+		directive1 := func(ctx context.Context) (interface{}, error) {
+			if ec.directives.Authenticated == nil {
+				return nil, errors.New("directive authenticated is not implemented")
+			}
+			return ec.directives.Authenticated(ctx, nil, directive0)
+		}
+
+		tmp, err := directive1(rctx)
+		if err != nil {
+			return nil, graphql.ErrorOnPath(ctx, err)
+		}
+		if tmp == nil {
+			return nil, nil
+		}
+		if data, ok := tmp.(bool); ok {
+			return data, nil
+		}
+		return nil, fmt.Errorf(`unexpected type %T from directive, should be bool`, tmp)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(bool)
+	fc.Result = res
+	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Mutation_createUser(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -3125,6 +3190,11 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 			}
 		case "login":
 			out.Values[i] = ec._Mutation_login(ctx, field)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "logout":
+			out.Values[i] = ec._Mutation_logout(ctx, field)
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
