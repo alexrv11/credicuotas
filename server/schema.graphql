@@ -98,5 +98,8 @@ type User {
   id: String!
   name: String!
   role: Role!
+  email: String!
+  phone: String!
+  identifierNumber: String
 }
 
