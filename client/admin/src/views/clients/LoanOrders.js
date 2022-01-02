@@ -4,6 +4,8 @@ import { DataGrid } from '@mui/x-data-grid';
 
 import { useQuery } from '@apollo/client';
 
+import { useNavigate } from 'react-router-dom';
+
 // project imports
 import MainCard from 'ui-component/cards/MainCard';
 import { gridSpacing } from 'store/constant';
@@ -13,6 +15,7 @@ import GET_LOAN_ORDERS from 'api/gql/queries/get-loan-orders';
 const LoanOrders = () => {
     const [pageSize, setPageSize] = useState(25);
     const { loading, error, data } = useQuery(GET_LOAN_ORDERS);
+    const navigate = useNavigate();
     const columns = [
         {
             field: 'id',
@@ -74,6 +77,7 @@ const LoanOrders = () => {
                             rows={data?.getLoanOrders}
                             columns={columns}
                             pageSize={pageSize}
+                            onRowClick={(data) => navigate(`/admin/clients/loans/${data.id}`)}
                             onPageSizeChange={(newPage) => setPageSize(newPage)}
                             pagination
                         />
