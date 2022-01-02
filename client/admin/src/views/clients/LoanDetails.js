@@ -10,7 +10,12 @@ import MainCard from 'ui-component/cards/MainCard';
 import { gridSpacing } from 'store/constant';
 import LoanTimeline from 'ui-component/timeline';
 import styled from '@emotion/styled';
-import { fontWeight } from '@mui/system';
+import Box from '@mui/material/Box';
+import Tabs from '@mui/material/Tabs';
+import Tab from '@mui/material/Tab';
+import { useState } from 'react';
+import VerticalLinearStepper from 'ui-component/stepper';
+import LoanTabs from 'ui-component/loantabs';
 
 const DetailWrapper = styled.div(({ theme }) => ({
     padding: 20,
@@ -32,12 +37,21 @@ const ValueWrapper = styled.span(({ theme }) => ({
 
 const LoanDetails = () => {
     const { id } = useParams();
+    const [activeTab, setActiveTab] = useState(0);
+
+    const handleChange = (event, newValue) => {
+        setActiveTab(newValue);
+    };
+
     return (
         <MainCard>
             <Grid container spacing={gridSpacing}>
-                <Grid container spacing={gridSpacing} rowSpacing={2}>
+                <Grid container>
                     <Grid item lg={3} md={3} sm={3} xs={12}>
                         <DetailWrapper>
+                            <Typography variant="subtitle2" gutterBottom component="div">
+                                Prestamo a
+                            </Typography>
                             <Typography variant="h3" gutterBottom component="div">
                                 Nombre Cliente
                             </Typography>
@@ -84,13 +98,12 @@ const LoanDetails = () => {
                         </DetailWrapper>
                     </Grid>
                 </Grid>
-                <Grid item lg={4} md={4} sm={12} xs={12}>
-                    <LoanTimeline />
-                </Grid>
+                <Divider flexItem width="100%" />
                 <Grid item lg={8} md={8} sm={12} xs={12}>
-                    <MuiTypography variant="h6" gutterBottom>
-                        It is coming
-                    </MuiTypography>
+                    <LoanTabs />
+                </Grid>
+                <Grid item lg={4} md={4} sm={12} xs={12}>
+                    <VerticalLinearStepper />
                 </Grid>
             </Grid>
         </MainCard>
