@@ -34,7 +34,7 @@ const chartData = {
                 show: false
             },
             y: {
-                title: 'Total Order'
+                title: 'Total Prestamos'
             },
             marker: {
                 show: false
