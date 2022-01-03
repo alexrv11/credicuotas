@@ -7,6 +7,7 @@
 - Golang
 - Postgres
 - Goland or VSCode with golang extends
+- Graphql client https://github.com/graphql/graphql-playground
 
 
 ``cd server/``
