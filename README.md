@@ -1,5 +1,21 @@
 # credicuotas
 
+## Get started on Golang server
+
+### Install Environment
+
+- Golang
+- Postgres
+- Goland or VSCode with golang extends
+
+
+``cd server/``
+``go get ./...``
+``go build ./...``
+``go generate ./...``
+
+
+
 ## Docker compose
 
 ### Run all services
