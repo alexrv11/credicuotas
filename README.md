@@ -15,6 +15,20 @@
 ``go build ./...``
 ``go generate ./...``
 
+### Config your dev.env
+
+
+``cd server/config``
+``cp sample.env dev.env``
+
+- Configure a env variable
+
+``ENV=dev``
+
+### config database
+
+- Create a postgres database
+- update the connection database on dev.env
 
 
 ## Docker compose
