@@ -1,0 +1,14 @@
+{
+  "SENDGRID_API_KEY":"",
+  "EMAIL_SENDER_NAME": "Porvenir SA",
+  "EMAIL_SENDER_ADDRESS": "",
+  "EMAIL_SIGN_IN_TEMPLATE_ID": "",
+  "POSTGRES_URL": "host=localhost port=5432 user=porvenir dbname=creditdb password=123456! sslmode=disable",
+  "SECRET_OTP": "base64",
+  "SECRET_SESSION": "base64",
+  "TWILIO_ACCOUNT_SID": "",
+  "TWILIO_AUTH_TOKEN": "",
+  "TWILIO_PHONE_NUMBER": "",
+  "ADMIN_USER": "",
+  "ADMIN_PASSWORD": ""
+}
