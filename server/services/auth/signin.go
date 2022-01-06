@@ -193,6 +193,22 @@ func (a *AuthImpl) SignInWithPassword(provider *providers.Provider, email, passw
 			Role:  string(model2.RoleAdmin),
 			Xid:   email,
 		}
+
+		var user dbmodel.User
+		err := db.Model(&dbmodel.User{}).Where("email = ?", email).First(&user).Error
+
+		if err != nil {
+			err = db.Save(&admin).Error
+			if err != nil {
+				return "", err
+			}
+
+			return createAccessToken(provider, admin)
+		}
+
+		admin.Xid = user.Xid
+		admin.ID = user.ID
+
 		return createAccessToken(provider, admin)
 	}
 

@@ -48,7 +48,7 @@ const Login = ({ ...others }) => {
         <>
             <Formik
                 initialValues={{
-                    email: 'asesor1@porvenir.com',
+                    email: 'admin@porvenir.com',
                     password: 'Control123',
                     submit: null
                 }}
