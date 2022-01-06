@@ -12,6 +12,7 @@ const ClientOrders = Loadable(lazy(() => import('views/clients/LoanOrders')));
 const ClientLoans = Loadable(lazy(() => import('views/clients/Loans')));
 const ClientLoanDetails = Loadable(lazy(() => import('views/clients/LoanDetails')));
 const ClientProfiles = Loadable(lazy(() => import('views/clients/Profiles')));
+const StaffProfiles = Loadable(lazy(() => import('views/staff/Profiles')));
 
 const MainRoutes = {
     path: '/',
@@ -40,6 +41,10 @@ const MainRoutes = {
         {
             path: '/clients/profiles',
             element: <ClientProfiles />
+        },
+        {
+            path: '/staff/profiles',
+            element: <StaffProfiles />
         }
     ]
 };

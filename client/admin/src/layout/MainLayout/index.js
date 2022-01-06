@@ -2,7 +2,7 @@ import { useQuery } from '@apollo/client';
 import GET_USER from 'api/gql/queries/get-user';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Outlet, useNavigate } from 'react-router-dom';
+import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 
 // material-ui
 import { styled, useTheme } from '@mui/material/styles';
@@ -16,6 +16,8 @@ import Customization from '../Customization';
 import navigation from 'menu-items';
 import { drawerWidth } from 'store/constant';
 import { SET_MENU } from 'store/actions';
+
+import config from 'config';
 
 // assets
 import { IconChevronRight } from '@tabler/icons';
@@ -70,6 +72,8 @@ const MainLayout = () => {
     const { loading, error, data } = useQuery(GET_USER);
     const matchDownMd = useMediaQuery(theme.breakpoints.down('lg'));
 
+    const location = useLocation();
+
     // Handle left drawer
     const leftDrawerOpened = useSelector((state) => state.customization.opened);
     const dispatch = useDispatch();
@@ -80,6 +84,15 @@ const MainLayout = () => {
     useEffect(() => {
         console.log(loading, error, data);
     }, [loading, error, data]);
+
+    useEffect(() => {
+        console.log('page', location.pathname, data);
+        const role = data?.getUser?.role;
+        if (role && location.pathname === '/admin') {
+            console.log('page', location.pathname, data);
+            navigate(config.defaultPaths[role]);
+        }
+    }, [location, data, navigate]);
 
     useEffect(() => {
         dispatch({ type: SET_MENU, opened: !matchDownMd });

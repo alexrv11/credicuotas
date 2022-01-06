@@ -6,7 +6,6 @@ import assistant from './assistant';
 // ==============================|| MENU ITEMS ||============================== //
 
 const getMenu = (role) => {
-    console.log('get menu', role);
     if (role === 'CREDIT_ASSISTANT') {
         return assistant;
     }
