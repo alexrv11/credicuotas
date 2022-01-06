@@ -51,6 +51,10 @@ func (query *queryResolver) GetClients(ctx context.Context) ([]*model2.User, err
 	return query.core.User.GetClients(query.provider)
 }
 
+func (query *queryResolver) GetStaff(ctx context.Context) ([]*model2.User, error) {
+	return query.core.User.GetStaff(query.provider)
+}
+
 func (query *queryResolver) GetLoan(ctx context.Context, id string) (*model2.Loan, error) {
 	return nil, nil
 }

@@ -51,6 +51,7 @@ type Query  {
   getLoans: [Loan!]! @authenticated
   getLoanOrders: [Loan]! @authenticated
   getClients: [User]! @authenticated
+  getStaff: [User]! @authenticated @hasRole(role: ADMIN)
   getLoan(id: String!): Loan! @authenticated
 }
 

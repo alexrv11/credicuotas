@@ -12,48 +12,8 @@ import Loader from 'ui-component/Loader';
 import GET_STAFF from 'api/gql/queries/get-staff';
 
 const StaffProfiles = () => {
-    const [pageSize, setPageSize] = useState(25);
-    const { loading, error, data } = useQuery(GET_STAFF);
-    const columns = [
-        {
-            field: 'id',
-            hide: true
-        },
-        {
-            field: 'name',
-            headerName: 'Nombre',
-            width: 220,
-            editable: false
-        },
-        {
-            field: 'email',
-            headerName: 'Correo electronico',
-            width: 320,
-            editable: false
-        },
-        {
-            field: 'role',
-            headerName: 'Rol',
-            width: 180,
-            editable: false
-        }
-    ];
 
-    if (loading || error || !data) {
-        return (
-            <MainCard title="Personal">
-                <Grid container spacing={gridSpacing}>
-                    <Grid item xs={12} sm={12}>
-                        <MuiTypography variant="h6" gutterBottom>
-                            Solicitudes de Prestamos
-                        </MuiTypography>
-                        <Loader />
-                    </Grid>
-                </Grid>
-            </MainCard>
-        );
-    }
-
+    console.log('hello');
     return (
         <MainCard title="Personal">
             <Grid container spacing={gridSpacing}>
