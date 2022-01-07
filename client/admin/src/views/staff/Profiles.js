@@ -1,10 +1,25 @@
 // material-ui
-import { Grid } from '@mui/material';
+import { Grid, Tooltip } from '@mui/material';
+import Fab from '@mui/material/Fab';
+import Box from '@mui/material/Box';
+import AddIcon from '@mui/icons-material/Add';
+import MuiTypography from '@mui/material/Typography';
+import Button from '@mui/material/Button';
+import TextField from '@mui/material/TextField';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import FormHelperText from '@mui/material/FormHelperText';
+import FormControl from '@mui/material/FormControl';
+import Select from '@mui/material/Select';
 
 // project imports
 import MainCard from 'ui-component/cards/MainCard';
 import { gridSpacing } from 'store/constant';
-import MuiTypography from '@mui/material/Typography';
 import { useQuery } from '@apollo/client';
 import { DataGrid } from '@mui/x-data-grid';
 import { useState } from 'react';
@@ -39,6 +54,23 @@ const StaffProfiles = () => {
         }
     ];
 
+    const [open, setOpen] = useState(false);
+
+    const handleClickOpen = () => {
+        setOpen(true);
+    };
+
+    const handleClose = () => {
+        setOpen(false);
+    };
+
+    const [userRol, setUserRol] = useState('CREDIT_ASSISTANT');
+
+    const handleChange = (event) => {
+        console.log(event.target);
+        setUserRol(event.target.value);
+    };
+
     if (loading || error || !data) {
         return (
             <MainCard title="Personal">
@@ -55,7 +87,51 @@ const StaffProfiles = () => {
     }
 
     return (
-        <MainCard title="Personal">
+        <MainCard
+            title="Personal"
+            secondary={
+                <Tooltip title="Registrar nuevo usuario" placement="left">
+                    <Box sx={{ '& > :not(style)': { m: 1 } }}>
+                        <Fab color="primary" aria-label="add" onClick={handleClickOpen}>
+                            <AddIcon />
+                        </Fab>
+                    </Box>
+                </Tooltip>
+            }
+        >
+            <div>
+                <Dialog open={open} onClose={handleClose}>
+                    <DialogTitle>Nuevo usuario</DialogTitle>
+                    <DialogContent>
+                        <DialogContentText>Para el registro de un usuario adminimistrativo ingrese:</DialogContentText>
+                        <Box sx={{ mt: 3 }}>
+                            <TextField autoFocus margin="dense" id="name" label="Nombre" type="text" fullWidth variant="standard" />
+                        </Box>
+                        <Box sx={{ mt: 3 }}>
+                            <TextField margin="dense" id="name" label="Correo Electronico" type="email" fullWidth variant="standard" />
+                        </Box>
+                        <Box sx={{ mt: 3 }}>
+                            <FormControl sx={{ m: 1, minWidth: 180 }}>
+                                <InputLabel id="create-user-select-role-label">Role del usuario</InputLabel>
+                                <Select
+                                    labelId="create-user-select-role-label"
+                                    id="select-role-values"
+                                    value={userRol}
+                                    label="Rol del usuario"
+                                    onChange={handleChange}
+                                >
+                                    <MenuItem value="CREDIT_ASSISTANT">Asesor de Credito</MenuItem>
+                                    <MenuItem value="MANAGER">Gerente</MenuItem>
+                                </Select>
+                            </FormControl>
+                        </Box>
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={handleClose}>Cancelar</Button>
+                        <Button onClick={handleClose}>Registrar</Button>
+                    </DialogActions>
+                </Dialog>
+            </div>
             <Grid container spacing={gridSpacing}>
                 <Grid item xs={12} sm={12}>
                     <div style={{ height: 400, width: '100%' }}>
