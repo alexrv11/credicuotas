@@ -13,22 +13,24 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
-import FormHelperText from '@mui/material/FormHelperText';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 
 // project imports
 import MainCard from 'ui-component/cards/MainCard';
 import { gridSpacing } from 'store/constant';
-import { useQuery } from '@apollo/client';
+import { useMutation, useQuery } from '@apollo/client';
 import { DataGrid } from '@mui/x-data-grid';
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import Loader from 'ui-component/Loader';
 import GET_STAFF from 'api/gql/queries/get-staff';
+import CREATE_USER from 'api/gql/mutations/create-user';
 
 const StaffProfiles = () => {
     const [pageSize, setPageSize] = useState(25);
     const { loading, error, data } = useQuery(GET_STAFF);
+    const [createUser, { error: createError }] = useMutation(CREATE_USER);
+
     const columns = [
         {
             field: 'id',
@@ -65,9 +67,15 @@ const StaffProfiles = () => {
     };
 
     const [userRol, setUserRol] = useState('CREDIT_ASSISTANT');
+    const [name, setName] = useState('');
+    const [email, setEmail] = useState('');
+
+    const handleSubmit = useCallback(async () => {
+        await createUser({ variables: { name, email, role: userRol, password: 'Control123' }, refetchQueries: [GET_STAFF] });
+        setOpen(false);
+    }, [createUser, email, name, userRol]);
 
     const handleChange = (event) => {
-        console.log(event.target);
         setUserRol(event.target.value);
     };
 
@@ -105,10 +113,29 @@ const StaffProfiles = () => {
                     <DialogContent>
                         <DialogContentText>Para el registro de un usuario adminimistrativo ingrese:</DialogContentText>
                         <Box sx={{ mt: 3 }}>
-                            <TextField autoFocus margin="dense" id="name" label="Nombre" type="text" fullWidth variant="standard" />
+                            <TextField
+                                autoFocus
+                                margin="dense"
+                                id="name"
+                                label="Nombre"
+                                type="text"
+                                fullWidth
+                                variant="standard"
+                                value={name}
+                                onChange={(e) => setName(e.target.value)}
+                            />
                         </Box>
                         <Box sx={{ mt: 3 }}>
-                            <TextField margin="dense" id="name" label="Correo Electronico" type="email" fullWidth variant="standard" />
+                            <TextField
+                                margin="dense"
+                                id="name"
+                                label="Correo Electronico"
+                                type="email"
+                                fullWidth
+                                variant="standard"
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
+                            />
                         </Box>
                         <Box sx={{ mt: 3 }}>
                             <FormControl sx={{ m: 1, minWidth: 180 }}>
@@ -128,7 +155,7 @@ const StaffProfiles = () => {
                     </DialogContent>
                     <DialogActions>
                         <Button onClick={handleClose}>Cancelar</Button>
-                        <Button onClick={handleClose}>Registrar</Button>
+                        <Button onClick={handleSubmit}>Registrar</Button>
                     </DialogActions>
                 </Dialog>
             </div>
