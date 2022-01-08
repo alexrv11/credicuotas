@@ -125,3 +125,8 @@ func (r *mutationResolver) CreateUser(ctx context.Context, email, password, name
 
 	return true, nil
 }
+
+func (r *mutationResolver) ToggleUserDisable(ctx context.Context, userXid string) (bool, error) {
+
+	return r.core.User.ToggleDisableUser(r.provider, userXid)
+}

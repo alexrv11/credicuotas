@@ -59,12 +59,14 @@ type Mutation {
   sendCodeByEmail(email: String!): Boolean!
   signInWithCode(email: String!, code: String!): Credential!
   login(email: String!, password: String!): Credential!
-  logout: Boolean! @authenticated
+  toggleUserDisable(userXid: String!): Boolean! @authenticated @hasRole(role: ADMIN)
   createUser(email: String!, password: String!, name: String!, role: Role!): Boolean! @authenticated @hasRole(role: ADMIN)
+
   saveUserInfo(name: String!, identifier: String!): Boolean! @authenticated
   sendCodeByPhone(phone: String!): Boolean! @authenticated
   savePhoneNumber(phone: String!, code: String!): Boolean! @authenticated
   saveLoan(amount: Int!, totalInstallments: Int!, incomeType: IncomeType!): Boolean! @authenticated
+  logout: Boolean! @authenticated
 }
 
 type Loan {

@@ -23,6 +23,7 @@ type User struct {
 	IdentifierNumber string
 	Role             string
 	Password         string
+	Disable          bool
 }
 
 func (u *User) BeforeCreate(tx *gorm.DB) error {

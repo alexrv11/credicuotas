@@ -14,6 +14,7 @@ type User interface {
 	SaveUserInfo(provider *providers.Provider, userXid, name, identifierNumber string) error
 	GetClients(provider *providers.Provider) ([]*model.User, error)
 	GetStaff(provider *providers.Provider) ([]*model.User, error)
+	ToggleDisableUser(provider *providers.Provider, userXid string) (bool, error)
 }
 
 type UserImpl struct {
@@ -92,4 +93,29 @@ func (u *UserImpl) GetStaff(provider *providers.Provider) ([]*model.User, error)
 	}
 
 	return users, nil
+}
+
+func (u *UserImpl) ToggleDisableUser(provider *providers.Provider, userXid string) (bool, error) {
+	db := provider.GormClient()
+
+	var user model.User
+	err := db.Model(&model.User{}).Where("xid = ?", userXid).First(&user).Error
+
+	if errors.Is(err, gorm.ErrRecordNotFound) {
+		return false, fmt.Errorf("not found user")
+	}
+
+	if err != nil {
+		return false, err
+	}
+
+	user.Disable = !user.Disable
+
+	err = db.Save(&user).Error
+
+	if err != nil {
+		return false, err
+	}
+
+	return true, nil
 }
