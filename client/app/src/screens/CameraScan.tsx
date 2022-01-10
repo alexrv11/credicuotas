@@ -6,7 +6,9 @@ import Camera from '../components/Camera';
 const CameraCaptureScreen = ({ navigation }) => {
   return (
     <SafeAreaView style={styles.container}>
-      <Camera afterTakePicture={() => console.log('hello camera')} />
+      <Camera
+        afterTakePicture={(uri: any) => console.log('hello camera', uri)}
+      />
     </SafeAreaView>
   );
 };

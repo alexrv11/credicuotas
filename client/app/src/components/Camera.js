@@ -15,7 +15,7 @@ const Camera = ({ afterTakePicture }) => {
       const data = await camera.takePictureAsync(options);
       console.log(data.uri);
       if (afterTakePicture) {
-        afterTakePicture();
+        afterTakePicture(data.uri);
       }
     }
   }, [afterTakePicture, camera]);
