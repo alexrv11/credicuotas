@@ -3,36 +3,33 @@ import PrimaryButton from 'components/PrimaryButton';
 import { StackActions } from '@react-navigation/native';
 import Spacer from 'components/Spacer';
 import React from 'react';
-import { SafeAreaView, StyleSheet, View, ImageBackground } from 'react-native';
+import { SafeAreaView, StyleSheet, View, Platform } from 'react-native';
 import { Input, Text, Image } from 'react-native-elements';
 import Loading from 'components/Loading';
-import { useSaveUserMutation } from '../api/graphql/generated/graphql';
 
-const PreviewDocumentScreen = ({ navigation }) => {
+const PreviewDocumentScreen = ({ route, navigation }) => {
   const [name, setName] = useState('');
-  const [identifierNumber, setIdentifierNumber] = useState('');
   const [loading, setLoading] = useState(false);
-  const [disable, setDisable] = useState(true);
+  const { uri } = route.params;
 
-  const [saveUserInfo, { data }] = useSaveUserMutation({
-    variables: { name, identifierNumber },
-  });
+  const onSubmit = useCallback(async () => {
+    const data = new FormData();
 
-  const onSubmit = useCallback(() => {
-    saveUserInfo();
-  }, [saveUserInfo]);
-
-  useEffect(() => {
-    if (data?.saveUserInfo === true) {
-      navigation.dispatch(StackActions.replace('LoadingOnboarding'));
-    }
-  }, [data, navigation]);
-
-  useEffect(() => {
-    if (name && identifierNumber) {
-      setDisable(false);
-    }
-  }, [name, identifierNumber]);
+    const uriFile = Platform.OS === 'ios' ? uri.replace('file://', '') : uri;
+    var filename = uri.replace(/^.*[\\\/]/, '');
+    data.append('data', {
+      name: filename,
+      type: 'image',
+      uri: uriFile,
+    });
+    await fetch('http://localhost:8181/upload-file', {
+      method: 'post',
+      body: data,
+      headers: {
+        'Content-Type': 'multipart/form-data; ',
+      },
+    });
+  }, [uri]);
 
   if (loading) {
     return <Loading />;
@@ -44,14 +41,10 @@ const PreviewDocumentScreen = ({ navigation }) => {
         <Text style={styles.description}>Guardando documento...</Text>
       </View>
       <View style={styles.form}>
-        <Image
-          source={require('../assets/logo.png')}
-          style={styles.image}
-          resizeMode="stretch"
-        />
+        <Image source={{ uri }} style={styles.image} resizeMode="stretch" />
       </View>
       <View style={styles.footer}>
-      <PrimaryButton onPress={onSubmit} text="Guardar" disabled={disable} />
+        <PrimaryButton onPress={onSubmit} text="Guardar" disabled={false} />
       </View>
     </SafeAreaView>
   );

@@ -14,9 +14,11 @@ import (
 	"github.com/alexrv11/credicuotas/server/providers"
 	"github.com/alexrv11/credicuotas/server/services"
 	"github.com/go-chi/cors"
+	"github.com/google/uuid"
 	"github.com/spf13/cobra"
 	"github.com/vektah/gqlparser/v2/gqlerror"
 	"go.uber.org/zap"
+	"io"
 	"net/http"
 	"os"
 
@@ -68,6 +70,35 @@ var serveCmd = &cobra.Command{
 		router.Use(middleware.Logger)
 		router.Use(middlewares.Authentication)
 		router.Get("/", playground.Handler("GraphQL playground", "/query"))
+		router.Post("/upload-file", func(w http.ResponseWriter, r *http.Request) {
+			id, _ := uuid.NewUUID()
+
+			r.ParseMultipartForm(32 << 20)
+			file, header, err := r.FormFile("data")
+			if err != nil {
+				logger.Error(zap.Error(err))
+				http.Error(w, http.StatusText(400), 400)
+				return
+			}
+
+			newFile, err := os.Create(fmt.Sprintf("/Users/alexventura/Documents/bucket-test/%s%s", id, header.Filename))
+			if err != nil {
+				logger.Error(zap.Error(err))
+				http.Error(w, http.StatusText(400), 400)
+				return
+			}
+
+			defer newFile.Close()
+
+			if _, err := io.Copy(newFile, file); err != nil {
+				logger.Error(zap.Error(err))
+				http.Error(w, http.StatusText(400), 400)
+				return
+			}
+
+			w.WriteHeader(http.StatusOK)
+			w.Write([]byte("success upload file"))
+		})
 
 		resolver := graph.NewResolver(provider, core)
 

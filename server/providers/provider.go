@@ -8,10 +8,11 @@ import (
 )
 
 type Provider struct {
-	db     *gorm.DB
-	logger *zap.SugaredLogger
-	email  Email
-	sms    SMS
+	db      *gorm.DB
+	logger  *zap.SugaredLogger
+	email   Email
+	sms     SMS
+	storage Storage
 }
 
 func NewProvider() *Provider {
@@ -50,4 +51,12 @@ func (p *Provider) SMS() SMS {
 	}
 
 	return p.sms
+}
+
+func (p *Provider) Storage() Storage {
+	if p.storage == nil {
+		p.storage = &GoogleStorage{}
+	}
+
+	return p.storage
 }

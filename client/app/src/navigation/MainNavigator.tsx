@@ -49,7 +49,7 @@ const RegisterLoanStack = createNativeStackNavigator();
 const RegisterLoanFlow = () => {
   return (
     <RegisterLoanStack.Navigator
-      initialRouteName="LoanAmount"
+      initialRouteName="CameraScan"
       screenOptions={{
         headerShown: true,
       }}>
@@ -63,6 +63,20 @@ const RegisterLoanFlow = () => {
       <RegisterLoanStack.Screen
         name="LoanIncomeType"
         component={IncomeLoanScreen}
+        options={{
+          title: '',
+        }}
+      />
+      <RegisterLoanStack.Screen
+        name="PreviewDocument"
+        component={PreviewDocumentScreen}
+        options={{
+          title: '',
+        }}
+      />
+      <RegisterLoanStack.Screen
+        name="CameraScan"
+        component={CameraCaptureScreen}
         options={{
           title: '',
         }}
@@ -107,20 +121,6 @@ const OnboardingFlow = () => {
       <OnboardingStack.Screen
         name="InstructionCI"
         component={InstructionUploadCIScreen}
-        options={{
-          title: '',
-        }}
-      />
-      <OnboardingStack.Screen
-        name="CameraScan"
-        component={CameraCaptureScreen}
-        options={{
-          title: '',
-        }}
-      />
-      <OnboardingStack.Screen
-        name="PreviewDocument"
-        component={PreviewDocumentScreen}
         options={{
           title: '',
         }}
@@ -195,7 +195,7 @@ const MainNavigator = () => {
   return (
     <NavigationContainer>
       <AppStack.Navigator
-        initialRouteName="OnboardingFlow"
+        initialRouteName="RegisterLoanFlow"
         screenOptions={{ headerShown: false }}>
         <AppStack.Screen name="SignInFlow" component={SignInFlow} />
         <AppStack.Screen name="MainFlow" component={MainFlow} />

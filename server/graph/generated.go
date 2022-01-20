@@ -547,6 +547,8 @@ var sources = []*ast.Source{
 
 scalar Map
 
+scalar Upload
+
 scalar Time
 
 type Credential {

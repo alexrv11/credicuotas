@@ -13,7 +13,7 @@ import (
 
 const (
 	EnvTest = "test"
-	EnvProd = "PROD"
+	EnvProd = "prod"
 	EnvDev  = "dev"
 )
 
