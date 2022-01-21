@@ -78,13 +78,21 @@ type ComplexityRoot struct {
 	}
 
 	Query struct {
-		GetClients    func(childComplexity int) int
-		GetLoan       func(childComplexity int, id string) int
-		GetLoanOrders func(childComplexity int) int
-		GetLoans      func(childComplexity int) int
-		GetStaff      func(childComplexity int) int
-		GetUser       func(childComplexity int) int
-		Onboarding    func(childComplexity int) int
+		GetClients          func(childComplexity int) int
+		GetLoan             func(childComplexity int, id string) int
+		GetLoanOrders       func(childComplexity int) int
+		GetLoanRequirements func(childComplexity int, loanID string, documentType string) int
+		GetLoans            func(childComplexity int) int
+		GetStaff            func(childComplexity int) int
+		GetUser             func(childComplexity int) int
+		Onboarding          func(childComplexity int) int
+	}
+
+	Requirement struct {
+		Description     func(childComplexity int) int
+		RequirementType func(childComplexity int) int
+		Status          func(childComplexity int) int
+		Title           func(childComplexity int) int
 	}
 
 	Timeline struct {
@@ -138,6 +146,7 @@ type QueryResolver interface {
 	GetClients(ctx context.Context) ([]*model1.User, error)
 	GetStaff(ctx context.Context) ([]*model1.User, error)
 	GetLoan(ctx context.Context, id string) (*model1.Loan, error)
+	GetLoanRequirements(ctx context.Context, loanID string, documentType string) ([]*model1.Requirement, error)
 }
 type UserResolver interface {
 	ID(ctx context.Context, obj *model1.User) (string, error)
@@ -357,6 +366,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Query.GetLoanOrders(childComplexity), true
 
+	case "Query.getLoanRequirements":
+		if e.complexity.Query.GetLoanRequirements == nil {
+			break
+		}
+
+		args, err := ec.field_Query_getLoanRequirements_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Query.GetLoanRequirements(childComplexity, args["loanId"].(string), args["documentType"].(string)), true
+
 	case "Query.getLoans":
 		if e.complexity.Query.GetLoans == nil {
 			break
@@ -384,6 +405,34 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Query.Onboarding(childComplexity), true
+
+	case "Requirement.description":
+		if e.complexity.Requirement.Description == nil {
+			break
+		}
+
+		return e.complexity.Requirement.Description(childComplexity), true
+
+	case "Requirement.requirementType":
+		if e.complexity.Requirement.RequirementType == nil {
+			break
+		}
+
+		return e.complexity.Requirement.RequirementType(childComplexity), true
+
+	case "Requirement.status":
+		if e.complexity.Requirement.Status == nil {
+			break
+		}
+
+		return e.complexity.Requirement.Status(childComplexity), true
+
+	case "Requirement.title":
+		if e.complexity.Requirement.Title == nil {
+			break
+		}
+
+		return e.complexity.Requirement.Title(childComplexity), true
 
 	case "Timeline.approved":
 		if e.complexity.Timeline.Approved == nil {
@@ -571,6 +620,31 @@ enum IncomeType {
   PUBLIC_EMPLOYEE
 }
 
+enum DocumentType {
+  OWN_ASSET
+  SIGNATURE_ACKNOWLEDGMENT
+  TWO_GUARANTEES
+  LAST_INVOICE
+}
+
+enum RequirementType {
+  CLIENT_DOCUMENT_PHOTO
+  LAST_INVOICE_PHOTO
+  GUARANTEE_DOCUMENT_PHOTO
+  OWN_ASSET_PHOTO
+  GUARANTEE_NAME
+  GUARANTEE_CI
+  CO_BORROWER_NAME
+  CO_BORROWER_CI
+}
+
+type Requirement {
+  requirementType: RequirementType!
+  title: String!
+  description: String!
+  status: Boolean!
+}
+
 directive @authenticated on | OBJECT | FIELD_DEFINITION | ENUM
 
 enum OnboardingStatus {
@@ -597,6 +671,7 @@ type Query  {
   getClients: [User]! @authenticated
   getStaff: [User]! @authenticated @hasRole(role: ADMIN)
   getLoan(id: String!): Loan! @authenticated
+  getLoanRequirements(loanId: String!, documentType: String!): [Requirement]! @authenticated
 }
 
 type Mutation {
@@ -901,6 +976,30 @@ func (ec *executionContext) field_Query___type_args(ctx context.Context, rawArgs
 		}
 	}
 	args["name"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Query_getLoanRequirements_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 string
+	if tmp, ok := rawArgs["loanId"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("loanId"))
+		arg0, err = ec.unmarshalNString2string(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["loanId"] = arg0
+	var arg1 string
+	if tmp, ok := rawArgs["documentType"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("documentType"))
+		arg1, err = ec.unmarshalNString2string(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["documentType"] = arg1
 	return args, nil
 }
 
@@ -2212,6 +2311,68 @@ func (ec *executionContext) _Query_getLoan(ctx context.Context, field graphql.Co
 	return ec.marshalNLoan2ᚖgithubᚗcomᚋalexrv11ᚋcredicuotasᚋserverᚋdbᚋmodelᚐLoan(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _Query_getLoanRequirements(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Query",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Query_getLoanRequirements_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		directive0 := func(rctx context.Context) (interface{}, error) {
+			ctx = rctx // use context from middleware stack in children
+			return ec.resolvers.Query().GetLoanRequirements(rctx, args["loanId"].(string), args["documentType"].(string))
+		}
+		directive1 := func(ctx context.Context) (interface{}, error) {
+			if ec.directives.Authenticated == nil {
+				return nil, errors.New("directive authenticated is not implemented")
+			}
+			return ec.directives.Authenticated(ctx, nil, directive0)
+		}
+
+		tmp, err := directive1(rctx)
+		if err != nil {
+			return nil, graphql.ErrorOnPath(ctx, err)
+		}
+		if tmp == nil {
+			return nil, nil
+		}
+		if data, ok := tmp.([]*model1.Requirement); ok {
+			return data, nil
+		}
+		return nil, fmt.Errorf(`unexpected type %T from directive, should be []*github.com/alexrv11/credicuotas/server/db/model.Requirement`, tmp)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.([]*model1.Requirement)
+	fc.Result = res
+	return ec.marshalNRequirement2ᚕᚖgithubᚗcomᚋalexrv11ᚋcredicuotasᚋserverᚋdbᚋmodelᚐRequirement(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _Query___type(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -2281,6 +2442,146 @@ func (ec *executionContext) _Query___schema(ctx context.Context, field graphql.C
 	res := resTmp.(*introspection.Schema)
 	fc.Result = res
 	return ec.marshalO__Schema2ᚖgithubᚗcomᚋ99designsᚋgqlgenᚋgraphqlᚋintrospectionᚐSchema(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Requirement_requirementType(ctx context.Context, field graphql.CollectedField, obj *model1.Requirement) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Requirement",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.RequirementType, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(model1.RequirementType)
+	fc.Result = res
+	return ec.marshalNRequirementType2githubᚗcomᚋalexrv11ᚋcredicuotasᚋserverᚋdbᚋmodelᚐRequirementType(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Requirement_title(ctx context.Context, field graphql.CollectedField, obj *model1.Requirement) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Requirement",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Title, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Requirement_description(ctx context.Context, field graphql.CollectedField, obj *model1.Requirement) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Requirement",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Description, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Requirement_status(ctx context.Context, field graphql.CollectedField, obj *model1.Requirement) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Requirement",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Status, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(bool)
+	fc.Result = res
+	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Timeline_submitted(ctx context.Context, field graphql.CollectedField, obj *model.Timeline) (ret graphql.Marshaler) {
@@ -4139,10 +4440,66 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 				}
 				return res
 			})
+		case "getLoanRequirements":
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Query_getLoanRequirements(ctx, field)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
+			})
 		case "__type":
 			out.Values[i] = ec._Query___type(ctx, field)
 		case "__schema":
 			out.Values[i] = ec._Query___schema(ctx, field)
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var requirementImplementors = []string{"Requirement"}
+
+func (ec *executionContext) _Requirement(ctx context.Context, sel ast.SelectionSet, obj *model1.Requirement) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, requirementImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("Requirement")
+		case "requirementType":
+			out.Values[i] = ec._Requirement_requirementType(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "title":
+			out.Values[i] = ec._Requirement_title(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "description":
+			out.Values[i] = ec._Requirement_description(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "status":
+			out.Values[i] = ec._Requirement_status(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -4697,6 +5054,59 @@ func (ec *executionContext) marshalNOnboardingStatus2githubᚗcomᚋalexrv11ᚋc
 	return v
 }
 
+func (ec *executionContext) marshalNRequirement2ᚕᚖgithubᚗcomᚋalexrv11ᚋcredicuotasᚋserverᚋdbᚋmodelᚐRequirement(ctx context.Context, sel ast.SelectionSet, v []*model1.Requirement) graphql.Marshaler {
+	ret := make(graphql.Array, len(v))
+	var wg sync.WaitGroup
+	isLen1 := len(v) == 1
+	if !isLen1 {
+		wg.Add(len(v))
+	}
+	for i := range v {
+		i := i
+		fc := &graphql.FieldContext{
+			Index:  &i,
+			Result: &v[i],
+		}
+		ctx := graphql.WithFieldContext(ctx, fc)
+		f := func(i int) {
+			defer func() {
+				if r := recover(); r != nil {
+					ec.Error(ctx, ec.Recover(ctx, r))
+					ret = nil
+				}
+			}()
+			if !isLen1 {
+				defer wg.Done()
+			}
+			ret[i] = ec.marshalORequirement2ᚖgithubᚗcomᚋalexrv11ᚋcredicuotasᚋserverᚋdbᚋmodelᚐRequirement(ctx, sel, v[i])
+		}
+		if isLen1 {
+			f(i)
+		} else {
+			go f(i)
+		}
+
+	}
+	wg.Wait()
+	return ret
+}
+
+func (ec *executionContext) unmarshalNRequirementType2githubᚗcomᚋalexrv11ᚋcredicuotasᚋserverᚋdbᚋmodelᚐRequirementType(ctx context.Context, v interface{}) (model1.RequirementType, error) {
+	tmp, err := graphql.UnmarshalString(v)
+	res := model1.RequirementType(tmp)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalNRequirementType2githubᚗcomᚋalexrv11ᚋcredicuotasᚋserverᚋdbᚋmodelᚐRequirementType(ctx context.Context, sel ast.SelectionSet, v model1.RequirementType) graphql.Marshaler {
+	res := graphql.MarshalString(string(v))
+	if res == graphql.Null {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "must not be null")
+		}
+	}
+	return res
+}
+
 func (ec *executionContext) unmarshalNRole2githubᚗcomᚋalexrv11ᚋcredicuotasᚋserverᚋgraphᚋmodelᚐRole(ctx context.Context, v interface{}) (model.Role, error) {
 	var res model.Role
 	err := res.UnmarshalGQL(v)
@@ -5080,6 +5490,13 @@ func (ec *executionContext) marshalOLoan2ᚖgithubᚗcomᚋalexrv11ᚋcredicuota
 		return graphql.Null
 	}
 	return ec._Loan(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalORequirement2ᚖgithubᚗcomᚋalexrv11ᚋcredicuotasᚋserverᚋdbᚋmodelᚐRequirement(ctx context.Context, sel ast.SelectionSet, v *model1.Requirement) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._Requirement(ctx, sel, v)
 }
 
 func (ec *executionContext) unmarshalOString2string(ctx context.Context, v interface{}) (string, error) {

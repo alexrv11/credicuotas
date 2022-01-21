@@ -58,3 +58,7 @@ func (query *queryResolver) GetStaff(ctx context.Context) ([]*model2.User, error
 func (query *queryResolver) GetLoan(ctx context.Context, id string) (*model2.Loan, error) {
 	return nil, nil
 }
+
+func (query *queryResolver) GetLoanRequirements(ctx context.Context, loanID string, documentType string) ([]*model2.Requirement, error) {
+	return nil, nil
+}

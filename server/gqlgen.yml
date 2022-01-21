@@ -67,3 +67,9 @@ models:
         resolver: true
   User:
     model: github.com/alexrv11/credicuotas/server/db/model.User
+  RequirementType:
+    model: github.com/alexrv11/credicuotas/server/db/model.RequirementType
+  Requirement:
+    model: github.com/alexrv11/credicuotas/server/db/model.Requirement
+  DocumentType:
+    model: github.com/alexrv11/credicuotas/server/db/model.DocumentType
