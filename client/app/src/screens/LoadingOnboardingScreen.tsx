@@ -14,7 +14,6 @@ const LoadingOnboardingScreen = ({ navigation }) => {
   }, [onBoardingQuery]);
 
   useEffect(() => {
-    console.log('onboarding status', data, loading);
     if (data?.onboarding === 'PENDING_PERSONAL_DATA') {
       navigation.dispatch(StackActions.replace('PersonalRegister'));
       return;

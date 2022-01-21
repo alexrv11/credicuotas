@@ -81,7 +81,9 @@ var serveCmd = &cobra.Command{
 				return
 			}
 
-			newFile, err := os.Create(fmt.Sprintf("/Users/alexventura/Documents/bucket-test/%s%s", id, header.Filename))
+			fileName := fmt.Sprintf("/Users/alexventura/Documents/bucket-test/%s%s", id, header.Filename)
+
+			newFile, err := os.Create(fileName)
 			if err != nil {
 				logger.Error(zap.Error(err))
 				http.Error(w, http.StatusText(400), 400)
@@ -96,6 +98,19 @@ var serveCmd = &cobra.Command{
 				return
 			}
 
+			loanID := r.FormValue("loanId")
+			documentType := r.FormValue("documentType")
+
+			userXid, _ := r.Context().Value(middlewares.UserInfoKey).(string)
+
+			logger.Infof("loan %s %s %s", loanID, documentType, userXid)
+
+			err = core.Loan.SaveDocuments(provider, userXid, loanID, documentType, fileName)
+			if err != nil {
+				logger.Error(zap.Error(err))
+				http.Error(w, http.StatusText(400), 400)
+				return
+			}
 			w.WriteHeader(http.StatusOK)
 			w.Write([]byte("success upload file"))
 		})

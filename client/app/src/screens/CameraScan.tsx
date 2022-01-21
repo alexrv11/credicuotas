@@ -3,7 +3,7 @@ import { StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Camera from '../components/Camera';
 
-const CameraCaptureScreen = ({ navigation }) => {
+const CameraCaptureScreen = ({ route, navigation }) => {
   return (
     <SafeAreaView style={styles.container}>
       <Camera

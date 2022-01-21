@@ -20,6 +20,8 @@ import VerifyPhoneCodeScreen from 'screens/VerifyPhoneCodeScreen';
 import LoanAmountScreen from 'screens/home/LoanAmountScreen';
 import IncomeLoanScreen from 'screens/home/IncomeLoanScreen';
 import PreviewDocumentScreen from '../screens/PreviewDocument';
+import LoanRequirementTypeScreen from 'screens/LoanRequirementTypeScreen';
+import LoanDocsScreen from 'screens/LoanDocsScreen';
 
 const AppStack = createNativeStackNavigator();
 
@@ -49,7 +51,7 @@ const RegisterLoanStack = createNativeStackNavigator();
 const RegisterLoanFlow = () => {
   return (
     <RegisterLoanStack.Navigator
-      initialRouteName="CameraScan"
+      initialRouteName="LoanAmount"
       screenOptions={{
         headerShown: true,
       }}>
@@ -68,6 +70,13 @@ const RegisterLoanFlow = () => {
         }}
       />
       <RegisterLoanStack.Screen
+        name="LoanRequirementType"
+        component={LoanRequirementTypeScreen}
+        options={{
+          title: '',
+        }}
+      />
+      <RegisterLoanStack.Screen
         name="PreviewDocument"
         component={PreviewDocumentScreen}
         options={{
@@ -81,6 +90,13 @@ const RegisterLoanFlow = () => {
           title: '',
         }}
       />
+      <RegisterLoanStack.Screen
+        name="LoanDocs"
+        component={LoanDocsScreen}
+        options={{
+          title: '',
+        }}
+      />
     </RegisterLoanStack.Navigator>
   );
 };
@@ -89,7 +105,7 @@ const OnboardingStack = createNativeStackNavigator();
 
 const OnboardingFlow = () => {
   return (
-    <OnboardingStack.Navigator initialRouteName="PreviewDocument">
+    <OnboardingStack.Navigator initialRouteName="LoadingOnboarding">
       <OnboardingStack.Screen
         name="LoadingOnboarding"
         component={LoadingOnboardingScreen}
@@ -195,7 +211,7 @@ const MainNavigator = () => {
   return (
     <NavigationContainer>
       <AppStack.Navigator
-        initialRouteName="RegisterLoanFlow"
+        initialRouteName="SignInFlow"
         screenOptions={{ headerShown: false }}>
         <AppStack.Screen name="SignInFlow" component={SignInFlow} />
         <AppStack.Screen name="MainFlow" component={MainFlow} />

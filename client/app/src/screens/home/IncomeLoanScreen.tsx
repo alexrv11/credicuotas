@@ -1,29 +1,48 @@
-import { useCallback, useEffect } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import Spacer from 'components/Spacer';
 import React from 'react';
 import { SafeAreaView, StyleSheet, View, TouchableOpacity } from 'react-native';
 import { Text, Icon } from 'react-native-elements';
 import { useLoan } from 'context/LoanContext';
 import { StackActions } from '@react-navigation/native';
-import { useSaveLoanMutation } from '../../api/graphql/generated/graphql';
+import {
+  useSaveLoanMutation,
+  IncomeType,
+} from '../../api/graphql/generated/graphql';
 
 const IncomeLoanScreen = ({ navigation }) => {
   const { amount, totalInstallments } = useLoan();
+  const [incomeLoanType, setIncomeLoanType] = useState('');
 
   const [saveLoan, { data, error }] = useSaveLoanMutation();
 
   const onSubmit = useCallback(
     (incomeType: String) => {
       saveLoan({ variables: { amount, totalInstallments, incomeType } });
+      setIncomeLoanType(incomeType);
     },
     [amount, totalInstallments, saveLoan],
   );
 
   useEffect(() => {
     if (data) {
-      navigation.dispatch(StackActions.replace('MainFlow'));
+      navigation.dispatch(
+        StackActions.replace('LoanRequirementType', {
+          incomeType: incomeLoanType,
+        }),
+      );
     }
-  }, [data, navigation]);
+  }, [data, navigation, incomeLoanType]);
+
+  useEffect(() => {
+    if (error) {
+      navigation.dispatch(
+        StackActions.replace('LoanRequirementType', {
+          incomeType: incomeLoanType,
+        }),
+      );
+    }
+  }, [error, navigation, incomeLoanType]);
 
   return (
     <SafeAreaView style={styles.container}>

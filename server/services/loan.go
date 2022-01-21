@@ -11,6 +11,7 @@ import (
 
 type Loan interface {
 	Save(provider *providers.Provider, userXid string, amount, totalInstallments int, incomeType model.IncomeType) error
+	SaveDocuments(provider *providers.Provider, userXid, loanID, documentType, fileName string) error
 	GetLoans(provider *providers.Provider, userXid string) ([]*modeldb.Loan, error)
 	GetLoanOrders(provider *providers.Provider) ([]*modeldb.Loan, error)
 }
@@ -86,4 +87,38 @@ func (r *LoanImpl) GetLoanOrders(provider *providers.Provider) ([]*modeldb.Loan,
 	err := db.Preload("User").Where("status != ?", modeldb.LoanStatusRunning).Find(&loans).Error
 
 	return loans, err
+}
+
+func (r *LoanImpl) SaveDocuments(provider *providers.Provider, userXid, loanID, documentType, fileName string) error {
+	db := provider.GormClient()
+
+	var user modeldb.User
+	err := db.Model(&modeldb.User{}).Where("xid = ?", userXid).First(&user).Error
+
+	if errors.Is(err, gorm.ErrRecordNotFound) {
+		return fmt.Errorf("not found user")
+	}
+
+	var loan modeldb.Loan
+
+	err = db.Model(&modeldb.Loan{}).Where("xid = ?", loanID).First(&loan).Error
+
+	if errors.Is(err, gorm.ErrRecordNotFound) {
+		return fmt.Errorf("not found loan")
+	}
+
+	document := &modeldb.Document{
+		UserID: user.ID,
+		LoanID: loan.ID,
+		Type:   documentType,
+		Url:    fileName,
+	}
+
+	err = db.Save(document).Error
+
+	if err != nil {
+		return err
+	}
+
+	return nil
 }

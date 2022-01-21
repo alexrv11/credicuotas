@@ -22,6 +22,7 @@ const PreviewDocumentScreen = ({ route, navigation }) => {
       type: 'image',
       uri: uriFile,
     });
+
     await fetch('http://localhost:8181/upload-file', {
       method: 'post',
       body: data,

@@ -12,8 +12,7 @@ const Camera = ({ afterTakePicture }) => {
     if (camera) {
       const options = { quality: 0.5, base64: true };
       const data = await camera.takePictureAsync(options);
-      console.log('data fileName', data.fileName);
-      console.log('data type', data.type);
+
       if (afterTakePicture) {
         afterTakePicture(data.uri);
       }

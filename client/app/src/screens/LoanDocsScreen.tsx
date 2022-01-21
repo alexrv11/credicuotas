@@ -4,28 +4,31 @@ import { Avatar, Text } from 'react-native-elements';
 import Spacer from 'components/Spacer';
 import PrimaryButton from 'components/PrimaryButton';
 
-const InstructionUploadCIScreen = ({ route, navigation }) => {
+const titles = {
+  LAST_INVOICE: {
+    title: 'Necesitamos tomar una foto de la ultima boleta de pago',
+  },
+  OWN_ASSET: {
+    title:
+      'Necesitamos tomar una foto del objeto de valor que dejara de garantia',
+  },
+}
+
+const LoanDocsScreen = ({ route, navigation }) => {
+  const { type } = route.params;
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
-        <Avatar
-          size={150}
-          rounded
-          icon={{ name: 'account-circle', color: '#0c0f69' }}
-          activeOpacity={0.7}
-          size="large"
-          containerStyle={styles.avatarContainer}
-        />
-        <Spacer />
         <Text style={styles.textAvatar}>
-          Necesitamos verificar tu cedula de identidad
+          { titles[type].title }
         </Text>
         <Spacer />
         <Text style={styles.textDescription}>Te recomendamos estar en un ambiente con mucha iluminacion</Text>
       </View>
       <Spacer />
       <PrimaryButton
-        onPress={() => console.log('continuar')}
+        onPress={() => navigation.navigate('CameraScan')}
         text="Continuar"
         disabled={false}
       />
@@ -67,4 +70,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default InstructionUploadCIScreen;
+export default LoanDocsScreen;
