@@ -99,13 +99,11 @@ var serveCmd = &cobra.Command{
 			}
 
 			loanID := r.FormValue("loanId")
-			documentType := r.FormValue("documentType")
+			requirementType := r.FormValue("requirementType")
 
 			userXid, _ := r.Context().Value(middlewares.UserInfoKey).(string)
 
-			logger.Infof("loan %s %s %s", loanID, documentType, userXid)
-
-			err = core.Loan.SaveDocuments(provider, userXid, loanID, documentType, fileName)
+			err = core.Loan.SaveDocuments(provider, userXid, loanID, requirementType, fileName)
 			if err != nil {
 				logger.Error(zap.Error(err))
 				http.Error(w, http.StatusText(400), 400)

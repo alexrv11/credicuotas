@@ -59,6 +59,8 @@ func (query *queryResolver) GetLoan(ctx context.Context, id string) (*model2.Loa
 	return nil, nil
 }
 
-func (query *queryResolver) GetLoanRequirements(ctx context.Context, loanID string, documentType string) ([]*model2.Requirement, error) {
-	return nil, nil
+func (query *queryResolver) GetLoanRequirements(ctx context.Context, loanID string, documentType model2.DocumentType) ([]*model2.Requirement, error) {
+	userXid, _ := ctx.Value(middlewares.UserInfoKey).(string)
+
+	return query.core.Loan.GetLoanRequirements(query.provider, userXid, loanID, documentType)
 }

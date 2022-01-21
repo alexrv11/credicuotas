@@ -81,7 +81,7 @@ type ComplexityRoot struct {
 		GetClients          func(childComplexity int) int
 		GetLoan             func(childComplexity int, id string) int
 		GetLoanOrders       func(childComplexity int) int
-		GetLoanRequirements func(childComplexity int, loanID string, documentType string) int
+		GetLoanRequirements func(childComplexity int, loanID string, documentType model1.DocumentType) int
 		GetLoans            func(childComplexity int) int
 		GetStaff            func(childComplexity int) int
 		GetUser             func(childComplexity int) int
@@ -146,7 +146,7 @@ type QueryResolver interface {
 	GetClients(ctx context.Context) ([]*model1.User, error)
 	GetStaff(ctx context.Context) ([]*model1.User, error)
 	GetLoan(ctx context.Context, id string) (*model1.Loan, error)
-	GetLoanRequirements(ctx context.Context, loanID string, documentType string) ([]*model1.Requirement, error)
+	GetLoanRequirements(ctx context.Context, loanID string, documentType model1.DocumentType) ([]*model1.Requirement, error)
 }
 type UserResolver interface {
 	ID(ctx context.Context, obj *model1.User) (string, error)
@@ -376,7 +376,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Query.GetLoanRequirements(childComplexity, args["loanId"].(string), args["documentType"].(string)), true
+		return e.complexity.Query.GetLoanRequirements(childComplexity, args["loanId"].(string), args["documentType"].(model1.DocumentType)), true
 
 	case "Query.getLoans":
 		if e.complexity.Query.GetLoans == nil {
@@ -671,7 +671,7 @@ type Query  {
   getClients: [User]! @authenticated
   getStaff: [User]! @authenticated @hasRole(role: ADMIN)
   getLoan(id: String!): Loan! @authenticated
-  getLoanRequirements(loanId: String!, documentType: String!): [Requirement]! @authenticated
+  getLoanRequirements(loanId: String!, documentType: DocumentType!): [Requirement]! @authenticated
 }
 
 type Mutation {
@@ -991,10 +991,10 @@ func (ec *executionContext) field_Query_getLoanRequirements_args(ctx context.Con
 		}
 	}
 	args["loanId"] = arg0
-	var arg1 string
+	var arg1 model1.DocumentType
 	if tmp, ok := rawArgs["documentType"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("documentType"))
-		arg1, err = ec.unmarshalNString2string(ctx, tmp)
+		arg1, err = ec.unmarshalNDocumentType2githubᚗcomᚋalexrv11ᚋcredicuotasᚋserverᚋdbᚋmodelᚐDocumentType(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -2337,7 +2337,7 @@ func (ec *executionContext) _Query_getLoanRequirements(ctx context.Context, fiel
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		directive0 := func(rctx context.Context) (interface{}, error) {
 			ctx = rctx // use context from middleware stack in children
-			return ec.resolvers.Query().GetLoanRequirements(rctx, args["loanId"].(string), args["documentType"].(string))
+			return ec.resolvers.Query().GetLoanRequirements(rctx, args["loanId"].(string), args["documentType"].(model1.DocumentType))
 		}
 		directive1 := func(ctx context.Context) (interface{}, error) {
 			if ec.directives.Authenticated == nil {
@@ -4929,6 +4929,22 @@ func (ec *executionContext) marshalNCredential2ᚖgithubᚗcomᚋalexrv11ᚋcred
 		return graphql.Null
 	}
 	return ec._Credential(ctx, sel, v)
+}
+
+func (ec *executionContext) unmarshalNDocumentType2githubᚗcomᚋalexrv11ᚋcredicuotasᚋserverᚋdbᚋmodelᚐDocumentType(ctx context.Context, v interface{}) (model1.DocumentType, error) {
+	tmp, err := graphql.UnmarshalString(v)
+	res := model1.DocumentType(tmp)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalNDocumentType2githubᚗcomᚋalexrv11ᚋcredicuotasᚋserverᚋdbᚋmodelᚐDocumentType(ctx context.Context, sel ast.SelectionSet, v model1.DocumentType) graphql.Marshaler {
+	res := graphql.MarshalString(string(v))
+	if res == graphql.Null {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "must not be null")
+		}
+	}
+	return res
 }
 
 func (ec *executionContext) unmarshalNIncomeType2githubᚗcomᚋalexrv11ᚋcredicuotasᚋserverᚋgraphᚋmodelᚐIncomeType(ctx context.Context, v interface{}) (model.IncomeType, error) {

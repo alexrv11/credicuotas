@@ -80,7 +80,7 @@ type Query  {
   getClients: [User]! @authenticated
   getStaff: [User]! @authenticated @hasRole(role: ADMIN)
   getLoan(id: String!): Loan! @authenticated
-  getLoanRequirements(loanId: String!, documentType: String!): [Requirement]! @authenticated
+  getLoanRequirements(loanId: String!, documentType: DocumentType!): [Requirement]! @authenticated
 }
 
 type Mutation {
