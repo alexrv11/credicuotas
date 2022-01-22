@@ -1,4 +1,4 @@
-import React, { memo } from 'react';
+import React, { memo, useState } from 'react';
 
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
@@ -224,26 +224,14 @@ const MainNavigator = () => {
     return <Loading />;
   }
 
-  if (error) {
-    return (
-      <NavigationContainer>
-        <AppStack.Navigator
-          initialRouteName="SignInFlow"
-          screenOptions={{ headerShown: false }}>
-          <AppStack.Screen name="SignInFlow" component={SignInFlow} />
-        </AppStack.Navigator>
-      </NavigationContainer>
-    );
-  }
-
   return (
     <NavigationContainer>
       <AppStack.Navigator
-        initialRouteName="MainFlow"
+        initialRouteName={error ? 'SignInFlow' : 'MainFlow'}
         screenOptions={{ headerShown: false }}>
         <AppStack.Screen name="SignInFlow" component={SignInFlow} />
-        <AppStack.Screen name="MainFlow" component={MainFlow} />
         <AppStack.Screen name="OnboardingFlow" component={OnboardingFlow} />
+        <AppStack.Screen name="MainFlow" component={MainFlow} />
         <AppStack.Screen name="RegisterLoanFlow" component={RegisterLoanFlow} />
       </AppStack.Navigator>
     </NavigationContainer>

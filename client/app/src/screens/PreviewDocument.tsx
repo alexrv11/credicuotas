@@ -6,9 +6,14 @@ import React from 'react';
 import { SafeAreaView, StyleSheet, View, Platform } from 'react-native';
 import { Input, Text, Image } from 'react-native-elements';
 import Loading from 'components/Loading';
+import { useLoan } from '../context/LoanContext';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const PreviewDocumentScreen = ({ route, navigation }) => {
   const [name, setName] = useState('');
+  const { loanId } = useLoan();
+  const { requirementType } = route.params;
+  console.log("preview loan document", loanId, requirementType);
   const [loading, setLoading] = useState(false);
   const { uri } = route.params;
 
@@ -23,14 +28,21 @@ const PreviewDocumentScreen = ({ route, navigation }) => {
       uri: uriFile,
     });
 
+    data.append('loanId', loanId);
+    data.append('requirementType', requirementType);
+
+    const token = await AsyncStorage.getItem('token');
+
     await fetch('http://localhost:8181/upload-file', {
       method: 'post',
       body: data,
       headers: {
         'Content-Type': 'multipart/form-data; ',
+        Authorization: `Bearer ${token}`,
       },
     });
-  }, [uri]);
+    navigation.navigate('LoanRequirementList');
+  }, [loanId, requirementType, uri]);
 
   if (loading) {
     return <Loading />;

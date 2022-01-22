@@ -4,31 +4,20 @@ import { Avatar, Text } from 'react-native-elements';
 import Spacer from 'components/Spacer';
 import PrimaryButton from 'components/PrimaryButton';
 
-const titles = {
-  LAST_INVOICE: {
-    title: 'Necesitamos tomar una foto de la ultima boleta de pago',
-  },
-  OWN_ASSET: {
-    title:
-      'Necesitamos tomar una foto del objeto de valor que dejara de garantia',
-  },
-}
-
 const LoanDocsScreen = ({ route, navigation }) => {
-  const { type } = route.params;
+  const { requirementType, title, description } = route.params;
+  console.log('loan docs', route.params);
 
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.textAvatar}>
-          { titles[type].title }
-        </Text>
+        <Text style={styles.textAvatar}>{description}</Text>
         <Spacer />
         <Text style={styles.textDescription}>Te recomendamos estar en un ambiente con mucha iluminacion</Text>
       </View>
       <Spacer />
       <PrimaryButton
-        onPress={() => navigation.navigate('CameraScan')}
+        onPress={() => navigation.navigate('CameraScan', { requirementType })}
         text="Continuar"
         disabled={false}
       />

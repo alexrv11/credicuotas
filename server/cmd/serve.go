@@ -70,6 +70,7 @@ var serveCmd = &cobra.Command{
 		router.Use(middleware.Logger)
 		router.Use(middlewares.Authentication)
 		router.Get("/", playground.Handler("GraphQL playground", "/query"))
+
 		router.Post("/upload-file", func(w http.ResponseWriter, r *http.Request) {
 			id, _ := uuid.NewUUID()
 

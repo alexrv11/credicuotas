@@ -8,7 +8,7 @@ const CameraCaptureScreen = ({ route, navigation }) => {
     <SafeAreaView style={styles.container}>
       <Camera
         afterTakePicture={(uri: any) =>
-          navigation.navigate('PreviewDocument', { uri })
+          navigation.navigate('PreviewDocument', { uri, ...route.params })
         }
       />
     </SafeAreaView>

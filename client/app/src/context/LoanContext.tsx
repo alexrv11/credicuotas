@@ -1,4 +1,5 @@
 import React, { Dispatch, SetStateAction } from 'react';
+import { Requirement } from '../api/graphql/generated/graphql';
 
 export interface Loan {
   loanId?: String;
@@ -9,6 +10,8 @@ export interface Loan {
   setTotalInstallments: Dispatch<SetStateAction<undefined>>;
   incomeType?: String;
   setIncomeType: Dispatch<SetStateAction<undefined>>;
+  requirementType?: String;
+  setRequirementType: Dispatch<SetStateAction<undefined>>;
 }
 
 const LoanContext = React.createContext({} as Loan);
@@ -22,6 +25,7 @@ function LoanProvider({ children }: React.PropsWithChildren<any>) {
   const [amount, setAmount] = React.useState();
   const [totalInstallments, setTotalInstallments] = React.useState();
   const [incomeType, setIncomeType] = React.useState();
+  const [requirementType, setRequirementType] = React.useState();
 
   const values = {
     loanId,
@@ -32,6 +36,8 @@ function LoanProvider({ children }: React.PropsWithChildren<any>) {
     setTotalInstallments,
     incomeType,
     setIncomeType,
+    requirementType,
+    setRequirementType,
   };
 
   return (

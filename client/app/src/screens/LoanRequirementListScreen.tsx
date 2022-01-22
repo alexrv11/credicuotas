@@ -5,24 +5,29 @@ import Spacer from 'components/Spacer';
 import PrimaryButton from 'components/PrimaryButton';
 import { useGetRequirementsQuery } from '../api/graphql/generated/graphql';
 import { useLoan } from 'context/LoanContext';
-import { useEffect } from 'react';
 import Loading from 'components/Loading';
 
-const LoanRequirementListScreen = ({ route }) => {
-  const { type } = route.params;
-  const { loanId } = useLoan();
+const LoanRequirementListScreen = ({ route, navigation }) => {
+  const { loanId, requirementType } = useLoan();
 
   const { data, error, loading } = useGetRequirementsQuery({
-    variables: { loanId, type },
+    variables: { loanId, type: requirementType },
+    fetchPolicy: 'network-only',
   });
 
-  const onSubmit = useCallback(type => {
-    console.log('contineuar test');
-  }, []);
-
-  useEffect(() => {
-    console.log('get requirements', data, error);
-  }, [data, error]);
+  const onSubmit = useCallback(() => {
+    if (data?.getLoanRequirements) {
+      console.log(data?.getLoanRequirements);
+      const uploadRequirements = data?.getLoanRequirements.filter(
+        item => item?.status === false,
+      );
+      if (uploadRequirements.length === 0) {
+        console.log('it is completed see2');
+      } else {
+        navigation.navigate('LoanDocs', { ...uploadRequirements[0] });
+      }
+    }
+  }, [data?.getLoanRequirements, navigation]);
 
   function viewRequirements(values) {
     if (!values) {
@@ -30,10 +35,12 @@ const LoanRequirementListScreen = ({ route }) => {
     }
     return values.map(requirement => {
       return (
-        <View style={styles.incomeContainer} key={requirement.type}>
+        <View key={requirement.type} style={styles.incomeContainer}>
           <Icon
             name={requirement.status ? 'check-circle' : 'check-circle-outline'}
-            style={styles.incomeIcon}
+            style={
+              requirement.status ? styles.incomeIcon : styles.incomeIconCheck
+            }
             type="material"
           />
           <View style={styles.incomeDescriptionContainer}>
@@ -85,7 +92,11 @@ const styles = StyleSheet.create({
     marginLeft: 25,
   },
   incomeIcon: {
-    color: '#070D99',
+    color: '#7a7b9e',
+    marginLeft: 25,
+  },
+  incomeIconCheck: {
+    color: '#3210aa',
     marginLeft: 25,
   },
   options: {

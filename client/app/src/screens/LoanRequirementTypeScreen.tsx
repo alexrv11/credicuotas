@@ -3,6 +3,7 @@ import { SafeAreaView, StyleSheet, View, TouchableOpacity } from 'react-native';
 import { Avatar, Text, Icon } from 'react-native-elements';
 import Spacer from 'components/Spacer';
 import PrimaryButton from 'components/PrimaryButton';
+import { useLoan } from '../context/LoanContext';
 
 const types = {
   OWN_BUSINESS: [
@@ -40,11 +41,12 @@ const types = {
 };
 
 const LoanRequirementTypeScreen = ({ route, navigation }) => {
-  const { incomeType } = route.params;
+  const { incomeType, setRequirementType } = useLoan();
 
   const onSubmit = useCallback(
     type => {
-      navigation.navigate('LoanRequirementList', { type: type });
+      navigation.navigate('LoanRequirementList');
+      setRequirementType(type);
     },
     [navigation],
   );
@@ -53,6 +55,7 @@ const LoanRequirementTypeScreen = ({ route, navigation }) => {
     return values.map(data => {
       return (
         <TouchableOpacity
+          key={data.type}
           style={styles.incomeContainer}
           onPress={() => {
             onSubmit(data.type);

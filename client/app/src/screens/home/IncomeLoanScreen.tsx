@@ -11,15 +11,14 @@ import {
 } from '../../api/graphql/generated/graphql';
 
 const IncomeLoanScreen = ({ navigation }) => {
-  const { amount, totalInstallments, setLoanId } = useLoan();
-  const [incomeLoanType, setIncomeLoanType] = useState('');
+  const { amount, totalInstallments, setLoanId, setIncomeType } = useLoan();
 
   const [saveLoan, { data, error }] = useSaveLoanMutation();
 
   const onSubmit = useCallback(
     (incomeType: String) => {
       saveLoan({ variables: { amount, totalInstallments, incomeType } });
-      setIncomeLoanType(incomeType);
+      setIncomeType(incomeType);
     },
     [amount, totalInstallments, saveLoan],
   );
@@ -28,23 +27,15 @@ const IncomeLoanScreen = ({ navigation }) => {
     if (data?.saveLoan) {
       console.log("loan save", data?.saveLoan);
       setLoanId(data?.saveLoan);
-      navigation.dispatch(
-        StackActions.replace('LoanRequirementType', {
-          incomeType: incomeLoanType,
-        }),
-      );
+      navigation.dispatch(StackActions.replace('LoanRequirementType'));
     }
-  }, [data, navigation, incomeLoanType, setLoanId]);
+  }, [data, navigation, setLoanId]);
 
   useEffect(() => {
     if (error) {
-      navigation.dispatch(
-        StackActions.replace('LoanRequirementType', {
-          incomeType: incomeLoanType,
-        }),
-      );
+      navigation.dispatch(StackActions.replace('LoanRequirementType'));
     }
-  }, [error, navigation, incomeLoanType]);
+  }, [error, navigation]);
 
   return (
     <SafeAreaView style={styles.container}>
