@@ -10,7 +10,7 @@ import (
 )
 
 type Loan interface {
-	Save(provider *providers.Provider, userXid string, amount, totalInstallments int, incomeType model.IncomeType) error
+	Save(provider *providers.Provider, userXid string, amount, totalInstallments int, incomeType model.IncomeType) (string, error)
 	SaveDocuments(provider *providers.Provider, userXid, loanID, requirementType, fileName string) error
 	GetLoans(provider *providers.Provider, userXid string) ([]*modeldb.Loan, error)
 	GetLoanOrders(provider *providers.Provider) ([]*modeldb.Loan, error)
@@ -19,24 +19,24 @@ type Loan interface {
 
 type LoanImpl struct{}
 
-func (r *LoanImpl) Save(provider *providers.Provider, userXid string, amount, totalInstallments int, incomeType model.IncomeType) error {
+func (r *LoanImpl) Save(provider *providers.Provider, userXid string, amount, totalInstallments int, incomeType model.IncomeType) (string, error) {
 	db := provider.GormClient()
 	var user modeldb.User
 	err := db.Model(&modeldb.User{}).Where("xid = ?", userXid).First(&user).Error
 
 	if errors.Is(err, gorm.ErrRecordNotFound) {
-		return fmt.Errorf("not found user")
+		return "", fmt.Errorf("not found user")
 	}
 
 	if err != nil {
-		return err
+		return "", err
 	}
 
 	var loan modeldb.Loan
 	err = db.Model(&modeldb.Loan{}).Where("user_id = ? AND status != ?", user.ID, modeldb.LoanStatusRunning).First(&loan).Error
 
 	if !errors.Is(err, gorm.ErrRecordNotFound) {
-		return err
+		return "", err
 	}
 
 	if errors.Is(err, gorm.ErrRecordNotFound) {
@@ -51,13 +51,13 @@ func (r *LoanImpl) Save(provider *providers.Provider, userXid string, amount, to
 		err = db.Save(newLoan).Error
 
 		if err != nil {
-			return err
+			return "", err
 		}
 
-		return nil
+		return newLoan.Xid, nil
 	}
 
-	return fmt.Errorf("the user already contains a loan request")
+	return "", fmt.Errorf("the user already contains a loan request")
 }
 
 func (r *LoanImpl) GetLoans(provider *providers.Provider, userXid string) ([]*modeldb.Loan, error) {
@@ -156,21 +156,22 @@ func getRequirementsByDocumentType(provider *providers.Provider, user modeldb.Us
 	var documentCI modeldb.Document
 	requirementCI := modeldb.Requirement{
 		RequirementType: modeldb.RequirementTypeClientDocumentPhoto,
-		Title:           "",
-		Description:     "",
+		Title:           "Cedula de identidad",
+		Description:     "foto del documento de identidad",
 		Status:          true,
 	}
 
 	requimentType := modeldb.RequirementTypeOwnAssetPhoto
-
+	descriptionType := "foto del artefacto en garantia."
 	if documentType == modeldb.DocumentTypeLastInvoice {
 		requimentType = modeldb.RequirementTypeLastInvoicePhoto
+		descriptionType = "foto de la ultima boleta de pago"
 	}
 
 	requirementByType := modeldb.Requirement{
 		RequirementType: requimentType,
-		Title:           "",
-		Description:     "",
+		Title:           "Boleto de pago",
+		Description:     descriptionType,
 		Status:          true,
 	}
 

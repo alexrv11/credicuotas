@@ -44,9 +44,7 @@ const LoanRequirementTypeScreen = ({ route, navigation }) => {
 
   const onSubmit = useCallback(
     type => {
-      if (type === 'LAST_INVOICE' || type === 'OWN_ASSET') {
-        navigation.navigate('LoanDocs', { type: type });
-      }
+      navigation.navigate('LoanRequirementList', { type: type });
     },
     [navigation],
   );

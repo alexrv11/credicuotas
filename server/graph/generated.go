@@ -135,7 +135,7 @@ type MutationResolver interface {
 	SaveUserInfo(ctx context.Context, name string, identifier string) (bool, error)
 	SendCodeByPhone(ctx context.Context, phone string) (bool, error)
 	SavePhoneNumber(ctx context.Context, phone string, code string) (bool, error)
-	SaveLoan(ctx context.Context, amount int, totalInstallments int, incomeType model.IncomeType) (bool, error)
+	SaveLoan(ctx context.Context, amount int, totalInstallments int, incomeType model.IncomeType) (string, error)
 	Logout(ctx context.Context) (bool, error)
 }
 type QueryResolver interface {
@@ -684,7 +684,7 @@ type Mutation {
   saveUserInfo(name: String!, identifier: String!): Boolean! @authenticated
   sendCodeByPhone(phone: String!): Boolean! @authenticated
   savePhoneNumber(phone: String!, code: String!): Boolean! @authenticated
-  saveLoan(amount: Int!, totalInstallments: Int!, incomeType: IncomeType!): Boolean! @authenticated
+  saveLoan(amount: Int!, totalInstallments: Int!, incomeType: IncomeType!): String! @authenticated
   logout: Boolean! @authenticated
 }
 
@@ -1834,10 +1834,10 @@ func (ec *executionContext) _Mutation_saveLoan(ctx context.Context, field graphq
 		if tmp == nil {
 			return nil, nil
 		}
-		if data, ok := tmp.(bool); ok {
+		if data, ok := tmp.(string); ok {
 			return data, nil
 		}
-		return nil, fmt.Errorf(`unexpected type %T from directive, should be bool`, tmp)
+		return nil, fmt.Errorf(`unexpected type %T from directive, should be string`, tmp)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -1849,9 +1849,9 @@ func (ec *executionContext) _Mutation_saveLoan(ctx context.Context, field graphq
 		}
 		return graphql.Null
 	}
-	res := resTmp.(bool)
+	res := resTmp.(string)
 	fc.Result = res
-	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
+	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Mutation_logout(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {

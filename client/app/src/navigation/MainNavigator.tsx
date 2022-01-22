@@ -22,6 +22,9 @@ import IncomeLoanScreen from 'screens/home/IncomeLoanScreen';
 import PreviewDocumentScreen from '../screens/PreviewDocument';
 import LoanRequirementTypeScreen from 'screens/LoanRequirementTypeScreen';
 import LoanDocsScreen from 'screens/LoanDocsScreen';
+import LoanRequirementListScreen from 'screens/LoanRequirementListScreen';
+import { useGetUserQuery } from '../api/graphql/generated/graphql';
+import Loading from 'components/Loading';
 
 const AppStack = createNativeStackNavigator();
 
@@ -93,6 +96,13 @@ const RegisterLoanFlow = () => {
       <RegisterLoanStack.Screen
         name="LoanDocs"
         component={LoanDocsScreen}
+        options={{
+          title: '',
+        }}
+      />
+      <RegisterLoanStack.Screen
+        name="LoanRequirementList"
+        component={LoanRequirementListScreen}
         options={{
           title: '',
         }}
@@ -208,10 +218,28 @@ const MainFlow = () => {
 };
 
 const MainNavigator = () => {
+  const { error, loading } = useGetUserQuery();
+
+  if (loading) {
+    return <Loading />;
+  }
+
+  if (error) {
+    return (
+      <NavigationContainer>
+        <AppStack.Navigator
+          initialRouteName="SignInFlow"
+          screenOptions={{ headerShown: false }}>
+          <AppStack.Screen name="SignInFlow" component={SignInFlow} />
+        </AppStack.Navigator>
+      </NavigationContainer>
+    );
+  }
+
   return (
     <NavigationContainer>
       <AppStack.Navigator
-        initialRouteName="SignInFlow"
+        initialRouteName="MainFlow"
         screenOptions={{ headerShown: false }}>
         <AppStack.Screen name="SignInFlow" component={SignInFlow} />
         <AppStack.Screen name="MainFlow" component={MainFlow} />

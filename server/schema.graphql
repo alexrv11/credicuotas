@@ -93,7 +93,7 @@ type Mutation {
   saveUserInfo(name: String!, identifier: String!): Boolean! @authenticated
   sendCodeByPhone(phone: String!): Boolean! @authenticated
   savePhoneNumber(phone: String!, code: String!): Boolean! @authenticated
-  saveLoan(amount: Int!, totalInstallments: Int!, incomeType: IncomeType!): Boolean! @authenticated
+  saveLoan(amount: Int!, totalInstallments: Int!, incomeType: IncomeType!): String! @authenticated
   logout: Boolean! @authenticated
 }
 

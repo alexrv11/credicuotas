@@ -11,7 +11,7 @@ import {
 } from '../../api/graphql/generated/graphql';
 
 const IncomeLoanScreen = ({ navigation }) => {
-  const { amount, totalInstallments } = useLoan();
+  const { amount, totalInstallments, setLoanId } = useLoan();
   const [incomeLoanType, setIncomeLoanType] = useState('');
 
   const [saveLoan, { data, error }] = useSaveLoanMutation();
@@ -25,14 +25,16 @@ const IncomeLoanScreen = ({ navigation }) => {
   );
 
   useEffect(() => {
-    if (data) {
+    if (data?.saveLoan) {
+      console.log("loan save", data?.saveLoan);
+      setLoanId(data?.saveLoan);
       navigation.dispatch(
         StackActions.replace('LoanRequirementType', {
           incomeType: incomeLoanType,
         }),
       );
     }
-  }, [data, navigation, incomeLoanType]);
+  }, [data, navigation, incomeLoanType, setLoanId]);
 
   useEffect(() => {
     if (error) {

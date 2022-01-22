@@ -95,16 +95,10 @@ func (r *mutationResolver) SavePhoneNumber(ctx context.Context, phone string, co
 	return true, nil
 }
 
-func (r *mutationResolver) SaveLoan(ctx context.Context, amount, totalInstallments int, incomeType modelgen.IncomeType) (bool, error) {
+func (r *mutationResolver) SaveLoan(ctx context.Context, amount, totalInstallments int, incomeType modelgen.IncomeType) (string, error) {
 	userXid, _ := ctx.Value(middlewares.UserInfoKey).(string)
 
-	err := r.core.Loan.Save(r.provider, userXid, amount, totalInstallments, incomeType)
-
-	if err != nil {
-		return false, err
-	}
-
-	return true, nil
+	return r.core.Loan.Save(r.provider, userXid, amount, totalInstallments, incomeType)
 }
 
 func (r *mutationResolver) CreateUser(ctx context.Context, email, password, name string, role modelgen.Role) (bool, error) {
