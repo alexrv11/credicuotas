@@ -80,6 +80,7 @@ type Query  {
   getClients: [User]! @authenticated
   getStaff: [User]! @authenticated @hasRole(role: ADMIN)
   getLoan: Loan! @authenticated
+  getLoanById(id: String!): Loan! @authenticated
   getLoanRequirements(loanId: String!, documentType: DocumentType!): [Requirement]! @authenticated
 }
 

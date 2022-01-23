@@ -14,6 +14,7 @@ type Loan interface {
 	SaveDocuments(provider *providers.Provider, userXid, loanID, requirementType, fileName string) error
 	GetLoans(provider *providers.Provider, userXid string) ([]*modeldb.Loan, error)
 	GetLoan(provider *providers.Provider, userXid string) (*modeldb.Loan, error)
+	GetLoanByID(provider *providers.Provider, id string) (*modeldb.Loan, error)
 	GetLoanOrders(provider *providers.Provider) ([]*modeldb.Loan, error)
 	GetLoanRequirements(provider *providers.Provider, userXid, loanID string, documentType modeldb.DocumentType) ([]*modeldb.Requirement, error)
 	GetDocuments(provider *providers.Provider, loanID uint) ([]*modeldb.Document, error)
@@ -232,6 +233,19 @@ func (r *LoanImpl) GetLoan(provider *providers.Provider, userXid string) (*model
 	var loan modeldb.Loan
 
 	err = db.Model(&modeldb.Loan{}).Preload("User").Where("user_id = ?", user.ID).First(&loan).Error
+
+	if errors.Is(err, gorm.ErrRecordNotFound) {
+		return nil, fmt.Errorf("not found loan")
+	}
+
+	return &loan, nil
+}
+
+func (r *LoanImpl) GetLoanByID(provider *providers.Provider, id string) (*modeldb.Loan, error) {
+	db := provider.GormClient()
+	var loan modeldb.Loan
+
+	err := db.Model(&modeldb.Loan{}).Preload("User").Where("xid = ?", id).First(&loan).Error
 
 	if errors.Is(err, gorm.ErrRecordNotFound) {
 		return nil, fmt.Errorf("not found loan")

@@ -61,6 +61,11 @@ func (query *queryResolver) GetLoan(ctx context.Context) (*model2.Loan, error) {
 	return query.core.Loan.GetLoan(query.provider, userXid)
 }
 
+func (query *queryResolver) GetLoanByID(ctx context.Context, id string) (*model2.Loan, error) {
+
+	return query.core.Loan.GetLoanByID(query.provider, id)
+}
+
 func (query *queryResolver) GetLoanRequirements(ctx context.Context, loanID string, documentType model2.DocumentType) ([]*model2.Requirement, error) {
 	userXid, _ := ctx.Value(middlewares.UserInfoKey).(string)
 

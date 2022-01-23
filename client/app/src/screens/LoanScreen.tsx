@@ -34,7 +34,11 @@ const LoanScreen = () => {
       return (
         <View style={styles.documentItem}>
           <Text style={styles.documentItemDescription}>{doc?.description}</Text>
-          <Text style={styles.documentItemDescriptionVer}>ver</Text>
+          <Text
+            style={styles.documentItemDescriptionVer}
+            onPress={() => console.log('hello', doc)}>
+            ver
+          </Text>
         </View>
       );
     });
@@ -72,7 +76,9 @@ const LoanScreen = () => {
       </View>
       <View style={styles.documents}>
         <Text style={styles.documentTitle}>Documentos</Text>
-        <View style={styles.docs}>{documentView(data?.getLoan?.documents)}</View>
+        <View style={styles.docs}>
+          {documentView(data?.getLoan?.documents)}
+        </View>
       </View>
     </SafeAreaView>
   );
@@ -203,7 +209,7 @@ const styles = StyleSheet.create({
     fontSize: 17,
     color: '#070D99',
     textDecorationLine: 'underline',
-  }
+  },
 });
 
 export default LoanScreen;
