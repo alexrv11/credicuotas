@@ -13,8 +13,10 @@ type Loan interface {
 	Save(provider *providers.Provider, userXid string, amount, totalInstallments int, incomeType model.IncomeType) (string, error)
 	SaveDocuments(provider *providers.Provider, userXid, loanID, requirementType, fileName string) error
 	GetLoans(provider *providers.Provider, userXid string) ([]*modeldb.Loan, error)
+	GetLoan(provider *providers.Provider, userXid string) (*modeldb.Loan, error)
 	GetLoanOrders(provider *providers.Provider) ([]*modeldb.Loan, error)
 	GetLoanRequirements(provider *providers.Provider, userXid, loanID string, documentType modeldb.DocumentType) ([]*modeldb.Requirement, error)
+	GetDocuments(provider *providers.Provider, loanID uint) ([]*modeldb.Document, error)
 }
 
 type LoanImpl struct{}
@@ -40,12 +42,22 @@ func (r *LoanImpl) Save(provider *providers.Provider, userXid string, amount, to
 	}
 
 	if errors.Is(err, gorm.ErrRecordNotFound) {
+		rate := 0.24
+		if incomeType == model.IncomeTypePublicEmployee {
+			rate = 0.22
+		}
+
+		if incomeType == model.IncomeTypeOnwEmployee {
+			rate = 0.30
+		}
+
 		newLoan := &modeldb.Loan{
 			Amount:            amount,
 			TotalInstallments: totalInstallments,
 			IncomeType:        string(incomeType),
 			Status:            "Register",
 			UserID:            user.ID,
+			Rate:              rate,
 		}
 
 		err = db.Save(newLoan).Error
@@ -133,6 +145,7 @@ func (r *LoanImpl) GetLoanRequirements(provider *providers.Provider, userXid, lo
 	if errors.Is(err, gorm.ErrRecordNotFound) {
 		return nil, fmt.Errorf("not found user")
 	}
+
 	var loan modeldb.Loan
 
 	err = db.Model(&modeldb.Loan{}).Where("xid = ?", loanID).First(&loan).Error
@@ -204,4 +217,39 @@ func getRequirementsByDocumentType(provider *providers.Provider, user modeldb.Us
 	requirements = append(requirements, &requirementCI, &requirementByType)
 
 	return requirements, nil
+}
+
+func (r *LoanImpl) GetLoan(provider *providers.Provider, userXid string) (*modeldb.Loan, error) {
+	db := provider.GormClient()
+
+	var user modeldb.User
+	err := db.Model(&modeldb.User{}).Where("xid = ?", userXid).First(&user).Error
+
+	if errors.Is(err, gorm.ErrRecordNotFound) {
+		return nil, fmt.Errorf("not found user")
+	}
+
+	var loan modeldb.Loan
+
+	err = db.Model(&modeldb.Loan{}).Preload("User").Where("user_id = ?", user.ID).First(&loan).Error
+
+	if errors.Is(err, gorm.ErrRecordNotFound) {
+		return nil, fmt.Errorf("not found loan")
+	}
+
+	return &loan, nil
+}
+
+func (r *LoanImpl) GetDocuments(provider *providers.Provider, loanID uint) ([]*modeldb.Document, error) {
+	db := provider.GormClient()
+
+	documents := make([]*modeldb.Document, 0)
+
+	err := db.Model(&modeldb.Document{}).Where("loan_id = ?", loanID).Find(&documents).Error
+
+	if err != nil {
+		return nil, err
+	}
+
+	return documents, nil
 }

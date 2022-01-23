@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useState } from 'react';
 import { SafeAreaView, StyleSheet, View, TouchableOpacity } from 'react-native';
 import { Text, Icon } from 'react-native-elements';
 import Spacer from 'components/Spacer';
@@ -6,6 +6,7 @@ import PrimaryButton from 'components/PrimaryButton';
 import { useGetRequirementsQuery } from '../api/graphql/generated/graphql';
 import { useLoan } from 'context/LoanContext';
 import Loading from 'components/Loading';
+import { useEffect } from 'react';
 
 const LoanRequirementListScreen = ({ route, navigation }) => {
   const { loanId, requirementType } = useLoan();
@@ -21,21 +22,32 @@ const LoanRequirementListScreen = ({ route, navigation }) => {
       const uploadRequirements = data?.getLoanRequirements.filter(
         item => item?.status === false,
       );
-      if (uploadRequirements.length === 0) {
-        console.log('it is completed see2');
-      } else {
+      if (uploadRequirements.length > 0) {
         navigation.navigate('LoanDocs', { ...uploadRequirements[0] });
       }
     }
   }, [data?.getLoanRequirements, navigation]);
 
+  useEffect(() => {
+    const completed = data?.getLoanRequirements.filter(
+      item => item?.status === false,
+    );
+    if (completed?.length === 0) {
+      navigation.navigate('LoanCompleted');
+    }
+  }, [data?.getLoanRequirements, navigation]);
+
+  if (loading) {
+    return <Loading />;
+  }
+
   function viewRequirements(values) {
     if (!values) {
       return;
     }
-    return values.map(requirement => {
+    return values.map((requirement, index) => {
       return (
-        <View key={requirement.type} style={styles.incomeContainer}>
+        <View key={index} style={styles.incomeContainer}>
           <Icon
             name={requirement.status ? 'check-circle' : 'check-circle-outline'}
             style={

@@ -25,6 +25,7 @@ import LoanDocsScreen from 'screens/LoanDocsScreen';
 import LoanRequirementListScreen from 'screens/LoanRequirementListScreen';
 import { useGetUserQuery } from '../api/graphql/generated/graphql';
 import Loading from 'components/Loading';
+import LoanCompletedScreen from 'screens/LoanCompletedScreen';
 
 const AppStack = createNativeStackNavigator();
 
@@ -103,6 +104,13 @@ const RegisterLoanFlow = () => {
       <RegisterLoanStack.Screen
         name="LoanRequirementList"
         component={LoanRequirementListScreen}
+        options={{
+          title: '',
+        }}
+      />
+      <RegisterLoanStack.Screen
+        name="LoanCompleted"
+        component={LoanCompletedScreen}
         options={{
           title: '',
         }}

@@ -1,29 +1,69 @@
+import Loading from 'components/Loading';
 import React from 'react';
 import { StyleSheet, Text, View, SafeAreaView } from 'react-native';
 import { Icon } from 'react-native-elements';
+import { useGetLoanQuery } from '../api/graphql/generated/graphql';
 
 const LoanScreen = () => {
+  const { data, error, loading } = useGetLoanQuery();
+
+  if (loading) {
+    return <Loading />;
+  }
+
+  const getStatusDescriptionView = status => {
+    let description = '';
+
+    if (status === 'Register') {
+      description = 'Estamos analizando su solicitud';
+    }
+
+    return (
+      <View style={styles.containerStatus}>
+        <Text style={styles.descriptionStatus}>{description}</Text>
+      </View>
+    );
+  };
+
+  const documentView = documents => {
+    if (!documents) {
+      return;
+    }
+    return documents.map(doc => {
+      console.log('docs', doc);
+      return (
+        <View style={styles.documentItem}>
+          <Text style={styles.documentItemDescription}>{doc?.description}</Text>
+          <Text style={styles.documentItemDescriptionVer}>ver</Text>
+        </View>
+      );
+    });
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.textStatus}>APPROVED</Text>
+        <Text style={styles.textStatus}>{data?.getLoan?.status}</Text>
+        {getStatusDescriptionView(data?.getLoan?.status)}
       </View>
       <View style={styles.loanContainer}>
         <View style={styles.details}>
           <Text style={styles.titleDetails}>Total Prestamo</Text>
           <View style={styles.amountContainer}>
             <Text>bs</Text>
-            <Text style={styles.amount}>10.000</Text>
+            <Text style={styles.amount}>{data?.getLoan?.amount}</Text>
           </View>
           <Text style={styles.rateTitle}>Interes</Text>
           <View style={styles.rateContainer}>
-            <Text>10%</Text>
-            <Text style={styles.rate}>1.000</Text>
+            <Text>{data?.getLoan?.ratePercentage}</Text>
+            <Text style={styles.rate}>{data?.getLoan?.rateAmount}</Text>
           </View>
         </View>
         <View style={styles.installments}>
           <Text style={styles.installmentTitle}>Cuotas</Text>
-          <Text style={styles.installmentsValue}>4/10</Text>
+          <Text style={styles.installmentsValue}>
+            {data?.getLoan?.totalInstallments}
+          </Text>
         </View>
       </View>
       <View style={styles.nextInstallments}>
@@ -32,6 +72,7 @@ const LoanScreen = () => {
       </View>
       <View style={styles.documents}>
         <Text style={styles.documentTitle}>Documentos</Text>
+        <View style={styles.docs}>{documentView(data?.getLoan?.documents)}</View>
       </View>
     </SafeAreaView>
   );
@@ -46,9 +87,11 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   header: {
+    height: 60,
     justifyContent: 'center',
     marginTop: 50,
     width: '100%',
+    flexDirection: 'column',
   },
   installmentsTitle: {
     marginLeft: 10,
@@ -132,6 +175,35 @@ const styles = StyleSheet.create({
     fontSize: 20,
     color: '#0c0f69',
   },
+  containerStatus: {
+    flex: 1,
+    marginTop: 8,
+  },
+  descriptionStatus: {
+    fontSize: 16,
+    flex: 1,
+    flexWrap: 'wrap',
+  },
+  docs: {
+    marginTop: 10,
+  },
+  documentItem: {
+    height: 50,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: 4,
+    padding: 10,
+    backgroundColor: '#eaeaf5',
+  },
+  documentItemDescription: {
+    fontSize: 17,
+    color: '#070D99',
+  },
+  documentItemDescriptionVer: {
+    fontSize: 17,
+    color: '#070D99',
+    textDecorationLine: 'underline',
+  }
 });
 
 export default LoanScreen;

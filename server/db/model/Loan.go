@@ -27,6 +27,9 @@ type Loan struct {
 	Status            string
 	User              *User
 	UserID            uint
+	Rate              float64
+	TotalGuarantees   uint
+	TotalCoBorrowers  uint
 }
 
 func (u *Loan) BeforeCreate(tx *gorm.DB) error {

@@ -79,7 +79,7 @@ type Query  {
   getLoanOrders: [Loan]! @authenticated
   getClients: [User]! @authenticated
   getStaff: [User]! @authenticated @hasRole(role: ADMIN)
-  getLoan(id: String!): Loan! @authenticated
+  getLoan: Loan! @authenticated
   getLoanRequirements(loanId: String!, documentType: DocumentType!): [Requirement]! @authenticated
 }
 
@@ -105,6 +105,10 @@ type Loan {
   status: String!
   ownerName: String!
   Timeline: Timeline!
+  rateAmount: String!
+  ratePercentage: String!
+  installmentAmount: String!
+  documents: [Document!]!
 }
 
 type Timeline {
@@ -132,5 +136,11 @@ type User {
   email: String!
   phone: String!
   identifierNumber: String
+}
+
+type Document {
+  id: String!
+  description: String!
+  url: String!
 }
 

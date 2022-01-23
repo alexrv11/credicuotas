@@ -73,3 +73,5 @@ models:
     model: github.com/alexrv11/credicuotas/server/db/model.Requirement
   DocumentType:
     model: github.com/alexrv11/credicuotas/server/db/model.DocumentType
+  Document:
+    model: github.com/alexrv11/credicuotas/server/db/model.Document

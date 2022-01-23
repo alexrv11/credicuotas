@@ -8,7 +8,7 @@ import (
 // m0003_create_user_documents_table
 func m0003_create_user_documents_table() *gormigrate.Migration {
 	return &gormigrate.Migration{
-		ID: "202112140002",
+		ID: "202112140003",
 		Migrate: func(tx *gorm.DB) error {
 			type User struct {
 				gorm.Model
@@ -20,7 +20,8 @@ func m0003_create_user_documents_table() *gormigrate.Migration {
 
 			type Document struct {
 				gorm.Model
-				User        User `json:"user,omitempty" gorm:"foreignKey:UserID;references:ID"`
+				Xid         string `gorm:"uniqueIndex"`
+				User        User   `json:"user,omitempty" gorm:"foreignKey:UserID;references:ID"`
 				UserID      uint
 				LoanID      uint
 				Loan        Loan `json:"loan,omitempty" gorm:"foreignKey:LoanID;references:ID"`

@@ -8,7 +8,7 @@ import (
 // m0004_create_loan_table
 func m0004_create_loan_table() *gormigrate.Migration {
 	return &gormigrate.Migration{
-		ID: "202112250003",
+		ID: "202112250005",
 		Migrate: func(tx *gorm.DB) error {
 			type User struct {
 				gorm.Model
@@ -20,6 +20,7 @@ func m0004_create_loan_table() *gormigrate.Migration {
 				Amount            int
 				TotalInstallments int
 				IncomeType        string
+				Rate              float64
 				Status            string
 				User              User `json:"user,omitempty" gorm:"foreignKey:UserID;references:ID"`
 				UserID            uint

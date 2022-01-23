@@ -1,6 +1,9 @@
 package model
 
-import "gorm.io/gorm"
+import (
+	"github.com/google/uuid"
+	"gorm.io/gorm"
+)
 
 type RequirementType string
 
@@ -33,6 +36,7 @@ type Requirement struct {
 
 type Document struct {
 	gorm.Model
+	Xid         string
 	User        *User
 	UserID      uint
 	LoanID      uint
@@ -40,4 +44,10 @@ type Document struct {
 	Type        string
 	Description string
 	Url         string
+}
+
+func (d *Document) BeforeCreate(tx *gorm.DB) error {
+	d.Xid = uuid.New().String()
+
+	return nil
 }
