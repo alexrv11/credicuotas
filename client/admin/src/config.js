@@ -3,7 +3,7 @@ const config = {
     defaultPath: '/dashboard/default',
     defaultPaths: {
         ADMIN: 'staff/profiles',
-        CREDIT_ASSISTANT: '/clients/orders',
+        CREDIT_ASSISTANT: '/admin/clients/orders',
         MANAGER: '/dashboard/default'
     },
     fontFamily: `'Roboto', sans-serif`,
