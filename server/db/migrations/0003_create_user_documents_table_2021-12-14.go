@@ -8,7 +8,7 @@ import (
 // m0003_create_user_documents_table
 func m0003_create_user_documents_table() *gormigrate.Migration {
 	return &gormigrate.Migration{
-		ID: "202112140003",
+		ID: "202112140005",
 		Migrate: func(tx *gorm.DB) error {
 			type User struct {
 				gorm.Model
@@ -28,6 +28,7 @@ func m0003_create_user_documents_table() *gormigrate.Migration {
 				Type        string
 				Description string
 				Url         string
+				Status      string
 			}
 
 			return tx.AutoMigrate(&Document{})

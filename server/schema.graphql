@@ -139,9 +139,17 @@ type User {
   identifierNumber: String
 }
 
+enum DocumentStatus {
+  PENDING_REVIEW
+  APPROVED
+  DECLINED
+}
+
 type Document {
   id: String!
   description: String!
   url: String!
+  status: DocumentStatus!
+  statusDescription: String!
 }
 

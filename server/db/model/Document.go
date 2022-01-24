@@ -27,6 +27,14 @@ const (
 	DocumentTypeLastInvoice             DocumentType = "LAST_INVOICE"
 )
 
+type DocumentStatus string
+
+const (
+	DocumentStatusPendingReview DocumentStatus = "PENDING_REVIEW"
+	DocumentStatusDeclined      DocumentStatus = "DECLINED"
+	DocumentStatusApproved      DocumentStatus = "APPROVED"
+)
+
 type Requirement struct {
 	RequirementType RequirementType `json:"requirementType"`
 	Title           string          `json:"title"`
@@ -44,6 +52,7 @@ type Document struct {
 	Type        string
 	Description string
 	Url         string
+	Status      DocumentStatus
 }
 
 func (d *Document) BeforeCreate(tx *gorm.DB) error {

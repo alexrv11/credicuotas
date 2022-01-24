@@ -56,9 +56,11 @@ type ComplexityRoot struct {
 	}
 
 	Document struct {
-		Description func(childComplexity int) int
-		ID          func(childComplexity int) int
-		Url         func(childComplexity int) int
+		Description       func(childComplexity int) int
+		ID                func(childComplexity int) int
+		Status            func(childComplexity int) int
+		StatusDescription func(childComplexity int) int
+		Url               func(childComplexity int) int
 	}
 
 	Loan struct {
@@ -132,6 +134,8 @@ type ComplexityRoot struct {
 
 type DocumentResolver interface {
 	ID(ctx context.Context, obj *model1.Document) (string, error)
+
+	StatusDescription(ctx context.Context, obj *model1.Document) (string, error)
 }
 type LoanResolver interface {
 	ID(ctx context.Context, obj *model1.Loan) (string, error)
@@ -209,6 +213,20 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Document.ID(childComplexity), true
+
+	case "Document.status":
+		if e.complexity.Document.Status == nil {
+			break
+		}
+
+		return e.complexity.Document.Status(childComplexity), true
+
+	case "Document.statusDescription":
+		if e.complexity.Document.StatusDescription == nil {
+			break
+		}
+
+		return e.complexity.Document.StatusDescription(childComplexity), true
 
 	case "Document.url":
 		if e.complexity.Document.Url == nil {
@@ -806,10 +824,18 @@ type User {
   identifierNumber: String
 }
 
+enum DocumentStatus {
+  PENDING_REVIEW
+  APPROVED
+  DECLINED
+}
+
 type Document {
   id: String!
   description: String!
   url: String!
+  status: DocumentStatus!
+  statusDescription: String!
 }
 
 `, BuiltIn: false},
@@ -1267,6 +1293,76 @@ func (ec *executionContext) _Document_url(ctx context.Context, field graphql.Col
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
 		return obj.Url, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Document_status(ctx context.Context, field graphql.CollectedField, obj *model1.Document) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Document",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Status, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(model1.DocumentStatus)
+	fc.Result = res
+	return ec.marshalNDocumentStatus2githubᚗcomᚋalexrv11ᚋcredicuotasᚋserverᚋdbᚋmodelᚐDocumentStatus(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Document_statusDescription(ctx context.Context, field graphql.CollectedField, obj *model1.Document) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Document",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Document().StatusDescription(rctx, obj)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -4580,6 +4676,25 @@ func (ec *executionContext) _Document(ctx context.Context, sel ast.SelectionSet,
 			if out.Values[i] == graphql.Null {
 				atomic.AddUint32(&invalids, 1)
 			}
+		case "status":
+			out.Values[i] = ec._Document_status(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&invalids, 1)
+			}
+		case "statusDescription":
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Document_statusDescription(ctx, field, obj)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
+			})
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -5479,6 +5594,22 @@ func (ec *executionContext) marshalNDocument2ᚖgithubᚗcomᚋalexrv11ᚋcredic
 		return graphql.Null
 	}
 	return ec._Document(ctx, sel, v)
+}
+
+func (ec *executionContext) unmarshalNDocumentStatus2githubᚗcomᚋalexrv11ᚋcredicuotasᚋserverᚋdbᚋmodelᚐDocumentStatus(ctx context.Context, v interface{}) (model1.DocumentStatus, error) {
+	tmp, err := graphql.UnmarshalString(v)
+	res := model1.DocumentStatus(tmp)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalNDocumentStatus2githubᚗcomᚋalexrv11ᚋcredicuotasᚋserverᚋdbᚋmodelᚐDocumentStatus(ctx context.Context, sel ast.SelectionSet, v model1.DocumentStatus) graphql.Marshaler {
+	res := graphql.MarshalString(string(v))
+	if res == graphql.Null {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "must not be null")
+		}
+	}
+	return res
 }
 
 func (ec *executionContext) unmarshalNDocumentType2githubᚗcomᚋalexrv11ᚋcredicuotasᚋserverᚋdbᚋmodelᚐDocumentType(ctx context.Context, v interface{}) (model1.DocumentType, error) {
