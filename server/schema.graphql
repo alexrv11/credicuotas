@@ -96,6 +96,7 @@ type Mutation {
   savePhoneNumber(phone: String!, code: String!): Boolean! @authenticated
   saveLoan(amount: Int!, totalInstallments: Int!, incomeType: IncomeType!): String! @authenticated
   logout: Boolean! @authenticated
+  changeDocumentStatus(documentId: String!, status: DocumentStatus!): Boolean! @authenticated
 }
 
 type Loan {

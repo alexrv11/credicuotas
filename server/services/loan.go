@@ -18,6 +18,7 @@ type Loan interface {
 	GetLoanOrders(provider *providers.Provider) ([]*modeldb.Loan, error)
 	GetLoanRequirements(provider *providers.Provider, userXid, loanID string, documentType modeldb.DocumentType) ([]*modeldb.Requirement, error)
 	GetDocuments(provider *providers.Provider, loanID uint) ([]*modeldb.Document, error)
+	ChangeDocumentStatus(provider *providers.Provider, documentID string, status modeldb.DocumentStatus) error
 }
 
 type LoanImpl struct{}
@@ -121,11 +122,27 @@ func (r *LoanImpl) SaveDocuments(provider *providers.Provider, userXid, loanID, 
 		return fmt.Errorf("not found loan")
 	}
 
-	document := &modeldb.Document{
-		UserID: user.ID,
-		LoanID: loan.ID,
-		Type:   requirementType,
-		Url:    fileName,
+	var document modeldb.Document
+
+	err = db.Model(&modeldb.Document{}).
+		Where("loan_id = ? AND type = ?", loan.ID, requirementType).
+		First(&document).Error
+
+	if errors.Is(err, gorm.ErrRecordNotFound) {
+		document = modeldb.Document{
+			UserID: user.ID,
+			LoanID: loan.ID,
+			Type:   requirementType,
+			Url:    fileName,
+			Status: modeldb.DocumentStatusPendingReview,
+		}
+	}
+
+	document.Url = fileName
+	document.Status = modeldb.DocumentStatusPendingReview
+
+	if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
+		return err
 	}
 
 	err = db.Save(document).Error
@@ -190,7 +207,7 @@ func getRequirementsByDocumentType(provider *providers.Provider, user modeldb.Us
 	}
 
 	err := db.Model(&modeldb.Document{}).
-		Where("user_id = ? AND type = ?", user.ID, modeldb.RequirementTypeClientDocumentPhoto).
+		Where("user_id = ? AND type = ? AND status != ?", user.ID, modeldb.RequirementTypeClientDocumentPhoto, modeldb.DocumentStatusDeclined).
 		First(&documentCI).Error
 
 	if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
@@ -204,7 +221,7 @@ func getRequirementsByDocumentType(provider *providers.Provider, user modeldb.Us
 	var documentByType modeldb.Document
 
 	err = db.Model(&modeldb.Document{}).
-		Where("loan_id = ? AND type = ?", loan.ID, requimentType).
+		Where("loan_id = ? AND type = ? AND status != ?", loan.ID, requimentType, modeldb.DocumentStatusDeclined).
 		First(&documentByType).Error
 
 	if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
@@ -266,4 +283,26 @@ func (r *LoanImpl) GetDocuments(provider *providers.Provider, loanID uint) ([]*m
 	}
 
 	return documents, nil
+}
+
+func (r *LoanImpl) ChangeDocumentStatus(provider *providers.Provider, documentID string, status modeldb.DocumentStatus) error {
+	db := provider.GormClient()
+
+	var document modeldb.Document
+
+	err := db.Model(&modeldb.Document{}).
+		Where("xid = ?", documentID).
+		First(&document).Error
+
+	if errors.Is(err, gorm.ErrRecordNotFound) {
+		return fmt.Errorf("not found document")
+	}
+
+	if err != nil {
+		return err
+	}
+
+	document.Status = status
+
+	return db.Save(&document).Error
 }

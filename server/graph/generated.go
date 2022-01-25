@@ -78,16 +78,17 @@ type ComplexityRoot struct {
 	}
 
 	Mutation struct {
-		CreateUser        func(childComplexity int, email string, password string, name string, role model.Role) int
-		Login             func(childComplexity int, email string, password string) int
-		Logout            func(childComplexity int) int
-		SaveLoan          func(childComplexity int, amount int, totalInstallments int, incomeType model.IncomeType) int
-		SavePhoneNumber   func(childComplexity int, phone string, code string) int
-		SaveUserInfo      func(childComplexity int, name string, identifier string) int
-		SendCodeByEmail   func(childComplexity int, email string) int
-		SendCodeByPhone   func(childComplexity int, phone string) int
-		SignInWithCode    func(childComplexity int, email string, code string) int
-		ToggleUserDisable func(childComplexity int, userXid string) int
+		ChangeDocumentStatus func(childComplexity int, documentID string, status model1.DocumentStatus) int
+		CreateUser           func(childComplexity int, email string, password string, name string, role model.Role) int
+		Login                func(childComplexity int, email string, password string) int
+		Logout               func(childComplexity int) int
+		SaveLoan             func(childComplexity int, amount int, totalInstallments int, incomeType model.IncomeType) int
+		SavePhoneNumber      func(childComplexity int, phone string, code string) int
+		SaveUserInfo         func(childComplexity int, name string, identifier string) int
+		SendCodeByEmail      func(childComplexity int, email string) int
+		SendCodeByPhone      func(childComplexity int, phone string) int
+		SignInWithCode       func(childComplexity int, email string, code string) int
+		ToggleUserDisable    func(childComplexity int, userXid string) int
 	}
 
 	Query struct {
@@ -160,6 +161,7 @@ type MutationResolver interface {
 	SavePhoneNumber(ctx context.Context, phone string, code string) (bool, error)
 	SaveLoan(ctx context.Context, amount int, totalInstallments int, incomeType model.IncomeType) (string, error)
 	Logout(ctx context.Context) (bool, error)
+	ChangeDocumentStatus(ctx context.Context, documentID string, status model1.DocumentStatus) (bool, error)
 }
 type QueryResolver interface {
 	GetUser(ctx context.Context) (*model1.User, error)
@@ -311,6 +313,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Loan.TotalInstallments(childComplexity), true
+
+	case "Mutation.changeDocumentStatus":
+		if e.complexity.Mutation.ChangeDocumentStatus == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_changeDocumentStatus_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.ChangeDocumentStatus(childComplexity, args["documentId"].(string), args["status"].(model1.DocumentStatus)), true
 
 	case "Mutation.createUser":
 		if e.complexity.Mutation.CreateUser == nil {
@@ -781,6 +795,7 @@ type Mutation {
   savePhoneNumber(phone: String!, code: String!): Boolean! @authenticated
   saveLoan(amount: Int!, totalInstallments: Int!, incomeType: IncomeType!): String! @authenticated
   logout: Boolean! @authenticated
+  changeDocumentStatus(documentId: String!, status: DocumentStatus!): Boolean! @authenticated
 }
 
 type Loan {
@@ -858,6 +873,30 @@ func (ec *executionContext) dir_hasRole_args(ctx context.Context, rawArgs map[st
 		}
 	}
 	args["role"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_changeDocumentStatus_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 string
+	if tmp, ok := rawArgs["documentId"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("documentId"))
+		arg0, err = ec.unmarshalNString2string(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["documentId"] = arg0
+	var arg1 model1.DocumentStatus
+	if tmp, ok := rawArgs["status"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("status"))
+		arg1, err = ec.unmarshalNDocumentStatus2githubᚗcomᚋalexrv11ᚋcredicuotasᚋserverᚋdbᚋmodelᚐDocumentStatus(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["status"] = arg1
 	return args, nil
 }
 
@@ -2302,6 +2341,68 @@ func (ec *executionContext) _Mutation_logout(ctx context.Context, field graphql.
 		directive0 := func(rctx context.Context) (interface{}, error) {
 			ctx = rctx // use context from middleware stack in children
 			return ec.resolvers.Mutation().Logout(rctx)
+		}
+		directive1 := func(ctx context.Context) (interface{}, error) {
+			if ec.directives.Authenticated == nil {
+				return nil, errors.New("directive authenticated is not implemented")
+			}
+			return ec.directives.Authenticated(ctx, nil, directive0)
+		}
+
+		tmp, err := directive1(rctx)
+		if err != nil {
+			return nil, graphql.ErrorOnPath(ctx, err)
+		}
+		if tmp == nil {
+			return nil, nil
+		}
+		if data, ok := tmp.(bool); ok {
+			return data, nil
+		}
+		return nil, fmt.Errorf(`unexpected type %T from directive, should be bool`, tmp)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(bool)
+	fc.Result = res
+	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Mutation_changeDocumentStatus(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Mutation_changeDocumentStatus_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		directive0 := func(rctx context.Context) (interface{}, error) {
+			ctx = rctx // use context from middleware stack in children
+			return ec.resolvers.Mutation().ChangeDocumentStatus(rctx, args["documentId"].(string), args["status"].(model1.DocumentStatus))
 		}
 		directive1 := func(ctx context.Context) (interface{}, error) {
 			if ec.directives.Authenticated == nil {
@@ -4917,6 +5018,11 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 			}
 		case "logout":
 			out.Values[i] = ec._Mutation_logout(ctx, field)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "changeDocumentStatus":
+			out.Values[i] = ec._Mutation_changeDocumentStatus(ctx, field)
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
