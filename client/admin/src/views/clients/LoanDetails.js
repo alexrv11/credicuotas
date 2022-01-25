@@ -51,7 +51,6 @@ const LoanDetails = () => {
     if (loading) {
         return <Loader />;
     }
-    console.log('get loan', data, error);
 
     return (
         <MainCard>

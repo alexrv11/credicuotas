@@ -52,9 +52,11 @@ export default function LoanTabs({ loan }) {
                 alignItems="center"
                 style={{ color: 'white', backgroundColor: '#e3f2fd', marginTop: 5, padding: 10, borderRadius: 5 }}
             >
-                <Typography variant="h6" gutterBottom component="div">
-                    {doc.description}
-                </Typography>
+                <Grid item lg={6} md={6} sm={6} xs={6}>
+                    <Typography variant="h6" gutterBottom component="div">
+                        {doc.description}
+                    </Typography>
+                </Grid>
                 <Chip label={doc.statusDescription} variant="outlined" />
                 <Button>
                     <ValidateTextWrapper>Ver</ValidateTextWrapper>

@@ -5,19 +5,19 @@ import (
 	"context"
 	"fmt"
 	"io"
-	"os"
+	"io/ioutil"
+	"mime/multipart"
 	"time"
 )
 
 type Storage interface {
-	UploadFile(writer io.Writer, bucket, object string) error
+	UploadFile(file multipart.File, bucket, object string) error
+	DownloadFile(bucket, fileName string) ([]byte, error)
 }
 
 type GoogleStorage struct{}
 
-func (s *GoogleStorage) UploadFile(w io.Writer, bucket, object string) error {
-	// bucket := "bucket-name"
-	// object := "object-name"
+func (s *GoogleStorage) UploadFile(file multipart.File, bucket, object string) error {
 	ctx := context.Background()
 	client, err := storage.NewClient(ctx)
 	if err != nil {
@@ -25,24 +25,38 @@ func (s *GoogleStorage) UploadFile(w io.Writer, bucket, object string) error {
 	}
 	defer client.Close()
 
-	// Open local file.
-	f, err := os.Open("notes.txt")
-	if err != nil {
-		return fmt.Errorf("os.Open: %v", err)
-	}
-	defer f.Close()
-
 	ctx, cancel := context.WithTimeout(ctx, time.Second*50)
 	defer cancel()
 
 	// Upload an object with storage.Writer.
 	wc := client.Bucket(bucket).Object(object).NewWriter(ctx)
-	if _, err = io.Copy(wc, f); err != nil {
+	if _, err = io.Copy(wc, file); err != nil {
 		return fmt.Errorf("io.Copy: %v", err)
 	}
 	if err := wc.Close(); err != nil {
 		return fmt.Errorf("Writer.Close: %v", err)
 	}
-	fmt.Fprintf(w, "Blob %v uploaded.\n", object)
+
+	fmt.Printf("Blob %v uploaded.\n", object)
 	return nil
+}
+
+func (s *GoogleStorage) DownloadFile(bucket, fileName string) ([]byte, error) {
+	// [START download_file]
+	ctx := context.Background()
+	client, err := storage.NewClient(ctx)
+
+	ctx, cancel := context.WithTimeout(ctx, time.Second*50)
+	defer cancel()
+	rc, err := client.Bucket(bucket).Object(fileName).NewReader(ctx)
+	if err != nil {
+		return nil, err
+	}
+	defer rc.Close()
+
+	data, err := ioutil.ReadAll(rc)
+	if err != nil {
+		return nil, err
+	}
+	return data, nil
 }
