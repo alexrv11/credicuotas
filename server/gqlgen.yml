@@ -79,3 +79,7 @@ models:
     model: github.com/alexrv11/credicuotas/server/db/model.DocumentStatus
   LoanStatus:
     model: github.com/alexrv11/credicuotas/server/db/model.LoanStatus
+  TimelineState:
+    model: github.com/alexrv11/credicuotas/server/db/model.TimelineState
+  TimelineStatus:
+    model: github.com/alexrv11/credicuotas/server/db/model.TimelineStatus

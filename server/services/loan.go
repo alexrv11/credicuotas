@@ -19,6 +19,7 @@ type Loan interface {
 	GetLoanRequirements(provider *providers.Provider, userXid, loanID string, documentType modeldb.DocumentType) ([]*modeldb.Requirement, error)
 	GetDocuments(provider *providers.Provider, loanID uint) ([]*modeldb.Document, error)
 	ChangeDocumentStatus(provider *providers.Provider, documentID string, note string, status modeldb.DocumentStatus) error
+	Timeline(provider *providers.Provider, loan *modeldb.Loan) ([]*modeldb.TimelineState, error)
 }
 
 type LoanImpl struct{}
@@ -319,4 +320,67 @@ func (r *LoanImpl) ChangeDocumentStatus(provider *providers.Provider, documentID
 	document.Note = note
 
 	return db.Save(&document).Error
+}
+
+func (r *LoanImpl) Timeline(provider *providers.Provider, loan *modeldb.Loan) ([]*modeldb.TimelineState, error) {
+	db := provider.GormClient()
+	timeline := make([]*modeldb.TimelineState, 0)
+	registeredState := &modeldb.TimelineState{
+		Label:  "Registrado",
+		Title:  loan.CreatedAt.Format("02/01/2006"),
+		Status: modeldb.TimelineStatusDone,
+	}
+
+	requiredDocumentState := &modeldb.TimelineState{
+		Label:  "Documentos requeridos",
+		Title:  "Todos los documentos fueron aprobados",
+		Status: modeldb.TimelineStatusDone,
+	}
+
+	docs := make([]*modeldb.Document, 0)
+
+	err := db.Model(&modeldb.Document{}).Where("loan_id = ?", loan.ID).Find(&docs).Error
+
+	if err != nil {
+		return nil, err
+	}
+
+	//required documents
+	for _, doc := range docs {
+		if doc.Status == modeldb.DocumentStatusPendingReview {
+			requiredDocumentState.Status = modeldb.TimelineStatusPending
+			break
+		}
+
+		if doc.Status == modeldb.DocumentStatusDeclined {
+			requiredDocumentState.Status = modeldb.TimelineStatusRejected
+			requiredDocumentState.Description = "Documentos rechazados"
+			requiredDocumentState.Title = doc.Note
+			break
+		}
+	}
+
+	preApprovedState := &modeldb.TimelineState{
+		Label:  "Pre aprobado",
+		Status: modeldb.TimelineStatusPending,
+	}
+
+	approvedState := &modeldb.TimelineState{
+		Label:  "Aprobado",
+		Status: modeldb.TimelineStatusPending,
+	}
+
+	clientSignState := &modeldb.TimelineState{
+		Label:  "Firma cliente",
+		Status: modeldb.TimelineStatusPending,
+	}
+
+	runningState := &modeldb.TimelineState{
+		Label:  "En ejecucion",
+		Status: modeldb.TimelineStatusPending,
+	}
+
+	timeline = append(timeline, registeredState, requiredDocumentState, preApprovedState, approvedState, clientSignState, runningState)
+
+	return timeline, nil
 }

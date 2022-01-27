@@ -11,6 +11,12 @@ const GET_LOAN = gql`
             incomeType
             rateAmount
             ratePercentage
+            timeline {
+                label
+                status
+                description
+                title
+            }
             documents {
                 url
                 id

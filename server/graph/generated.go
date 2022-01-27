@@ -111,17 +111,11 @@ type ComplexityRoot struct {
 		Title           func(childComplexity int) int
 	}
 
-	Timeline struct {
-		Approved     func(childComplexity int) int
-		PreApproved  func(childComplexity int) int
-		Requirements func(childComplexity int) int
-		Running      func(childComplexity int) int
-		Submitted    func(childComplexity int) int
-	}
-
-	TimelineItem struct {
-		CreatedDate func(childComplexity int) int
+	TimelineState struct {
+		Description func(childComplexity int) int
+		Label       func(childComplexity int) int
 		Status      func(childComplexity int) int
+		Title       func(childComplexity int) int
 	}
 
 	User struct {
@@ -146,7 +140,7 @@ type LoanResolver interface {
 
 	StatusDescription(ctx context.Context, obj *model1.Loan) (string, error)
 	OwnerName(ctx context.Context, obj *model1.Loan) (string, error)
-	Timeline(ctx context.Context, obj *model1.Loan) (*model.Timeline, error)
+	Timeline(ctx context.Context, obj *model1.Loan) ([]*model1.TimelineState, error)
 	RateAmount(ctx context.Context, obj *model1.Loan) (string, error)
 	RatePercentage(ctx context.Context, obj *model1.Loan) (string, error)
 	InstallmentAmount(ctx context.Context, obj *model1.Loan) (string, error)
@@ -309,7 +303,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Loan.StatusDescription(childComplexity), true
 
-	case "Loan.Timeline":
+	case "Loan.timeline":
 		if e.complexity.Loan.Timeline == nil {
 			break
 		}
@@ -551,54 +545,33 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Requirement.Title(childComplexity), true
 
-	case "Timeline.approved":
-		if e.complexity.Timeline.Approved == nil {
+	case "TimelineState.description":
+		if e.complexity.TimelineState.Description == nil {
 			break
 		}
 
-		return e.complexity.Timeline.Approved(childComplexity), true
+		return e.complexity.TimelineState.Description(childComplexity), true
 
-	case "Timeline.preApproved":
-		if e.complexity.Timeline.PreApproved == nil {
+	case "TimelineState.label":
+		if e.complexity.TimelineState.Label == nil {
 			break
 		}
 
-		return e.complexity.Timeline.PreApproved(childComplexity), true
+		return e.complexity.TimelineState.Label(childComplexity), true
 
-	case "Timeline.requirements":
-		if e.complexity.Timeline.Requirements == nil {
+	case "TimelineState.status":
+		if e.complexity.TimelineState.Status == nil {
 			break
 		}
 
-		return e.complexity.Timeline.Requirements(childComplexity), true
+		return e.complexity.TimelineState.Status(childComplexity), true
 
-	case "Timeline.running":
-		if e.complexity.Timeline.Running == nil {
+	case "TimelineState.title":
+		if e.complexity.TimelineState.Title == nil {
 			break
 		}
 
-		return e.complexity.Timeline.Running(childComplexity), true
-
-	case "Timeline.submitted":
-		if e.complexity.Timeline.Submitted == nil {
-			break
-		}
-
-		return e.complexity.Timeline.Submitted(childComplexity), true
-
-	case "TimelineItem.createdDate":
-		if e.complexity.TimelineItem.CreatedDate == nil {
-			break
-		}
-
-		return e.complexity.TimelineItem.CreatedDate(childComplexity), true
-
-	case "TimelineItem.status":
-		if e.complexity.TimelineItem.Status == nil {
-			break
-		}
-
-		return e.complexity.TimelineItem.Status(childComplexity), true
+		return e.complexity.TimelineState.Title(childComplexity), true
 
 	case "User.email":
 		if e.complexity.User.Email == nil {
@@ -826,29 +799,24 @@ type Loan {
   status: LoanStatus!
   statusDescription: String!
   ownerName: String!
-  Timeline: Timeline!
+  timeline: [TimelineState!]!
   rateAmount: String!
   ratePercentage: String!
   installmentAmount: String!
   documents: [Document!]!
 }
 
-type Timeline {
-  submitted: TimelineItem!
-  requirements: TimelineItem!
-  preApproved: TimelineItem!
-  approved: TimelineItem!
-  running: TimelineItem!
+type TimelineState {
+  label: String!
+  title: String!
+  description: String!
+  status: TimelineStatus!
 }
 
-type TimelineItem {
-  createdDate: Time!
-  status: TimelineItemStatus!
-}
-
-enum TimelineItemStatus {
+enum TimelineStatus {
   DONE
   PENDING
+  REJECTED
 }
 
 type User {
@@ -1693,7 +1661,7 @@ func (ec *executionContext) _Loan_ownerName(ctx context.Context, field graphql.C
 	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Loan_Timeline(ctx context.Context, field graphql.CollectedField, obj *model1.Loan) (ret graphql.Marshaler) {
+func (ec *executionContext) _Loan_timeline(ctx context.Context, field graphql.CollectedField, obj *model1.Loan) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -1723,9 +1691,9 @@ func (ec *executionContext) _Loan_Timeline(ctx context.Context, field graphql.Co
 		}
 		return graphql.Null
 	}
-	res := resTmp.(*model.Timeline)
+	res := resTmp.([]*model1.TimelineState)
 	fc.Result = res
-	return ec.marshalNTimeline2ᚖgithubᚗcomᚋalexrv11ᚋcredicuotasᚋserverᚋgraphᚋmodelᚐTimeline(ctx, field.Selections, res)
+	return ec.marshalNTimelineState2ᚕᚖgithubᚗcomᚋalexrv11ᚋcredicuotasᚋserverᚋdbᚋmodelᚐTimelineStateᚄ(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Loan_rateAmount(ctx context.Context, field graphql.CollectedField, obj *model1.Loan) (ret graphql.Marshaler) {
@@ -3233,7 +3201,7 @@ func (ec *executionContext) _Requirement_status(ctx context.Context, field graph
 	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Timeline_submitted(ctx context.Context, field graphql.CollectedField, obj *model.Timeline) (ret graphql.Marshaler) {
+func (ec *executionContext) _TimelineState_label(ctx context.Context, field graphql.CollectedField, obj *model1.TimelineState) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -3241,7 +3209,7 @@ func (ec *executionContext) _Timeline_submitted(ctx context.Context, field graph
 		}
 	}()
 	fc := &graphql.FieldContext{
-		Object:     "Timeline",
+		Object:     "TimelineState",
 		Field:      field,
 		Args:       nil,
 		IsMethod:   false,
@@ -3251,7 +3219,7 @@ func (ec *executionContext) _Timeline_submitted(ctx context.Context, field graph
 	ctx = graphql.WithFieldContext(ctx, fc)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.Submitted, nil
+		return obj.Label, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -3263,12 +3231,12 @@ func (ec *executionContext) _Timeline_submitted(ctx context.Context, field graph
 		}
 		return graphql.Null
 	}
-	res := resTmp.(*model.TimelineItem)
+	res := resTmp.(string)
 	fc.Result = res
-	return ec.marshalNTimelineItem2ᚖgithubᚗcomᚋalexrv11ᚋcredicuotasᚋserverᚋgraphᚋmodelᚐTimelineItem(ctx, field.Selections, res)
+	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Timeline_requirements(ctx context.Context, field graphql.CollectedField, obj *model.Timeline) (ret graphql.Marshaler) {
+func (ec *executionContext) _TimelineState_title(ctx context.Context, field graphql.CollectedField, obj *model1.TimelineState) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -3276,7 +3244,7 @@ func (ec *executionContext) _Timeline_requirements(ctx context.Context, field gr
 		}
 	}()
 	fc := &graphql.FieldContext{
-		Object:     "Timeline",
+		Object:     "TimelineState",
 		Field:      field,
 		Args:       nil,
 		IsMethod:   false,
@@ -3286,7 +3254,7 @@ func (ec *executionContext) _Timeline_requirements(ctx context.Context, field gr
 	ctx = graphql.WithFieldContext(ctx, fc)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.Requirements, nil
+		return obj.Title, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -3298,12 +3266,12 @@ func (ec *executionContext) _Timeline_requirements(ctx context.Context, field gr
 		}
 		return graphql.Null
 	}
-	res := resTmp.(*model.TimelineItem)
+	res := resTmp.(string)
 	fc.Result = res
-	return ec.marshalNTimelineItem2ᚖgithubᚗcomᚋalexrv11ᚋcredicuotasᚋserverᚋgraphᚋmodelᚐTimelineItem(ctx, field.Selections, res)
+	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Timeline_preApproved(ctx context.Context, field graphql.CollectedField, obj *model.Timeline) (ret graphql.Marshaler) {
+func (ec *executionContext) _TimelineState_description(ctx context.Context, field graphql.CollectedField, obj *model1.TimelineState) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -3311,7 +3279,7 @@ func (ec *executionContext) _Timeline_preApproved(ctx context.Context, field gra
 		}
 	}()
 	fc := &graphql.FieldContext{
-		Object:     "Timeline",
+		Object:     "TimelineState",
 		Field:      field,
 		Args:       nil,
 		IsMethod:   false,
@@ -3321,7 +3289,7 @@ func (ec *executionContext) _Timeline_preApproved(ctx context.Context, field gra
 	ctx = graphql.WithFieldContext(ctx, fc)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.PreApproved, nil
+		return obj.Description, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -3333,12 +3301,12 @@ func (ec *executionContext) _Timeline_preApproved(ctx context.Context, field gra
 		}
 		return graphql.Null
 	}
-	res := resTmp.(*model.TimelineItem)
+	res := resTmp.(string)
 	fc.Result = res
-	return ec.marshalNTimelineItem2ᚖgithubᚗcomᚋalexrv11ᚋcredicuotasᚋserverᚋgraphᚋmodelᚐTimelineItem(ctx, field.Selections, res)
+	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Timeline_approved(ctx context.Context, field graphql.CollectedField, obj *model.Timeline) (ret graphql.Marshaler) {
+func (ec *executionContext) _TimelineState_status(ctx context.Context, field graphql.CollectedField, obj *model1.TimelineState) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -3346,112 +3314,7 @@ func (ec *executionContext) _Timeline_approved(ctx context.Context, field graphq
 		}
 	}()
 	fc := &graphql.FieldContext{
-		Object:     "Timeline",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.Approved, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(*model.TimelineItem)
-	fc.Result = res
-	return ec.marshalNTimelineItem2ᚖgithubᚗcomᚋalexrv11ᚋcredicuotasᚋserverᚋgraphᚋmodelᚐTimelineItem(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _Timeline_running(ctx context.Context, field graphql.CollectedField, obj *model.Timeline) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "Timeline",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.Running, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(*model.TimelineItem)
-	fc.Result = res
-	return ec.marshalNTimelineItem2ᚖgithubᚗcomᚋalexrv11ᚋcredicuotasᚋserverᚋgraphᚋmodelᚐTimelineItem(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _TimelineItem_createdDate(ctx context.Context, field graphql.CollectedField, obj *model.TimelineItem) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "TimelineItem",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.CreatedDate, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(int64)
-	fc.Result = res
-	return ec.marshalNTime2int64(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _TimelineItem_status(ctx context.Context, field graphql.CollectedField, obj *model.TimelineItem) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "TimelineItem",
+		Object:     "TimelineState",
 		Field:      field,
 		Args:       nil,
 		IsMethod:   false,
@@ -3473,9 +3336,9 @@ func (ec *executionContext) _TimelineItem_status(ctx context.Context, field grap
 		}
 		return graphql.Null
 	}
-	res := resTmp.(model.TimelineItemStatus)
+	res := resTmp.(model1.TimelineStatus)
 	fc.Result = res
-	return ec.marshalNTimelineItemStatus2githubᚗcomᚋalexrv11ᚋcredicuotasᚋserverᚋgraphᚋmodelᚐTimelineItemStatus(ctx, field.Selections, res)
+	return ec.marshalNTimelineStatus2githubᚗcomᚋalexrv11ᚋcredicuotasᚋserverᚋdbᚋmodelᚐTimelineStatus(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _User_id(ctx context.Context, field graphql.CollectedField, obj *model1.User) (ret graphql.Marshaler) {
@@ -4954,7 +4817,7 @@ func (ec *executionContext) _Loan(ctx context.Context, sel ast.SelectionSet, obj
 				}
 				return res
 			})
-		case "Timeline":
+		case "timeline":
 			field := field
 			out.Concurrently(i, func() (res graphql.Marshaler) {
 				defer func() {
@@ -4962,7 +4825,7 @@ func (ec *executionContext) _Loan(ctx context.Context, sel ast.SelectionSet, obj
 						ec.Error(ctx, ec.Recover(ctx, r))
 					}
 				}()
-				res = ec._Loan_Timeline(ctx, field, obj)
+				res = ec._Loan_timeline(ctx, field, obj)
 				if res == graphql.Null {
 					atomic.AddUint32(&invalids, 1)
 				}
@@ -5314,71 +5177,34 @@ func (ec *executionContext) _Requirement(ctx context.Context, sel ast.SelectionS
 	return out
 }
 
-var timelineImplementors = []string{"Timeline"}
+var timelineStateImplementors = []string{"TimelineState"}
 
-func (ec *executionContext) _Timeline(ctx context.Context, sel ast.SelectionSet, obj *model.Timeline) graphql.Marshaler {
-	fields := graphql.CollectFields(ec.OperationContext, sel, timelineImplementors)
-
-	out := graphql.NewFieldSet(fields)
-	var invalids uint32
-	for i, field := range fields {
-		switch field.Name {
-		case "__typename":
-			out.Values[i] = graphql.MarshalString("Timeline")
-		case "submitted":
-			out.Values[i] = ec._Timeline_submitted(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
-		case "requirements":
-			out.Values[i] = ec._Timeline_requirements(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
-		case "preApproved":
-			out.Values[i] = ec._Timeline_preApproved(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
-		case "approved":
-			out.Values[i] = ec._Timeline_approved(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
-		case "running":
-			out.Values[i] = ec._Timeline_running(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
-		default:
-			panic("unknown field " + strconv.Quote(field.Name))
-		}
-	}
-	out.Dispatch()
-	if invalids > 0 {
-		return graphql.Null
-	}
-	return out
-}
-
-var timelineItemImplementors = []string{"TimelineItem"}
-
-func (ec *executionContext) _TimelineItem(ctx context.Context, sel ast.SelectionSet, obj *model.TimelineItem) graphql.Marshaler {
-	fields := graphql.CollectFields(ec.OperationContext, sel, timelineItemImplementors)
+func (ec *executionContext) _TimelineState(ctx context.Context, sel ast.SelectionSet, obj *model1.TimelineState) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, timelineStateImplementors)
 
 	out := graphql.NewFieldSet(fields)
 	var invalids uint32
 	for i, field := range fields {
 		switch field.Name {
 		case "__typename":
-			out.Values[i] = graphql.MarshalString("TimelineItem")
-		case "createdDate":
-			out.Values[i] = ec._TimelineItem_createdDate(ctx, field, obj)
+			out.Values[i] = graphql.MarshalString("TimelineState")
+		case "label":
+			out.Values[i] = ec._TimelineState_label(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "title":
+			out.Values[i] = ec._TimelineState_title(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "description":
+			out.Values[i] = ec._TimelineState_description(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
 		case "status":
-			out.Values[i] = ec._TimelineItem_status(ctx, field, obj)
+			out.Values[i] = ec._TimelineState_status(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
@@ -6030,53 +5856,67 @@ func (ec *executionContext) marshalNString2string(ctx context.Context, sel ast.S
 	return res
 }
 
-func (ec *executionContext) unmarshalNTime2int64(ctx context.Context, v interface{}) (int64, error) {
-	res, err := graphql.UnmarshalInt64(v)
+func (ec *executionContext) marshalNTimelineState2ᚕᚖgithubᚗcomᚋalexrv11ᚋcredicuotasᚋserverᚋdbᚋmodelᚐTimelineStateᚄ(ctx context.Context, sel ast.SelectionSet, v []*model1.TimelineState) graphql.Marshaler {
+	ret := make(graphql.Array, len(v))
+	var wg sync.WaitGroup
+	isLen1 := len(v) == 1
+	if !isLen1 {
+		wg.Add(len(v))
+	}
+	for i := range v {
+		i := i
+		fc := &graphql.FieldContext{
+			Index:  &i,
+			Result: &v[i],
+		}
+		ctx := graphql.WithFieldContext(ctx, fc)
+		f := func(i int) {
+			defer func() {
+				if r := recover(); r != nil {
+					ec.Error(ctx, ec.Recover(ctx, r))
+					ret = nil
+				}
+			}()
+			if !isLen1 {
+				defer wg.Done()
+			}
+			ret[i] = ec.marshalNTimelineState2ᚖgithubᚗcomᚋalexrv11ᚋcredicuotasᚋserverᚋdbᚋmodelᚐTimelineState(ctx, sel, v[i])
+		}
+		if isLen1 {
+			f(i)
+		} else {
+			go f(i)
+		}
+
+	}
+	wg.Wait()
+	return ret
+}
+
+func (ec *executionContext) marshalNTimelineState2ᚖgithubᚗcomᚋalexrv11ᚋcredicuotasᚋserverᚋdbᚋmodelᚐTimelineState(ctx context.Context, sel ast.SelectionSet, v *model1.TimelineState) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	return ec._TimelineState(ctx, sel, v)
+}
+
+func (ec *executionContext) unmarshalNTimelineStatus2githubᚗcomᚋalexrv11ᚋcredicuotasᚋserverᚋdbᚋmodelᚐTimelineStatus(ctx context.Context, v interface{}) (model1.TimelineStatus, error) {
+	tmp, err := graphql.UnmarshalString(v)
+	res := model1.TimelineStatus(tmp)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) marshalNTime2int64(ctx context.Context, sel ast.SelectionSet, v int64) graphql.Marshaler {
-	res := graphql.MarshalInt64(v)
+func (ec *executionContext) marshalNTimelineStatus2githubᚗcomᚋalexrv11ᚋcredicuotasᚋserverᚋdbᚋmodelᚐTimelineStatus(ctx context.Context, sel ast.SelectionSet, v model1.TimelineStatus) graphql.Marshaler {
+	res := graphql.MarshalString(string(v))
 	if res == graphql.Null {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "must not be null")
 		}
 	}
 	return res
-}
-
-func (ec *executionContext) marshalNTimeline2githubᚗcomᚋalexrv11ᚋcredicuotasᚋserverᚋgraphᚋmodelᚐTimeline(ctx context.Context, sel ast.SelectionSet, v model.Timeline) graphql.Marshaler {
-	return ec._Timeline(ctx, sel, &v)
-}
-
-func (ec *executionContext) marshalNTimeline2ᚖgithubᚗcomᚋalexrv11ᚋcredicuotasᚋserverᚋgraphᚋmodelᚐTimeline(ctx context.Context, sel ast.SelectionSet, v *model.Timeline) graphql.Marshaler {
-	if v == nil {
-		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	return ec._Timeline(ctx, sel, v)
-}
-
-func (ec *executionContext) marshalNTimelineItem2ᚖgithubᚗcomᚋalexrv11ᚋcredicuotasᚋserverᚋgraphᚋmodelᚐTimelineItem(ctx context.Context, sel ast.SelectionSet, v *model.TimelineItem) graphql.Marshaler {
-	if v == nil {
-		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	return ec._TimelineItem(ctx, sel, v)
-}
-
-func (ec *executionContext) unmarshalNTimelineItemStatus2githubᚗcomᚋalexrv11ᚋcredicuotasᚋserverᚋgraphᚋmodelᚐTimelineItemStatus(ctx context.Context, v interface{}) (model.TimelineItemStatus, error) {
-	var res model.TimelineItemStatus
-	err := res.UnmarshalGQL(v)
-	return res, graphql.ErrorOnPath(ctx, err)
-}
-
-func (ec *executionContext) marshalNTimelineItemStatus2githubᚗcomᚋalexrv11ᚋcredicuotasᚋserverᚋgraphᚋmodelᚐTimelineItemStatus(ctx context.Context, sel ast.SelectionSet, v model.TimelineItemStatus) graphql.Marshaler {
-	return v
 }
 
 func (ec *executionContext) marshalNUser2githubᚗcomᚋalexrv11ᚋcredicuotasᚋserverᚋdbᚋmodelᚐUser(ctx context.Context, sel ast.SelectionSet, v model1.User) graphql.Marshaler {

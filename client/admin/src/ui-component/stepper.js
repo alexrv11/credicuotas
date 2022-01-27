@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useEffect } from 'react';
 import Box from '@mui/material/Box';
 import Stepper from '@mui/material/Stepper';
 import Step from '@mui/material/Step';
@@ -41,7 +41,8 @@ const steps = [
     }
 ];
 
-export default function VerticalLinearStepper() {
+export default function VerticalLinearStepper({ timeline }) {
+    console.log(timeline);
     const [activeStep, setActiveStep] = React.useState(0);
 
     const handleNext = () => {
@@ -56,23 +57,37 @@ export default function VerticalLinearStepper() {
         setActiveStep(0);
     };
 
+    const viewStepLabel = (step) => {
+        const res = {};
+        if (step.status === 'REJECTED') {
+            res.optional = <Typography variant="caption">{step.description}</Typography>;
+            res.error = true;
+        }
+
+        return <StepLabel {...res}>{step.label}</StepLabel>;
+    };
+
+    useEffect(() => {
+        let counter = 0;
+        for (let index = 0; index < timeline.length; index += 1) {
+            const step = timeline[index];
+            if (step?.status === 'PENDING') {
+                counter -= 1;
+                break;
+            }
+            counter += 1;
+        }
+        setActiveStep(counter);
+    }, [timeline]);
+
     return (
         <Box sx={{ maxWidth: 400 }}>
             <Stepper activeStep={activeStep} orientation="vertical">
-                {steps.map((step, index) => (
-                    <Step key={step.label}>
-                        <StepLabel optional={index === 2 ? <Typography variant="caption">Last step</Typography> : null}>
-                            {step.label}
-                        </StepLabel>
+                {timeline.map((step, index) => (
+                    <Step key={index}>
+                        {viewStepLabel(step)}
                         <StepContent>
-                            <Typography>{step.description}</Typography>
-                            <Box sx={{ mb: 2 }}>
-                                <div>
-                                    <Button variant="contained" onClick={handleNext} sx={{ mt: 1, mr: 1 }}>
-                                        {index === steps.length - 1 ? 'Finish' : 'Continue'}
-                                    </Button>
-                                </div>
-                            </Box>
+                            <Typography>{step?.title}</Typography>
                         </StepContent>
                     </Step>
                 ))}

@@ -118,29 +118,24 @@ type Loan {
   status: LoanStatus!
   statusDescription: String!
   ownerName: String!
-  Timeline: Timeline!
+  timeline: [TimelineState!]!
   rateAmount: String!
   ratePercentage: String!
   installmentAmount: String!
   documents: [Document!]!
 }
 
-type Timeline {
-  submitted: TimelineItem!
-  requirements: TimelineItem!
-  preApproved: TimelineItem!
-  approved: TimelineItem!
-  running: TimelineItem!
+type TimelineState {
+  label: String!
+  title: String!
+  description: String!
+  status: TimelineStatus!
 }
 
-type TimelineItem {
-  createdDate: Time!
-  status: TimelineItemStatus!
-}
-
-enum TimelineItemStatus {
+enum TimelineStatus {
   DONE
   PENDING
+  REJECTED
 }
 
 type User {

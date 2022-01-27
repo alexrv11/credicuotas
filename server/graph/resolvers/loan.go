@@ -49,8 +49,8 @@ func (r *Loan) OwnerName(ctx context.Context, obj *model1.Loan) (string, error) 
 	return obj.User.Name, nil
 }
 
-func (r *Loan) Timeline(ctx context.Context, obj *model1.Loan) (*model.Timeline, error) {
-	return nil, nil
+func (r *Loan) Timeline(ctx context.Context, obj *model1.Loan) ([]*model1.TimelineState, error) {
+	return r.core.Loan.Timeline(r.provider, obj)
 }
 
 func (r *Loan) RateAmount(ctx context.Context, obj *model1.Loan) (string, error) {
