@@ -93,7 +93,7 @@ export default function componentStyleOverrides(theme) {
                 input: {
                     color: theme.textDark,
                     '&::placeholder': {
-                        color: theme.darkTextSecondary,
+                        color: theme.textLight,
                         fontSize: '0.875rem'
                     }
                 }
