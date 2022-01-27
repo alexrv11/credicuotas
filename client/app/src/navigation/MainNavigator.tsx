@@ -50,75 +50,6 @@ const SignInFlow = () => {
   );
 };
 
-const RegisterLoanStack = createNativeStackNavigator();
-
-const RegisterLoanFlow = () => {
-  return (
-    <RegisterLoanStack.Navigator
-      initialRouteName="LoanAmount"
-      screenOptions={{
-        headerShown: true,
-      }}>
-      <RegisterLoanStack.Screen
-        name="LoanAmount"
-        component={LoanAmountScreen}
-        options={{
-          title: '',
-        }}
-      />
-      <RegisterLoanStack.Screen
-        name="LoanIncomeType"
-        component={IncomeLoanScreen}
-        options={{
-          title: '',
-        }}
-      />
-      <RegisterLoanStack.Screen
-        name="LoanRequirementType"
-        component={LoanRequirementTypeScreen}
-        options={{
-          title: '',
-        }}
-      />
-      <RegisterLoanStack.Screen
-        name="PreviewDocument"
-        component={PreviewDocumentScreen}
-        options={{
-          title: '',
-        }}
-      />
-      <RegisterLoanStack.Screen
-        name="CameraScan"
-        component={CameraCaptureScreen}
-        options={{
-          title: '',
-        }}
-      />
-      <RegisterLoanStack.Screen
-        name="LoanDocs"
-        component={LoanDocsScreen}
-        options={{
-          title: '',
-        }}
-      />
-      <RegisterLoanStack.Screen
-        name="LoanRequirementList"
-        component={LoanRequirementListScreen}
-        options={{
-          title: '',
-        }}
-      />
-      <RegisterLoanStack.Screen
-        name="LoanCompleted"
-        component={LoanCompletedScreen}
-        options={{
-          title: '',
-        }}
-      />
-    </RegisterLoanStack.Navigator>
-  );
-};
-
 const OnboardingStack = createNativeStackNavigator();
 
 const OnboardingFlow = () => {
@@ -234,13 +165,72 @@ const MainNavigator = () => {
 
   return (
     <NavigationContainer>
-      <AppStack.Navigator
-        initialRouteName={error ? 'SignInFlow' : 'MainFlow'}
-        screenOptions={{ headerShown: false }}>
+      <AppStack.Navigator initialRouteName={error ? 'SignInFlow' : 'MainFlow'}>
         <AppStack.Screen name="SignInFlow" component={SignInFlow} />
         <AppStack.Screen name="OnboardingFlow" component={OnboardingFlow} />
-        <AppStack.Screen name="MainFlow" component={MainFlow} />
-        <AppStack.Screen name="RegisterLoanFlow" component={RegisterLoanFlow} />
+        <AppStack.Screen
+          name="MainFlow"
+          options={{
+            title: '',
+          }}
+          component={MainFlow}
+        />
+        <AppStack.Screen
+          name="LoanAmount"
+          component={LoanAmountScreen}
+          options={{
+            title: '',
+          }}
+        />
+        <AppStack.Screen
+          name="LoanIncomeType"
+          component={IncomeLoanScreen}
+          options={{
+            title: '',
+          }}
+        />
+        <AppStack.Screen
+          name="LoanRequirementType"
+          component={LoanRequirementTypeScreen}
+          options={{
+            title: '',
+          }}
+        />
+        <AppStack.Screen
+          name="PreviewDocument"
+          component={PreviewDocumentScreen}
+          options={{
+            title: '',
+          }}
+        />
+        <AppStack.Screen
+          name="CameraScan"
+          component={CameraCaptureScreen}
+          options={{
+            title: '',
+          }}
+        />
+        <AppStack.Screen
+          name="LoanDocs"
+          component={LoanDocsScreen}
+          options={{
+            title: '',
+          }}
+        />
+        <AppStack.Screen
+          name="LoanRequirementList"
+          component={LoanRequirementListScreen}
+          options={{
+            title: '',
+          }}
+        />
+        <AppStack.Screen
+          name="LoanCompleted"
+          component={LoanCompletedScreen}
+          options={{
+            title: '',
+          }}
+        />
       </AppStack.Navigator>
     </NavigationContainer>
   );

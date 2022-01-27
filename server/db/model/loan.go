@@ -25,6 +25,7 @@ type Loan struct {
 	TotalInstallments int
 	IncomeType        string
 	Status            LoanStatus
+	Observation       string
 	User              *User
 	UserID            uint
 	Rate              float64

@@ -122,10 +122,12 @@ type Loan {
   rateAmount: String!
   ratePercentage: String!
   installmentAmount: String!
+  observation: String!
   documents: [Document!]!
 }
 
 type TimelineState {
+  id: String!
   label: String!
   title: String!
   description: String!

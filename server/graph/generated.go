@@ -69,6 +69,7 @@ type ComplexityRoot struct {
 		ID                func(childComplexity int) int
 		IncomeType        func(childComplexity int) int
 		InstallmentAmount func(childComplexity int) int
+		Observation       func(childComplexity int) int
 		OwnerName         func(childComplexity int) int
 		RateAmount        func(childComplexity int) int
 		RatePercentage    func(childComplexity int) int
@@ -113,6 +114,7 @@ type ComplexityRoot struct {
 
 	TimelineState struct {
 		Description func(childComplexity int) int
+		ID          func(childComplexity int) int
 		Label       func(childComplexity int) int
 		Status      func(childComplexity int) int
 		Title       func(childComplexity int) int
@@ -144,6 +146,7 @@ type LoanResolver interface {
 	RateAmount(ctx context.Context, obj *model1.Loan) (string, error)
 	RatePercentage(ctx context.Context, obj *model1.Loan) (string, error)
 	InstallmentAmount(ctx context.Context, obj *model1.Loan) (string, error)
+
 	Documents(ctx context.Context, obj *model1.Loan) ([]*model1.Document, error)
 }
 type MutationResolver interface {
@@ -267,6 +270,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Loan.InstallmentAmount(childComplexity), true
+
+	case "Loan.observation":
+		if e.complexity.Loan.Observation == nil {
+			break
+		}
+
+		return e.complexity.Loan.Observation(childComplexity), true
 
 	case "Loan.ownerName":
 		if e.complexity.Loan.OwnerName == nil {
@@ -552,6 +562,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.TimelineState.Description(childComplexity), true
 
+	case "TimelineState.id":
+		if e.complexity.TimelineState.ID == nil {
+			break
+		}
+
+		return e.complexity.TimelineState.ID(childComplexity), true
+
 	case "TimelineState.label":
 		if e.complexity.TimelineState.Label == nil {
 			break
@@ -803,10 +820,12 @@ type Loan {
   rateAmount: String!
   ratePercentage: String!
   installmentAmount: String!
+  observation: String!
   documents: [Document!]!
 }
 
 type TimelineState {
+  id: String!
   label: String!
   title: String!
   description: String!
@@ -1785,6 +1804,41 @@ func (ec *executionContext) _Loan_installmentAmount(ctx context.Context, field g
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
 		return ec.resolvers.Loan().InstallmentAmount(rctx, obj)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Loan_observation(ctx context.Context, field graphql.CollectedField, obj *model1.Loan) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Loan",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Observation, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -3199,6 +3253,41 @@ func (ec *executionContext) _Requirement_status(ctx context.Context, field graph
 	res := resTmp.(bool)
 	fc.Result = res
 	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _TimelineState_id(ctx context.Context, field graphql.CollectedField, obj *model1.TimelineState) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "TimelineState",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _TimelineState_label(ctx context.Context, field graphql.CollectedField, obj *model1.TimelineState) (ret graphql.Marshaler) {
@@ -4873,6 +4962,11 @@ func (ec *executionContext) _Loan(ctx context.Context, sel ast.SelectionSet, obj
 				}
 				return res
 			})
+		case "observation":
+			out.Values[i] = ec._Loan_observation(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&invalids, 1)
+			}
 		case "documents":
 			field := field
 			out.Concurrently(i, func() (res graphql.Marshaler) {
@@ -5188,6 +5282,11 @@ func (ec *executionContext) _TimelineState(ctx context.Context, sel ast.Selectio
 		switch field.Name {
 		case "__typename":
 			out.Values[i] = graphql.MarshalString("TimelineState")
+		case "id":
+			out.Values[i] = ec._TimelineState_id(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
 		case "label":
 			out.Values[i] = ec._TimelineState_label(ctx, field, obj)
 			if out.Values[i] == graphql.Null {

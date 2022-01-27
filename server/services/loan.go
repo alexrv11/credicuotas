@@ -58,7 +58,7 @@ func (r *LoanImpl) Save(provider *providers.Provider, userXid string, amount, to
 			Amount:            amount,
 			TotalInstallments: totalInstallments,
 			IncomeType:        string(incomeType),
-			Status:            "Register",
+			Status:            modeldb.LoanStatusRegister,
 			UserID:            user.ID,
 			Rate:              rate,
 		}
@@ -319,19 +319,39 @@ func (r *LoanImpl) ChangeDocumentStatus(provider *providers.Provider, documentID
 	document.Status = status
 	document.Note = note
 
-	return db.Save(&document).Error
+	err = db.Save(&document).Error
+	if err != nil {
+		return err
+	}
+
+	if status == modeldb.DocumentStatusDeclined {
+		var loan modeldb.Loan
+		err = db.Model(&modeldb.Document{}).Where("id = ?", document.LoanID).First(&loan).Error
+		if err != nil {
+			return err
+		}
+		loan.Status = modeldb.LoanStatusHasObservation
+		err = db.Save(&loan).Error
+		if err != nil {
+			return err
+		}
+	}
+
+	return nil
 }
 
 func (r *LoanImpl) Timeline(provider *providers.Provider, loan *modeldb.Loan) ([]*modeldb.TimelineState, error) {
 	db := provider.GormClient()
 	timeline := make([]*modeldb.TimelineState, 0)
 	registeredState := &modeldb.TimelineState{
+		ID:     "REGISTERED",
 		Label:  "Registrado",
 		Title:  loan.CreatedAt.Format("02/01/2006"),
 		Status: modeldb.TimelineStatusDone,
 	}
 
 	requiredDocumentState := &modeldb.TimelineState{
+		ID:     "DOCUMENT_REQUIRED",
 		Label:  "Documentos requeridos",
 		Title:  "Todos los documentos fueron aprobados",
 		Status: modeldb.TimelineStatusDone,
@@ -361,21 +381,25 @@ func (r *LoanImpl) Timeline(provider *providers.Provider, loan *modeldb.Loan) ([
 	}
 
 	preApprovedState := &modeldb.TimelineState{
+		ID:     "PRE_APPROVED",
 		Label:  "Pre aprobado",
 		Status: modeldb.TimelineStatusPending,
 	}
 
 	approvedState := &modeldb.TimelineState{
+		ID:     "APPROVED",
 		Label:  "Aprobado",
 		Status: modeldb.TimelineStatusPending,
 	}
 
 	clientSignState := &modeldb.TimelineState{
+		ID:     "CLIENT_SIGN",
 		Label:  "Firma cliente",
 		Status: modeldb.TimelineStatusPending,
 	}
 
 	runningState := &modeldb.TimelineState{
+		ID:     "RUNNING",
 		Label:  "En ejecucion",
 		Status: modeldb.TimelineStatusPending,
 	}

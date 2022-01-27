@@ -12,6 +12,7 @@ export default gql`
       incomeType
       rateAmount
       ratePercentage
+      observation
       documents {
         url
         id

@@ -1,21 +1,36 @@
 import Loading from 'components/Loading';
+import PrimaryButton from 'components/PrimaryButton';
 import React from 'react';
 import { StyleSheet, Text, View, SafeAreaView } from 'react-native';
 import { Icon } from 'react-native-elements';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 import { useGetLoanQuery } from '../api/graphql/generated/graphql';
 
-const LoanScreen = () => {
+const LoanScreen = ({ navigation }) => {
   const { data, error, loading } = useGetLoanQuery();
 
   if (loading) {
     return <Loading />;
   }
 
-  const getStatusDescriptionView = status => {
+  const getStatusDescriptionView = (loan, callback) => {
     let description = '';
-
-    if (status === 'Register') {
+    if (loan?.status === 'REGISTERED') {
       description = 'Estamos analizando su solicitud';
+    }
+
+    if (loan?.status === 'HAS_OBSERVATION') {
+      description = loan.observation;
+      return (
+        <View style={styles.containerStatus}>
+          <Text style={styles.descriptionStatus}>{description}</Text>
+          <TouchableOpacity
+            style={styles.buttonReview}
+            onPress={() => navigation.navigate('LoanRequirementList')}>
+            <Text>Revisar</Text>
+          </TouchableOpacity>
+        </View>
+      );
     }
 
     return (
@@ -31,7 +46,7 @@ const LoanScreen = () => {
     }
     return documents.map(doc => {
       return (
-        <View style={styles.documentItem}>
+        <View key={doc.id} style={styles.documentItem}>
           <Text style={styles.documentItemDescription}>{doc?.description}</Text>
           <Text
             style={styles.documentItemDescriptionVer}
@@ -49,7 +64,7 @@ const LoanScreen = () => {
         <Text style={styles.textStatus}>
           {data?.getLoan?.statusDescription}
         </Text>
-        {getStatusDescriptionView(data?.getLoan?.status)}
+        {getStatusDescriptionView(data?.getLoan)}
       </View>
       <View style={styles.loanContainer}>
         <View style={styles.details}>
@@ -185,6 +200,8 @@ const styles = StyleSheet.create({
   containerStatus: {
     flex: 1,
     marginTop: 8,
+    flexDirection: 'row',
+    justifyContent: 'space-around',
   },
   descriptionStatus: {
     fontSize: 16,
@@ -210,6 +227,11 @@ const styles = StyleSheet.create({
     fontSize: 17,
     color: '#070D99',
     textDecorationLine: 'underline',
+  },
+  buttonReview: {
+    alignItems: 'center',
+    backgroundColor: '#DDDDDD',
+    padding: 10,
   },
 });
 

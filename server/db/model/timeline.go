@@ -9,6 +9,7 @@ const (
 )
 
 type TimelineState struct {
+	ID          string
 	Status      TimelineStatus `json:"status"`
 	Label       string
 	Title       string
