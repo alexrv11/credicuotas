@@ -125,9 +125,9 @@ func (r *mutationResolver) ToggleUserDisable(ctx context.Context, userXid string
 	return r.core.User.ToggleDisableUser(r.provider, userXid)
 }
 
-func (r *mutationResolver) ChangeDocumentStatus(ctx context.Context, documentID string, status model1.DocumentStatus) (bool, error) {
+func (r *mutationResolver) ChangeDocumentStatus(ctx context.Context, documentID string, note string, status model1.DocumentStatus) (bool, error) {
 
-	err := r.core.Loan.ChangeDocumentStatus(r.provider, documentID, status)
+	err := r.core.Loan.ChangeDocumentStatus(r.provider, documentID, note, status)
 
 	if err != nil {
 		return false, err

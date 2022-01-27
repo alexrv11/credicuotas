@@ -4,6 +4,7 @@ export default gql`
   query getLoan {
     getLoan {
       status
+      statusDescription
       totalInstallments
       amount
       ownerName

@@ -68,3 +68,19 @@ func (r *Loan) InstallmentAmount(ctx context.Context, obj *model1.Loan) (string,
 func (r *Loan) Documents(ctx context.Context, obj *model1.Loan) ([]*model1.Document, error) {
 	return r.core.Loan.GetDocuments(r.provider, obj.ID)
 }
+
+func (r *Loan) StatusDescription(ctx context.Context, obj *model1.Loan) (string, error) {
+	if obj.Status == model1.LoanStatusRegister {
+		return "Registrado", nil
+	}
+
+	if obj.Status == model1.LoanStatusApproved {
+		return "Aprobado", nil
+	}
+
+	if obj.Status == model1.LoanStatusRunning {
+		return "En ejecucion", nil
+	}
+
+	return "", nil
+}

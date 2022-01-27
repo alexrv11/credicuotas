@@ -8,14 +8,14 @@ import (
 type LoanStatus string
 
 const (
-	LoanStatusRegister            LoanStatus = "Registered"
-	LoanStatusPendingRequirements LoanStatus = "PendingRequirements"
-	LoanStatusPendingPreApproved  LoanStatus = "PendingPreApproved"
-	LoanStatusPendingRejected     LoanStatus = "Rejected"
-	LoanStatusHasObservation      LoanStatus = "HasObservation"
-	LoanStatusPreApproved         LoanStatus = "PreApproved"
-	LoanStatusApproved            LoanStatus = "Approved"
-	LoanStatusRunning             LoanStatus = "Running"
+	LoanStatusRegister            LoanStatus = "REGISTERED"
+	LoanStatusPendingRequirements LoanStatus = "PENDING_REQUIREMENTS"
+	LoanStatusPendingPreApproved  LoanStatus = "PENDING_PRE_APPROVED"
+	LoanStatusPendingRejected     LoanStatus = "REJECTED"
+	LoanStatusHasObservation      LoanStatus = "HAS_OBSERVATION"
+	LoanStatusPreApproved         LoanStatus = "PRE_APPROVED"
+	LoanStatusApproved            LoanStatus = "APPROVED"
+	LoanStatusRunning             LoanStatus = "RUNNING"
 )
 
 type Loan struct {
@@ -24,7 +24,7 @@ type Loan struct {
 	Amount            int
 	TotalInstallments int
 	IncomeType        string
-	Status            string
+	Status            LoanStatus
 	User              *User
 	UserID            uint
 	Rate              float64

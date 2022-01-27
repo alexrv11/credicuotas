@@ -53,6 +53,7 @@ type Document struct {
 	Description string
 	Url         string
 	Status      DocumentStatus
+	Note        string
 }
 
 func (d *Document) BeforeCreate(tx *gorm.DB) error {

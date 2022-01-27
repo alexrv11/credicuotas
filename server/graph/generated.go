@@ -73,12 +73,13 @@ type ComplexityRoot struct {
 		RateAmount        func(childComplexity int) int
 		RatePercentage    func(childComplexity int) int
 		Status            func(childComplexity int) int
+		StatusDescription func(childComplexity int) int
 		Timeline          func(childComplexity int) int
 		TotalInstallments func(childComplexity int) int
 	}
 
 	Mutation struct {
-		ChangeDocumentStatus func(childComplexity int, documentID string, status model1.DocumentStatus) int
+		ChangeDocumentStatus func(childComplexity int, documentID string, note string, status model1.DocumentStatus) int
 		CreateUser           func(childComplexity int, email string, password string, name string, role model.Role) int
 		Login                func(childComplexity int, email string, password string) int
 		Logout               func(childComplexity int) int
@@ -143,6 +144,7 @@ type LoanResolver interface {
 
 	IncomeType(ctx context.Context, obj *model1.Loan) (string, error)
 
+	StatusDescription(ctx context.Context, obj *model1.Loan) (string, error)
 	OwnerName(ctx context.Context, obj *model1.Loan) (string, error)
 	Timeline(ctx context.Context, obj *model1.Loan) (*model.Timeline, error)
 	RateAmount(ctx context.Context, obj *model1.Loan) (string, error)
@@ -161,7 +163,7 @@ type MutationResolver interface {
 	SavePhoneNumber(ctx context.Context, phone string, code string) (bool, error)
 	SaveLoan(ctx context.Context, amount int, totalInstallments int, incomeType model.IncomeType) (string, error)
 	Logout(ctx context.Context) (bool, error)
-	ChangeDocumentStatus(ctx context.Context, documentID string, status model1.DocumentStatus) (bool, error)
+	ChangeDocumentStatus(ctx context.Context, documentID string, note string, status model1.DocumentStatus) (bool, error)
 }
 type QueryResolver interface {
 	GetUser(ctx context.Context) (*model1.User, error)
@@ -300,6 +302,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Loan.Status(childComplexity), true
 
+	case "Loan.statusDescription":
+		if e.complexity.Loan.StatusDescription == nil {
+			break
+		}
+
+		return e.complexity.Loan.StatusDescription(childComplexity), true
+
 	case "Loan.Timeline":
 		if e.complexity.Loan.Timeline == nil {
 			break
@@ -324,7 +333,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Mutation.ChangeDocumentStatus(childComplexity, args["documentId"].(string), args["status"].(model1.DocumentStatus)), true
+		return e.complexity.Mutation.ChangeDocumentStatus(childComplexity, args["documentId"].(string), args["note"].(string), args["status"].(model1.DocumentStatus)), true
 
 	case "Mutation.createUser":
 		if e.complexity.Mutation.CreateUser == nil {
@@ -795,7 +804,18 @@ type Mutation {
   savePhoneNumber(phone: String!, code: String!): Boolean! @authenticated
   saveLoan(amount: Int!, totalInstallments: Int!, incomeType: IncomeType!): String! @authenticated
   logout: Boolean! @authenticated
-  changeDocumentStatus(documentId: String!, status: DocumentStatus!): Boolean! @authenticated
+  changeDocumentStatus(documentId: String!, note: String!, status: DocumentStatus!): Boolean! @authenticated
+}
+
+enum LoanStatus {
+  REGISTERED
+  PENDING_REQUIREMENTS
+  PENDING_PRE_APPROVED
+  REJECTED
+  HAS_OBSERVATION
+  PRE_APPROVED
+  APPROVED
+  RUNNING
 }
 
 type Loan {
@@ -803,7 +823,8 @@ type Loan {
   amount: Int!
   totalInstallments: Int!
   incomeType: String!
-  status: String!
+  status: LoanStatus!
+  statusDescription: String!
   ownerName: String!
   Timeline: Timeline!
   rateAmount: String!
@@ -888,15 +909,24 @@ func (ec *executionContext) field_Mutation_changeDocumentStatus_args(ctx context
 		}
 	}
 	args["documentId"] = arg0
-	var arg1 model1.DocumentStatus
-	if tmp, ok := rawArgs["status"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("status"))
-		arg1, err = ec.unmarshalNDocumentStatus2githubᚗcomᚋalexrv11ᚋcredicuotasᚋserverᚋdbᚋmodelᚐDocumentStatus(ctx, tmp)
+	var arg1 string
+	if tmp, ok := rawArgs["note"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("note"))
+		arg1, err = ec.unmarshalNString2string(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
 	}
-	args["status"] = arg1
+	args["note"] = arg1
+	var arg2 model1.DocumentStatus
+	if tmp, ok := rawArgs["status"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("status"))
+		arg2, err = ec.unmarshalNDocumentStatus2githubᚗcomᚋalexrv11ᚋcredicuotasᚋserverᚋdbᚋmodelᚐDocumentStatus(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["status"] = arg2
 	return args, nil
 }
 
@@ -1577,6 +1607,41 @@ func (ec *executionContext) _Loan_status(ctx context.Context, field graphql.Coll
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
 		return obj.Status, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(model1.LoanStatus)
+	fc.Result = res
+	return ec.marshalNLoanStatus2githubᚗcomᚋalexrv11ᚋcredicuotasᚋserverᚋdbᚋmodelᚐLoanStatus(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Loan_statusDescription(ctx context.Context, field graphql.CollectedField, obj *model1.Loan) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Loan",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Loan().StatusDescription(rctx, obj)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -2402,7 +2467,7 @@ func (ec *executionContext) _Mutation_changeDocumentStatus(ctx context.Context, 
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		directive0 := func(rctx context.Context) (interface{}, error) {
 			ctx = rctx // use context from middleware stack in children
-			return ec.resolvers.Mutation().ChangeDocumentStatus(rctx, args["documentId"].(string), args["status"].(model1.DocumentStatus))
+			return ec.resolvers.Mutation().ChangeDocumentStatus(rctx, args["documentId"].(string), args["note"].(string), args["status"].(model1.DocumentStatus))
 		}
 		directive1 := func(ctx context.Context) (interface{}, error) {
 			if ec.directives.Authenticated == nil {
@@ -4861,6 +4926,20 @@ func (ec *executionContext) _Loan(ctx context.Context, sel ast.SelectionSet, obj
 			if out.Values[i] == graphql.Null {
 				atomic.AddUint32(&invalids, 1)
 			}
+		case "statusDescription":
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Loan_statusDescription(ctx, field, obj)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
+			})
 		case "ownerName":
 			field := field
 			out.Concurrently(i, func() (res graphql.Marshaler) {
@@ -5845,6 +5924,22 @@ func (ec *executionContext) marshalNLoan2ᚖgithubᚗcomᚋalexrv11ᚋcredicuota
 		return graphql.Null
 	}
 	return ec._Loan(ctx, sel, v)
+}
+
+func (ec *executionContext) unmarshalNLoanStatus2githubᚗcomᚋalexrv11ᚋcredicuotasᚋserverᚋdbᚋmodelᚐLoanStatus(ctx context.Context, v interface{}) (model1.LoanStatus, error) {
+	tmp, err := graphql.UnmarshalString(v)
+	res := model1.LoanStatus(tmp)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalNLoanStatus2githubᚗcomᚋalexrv11ᚋcredicuotasᚋserverᚋdbᚋmodelᚐLoanStatus(ctx context.Context, sel ast.SelectionSet, v model1.LoanStatus) graphql.Marshaler {
+	res := graphql.MarshalString(string(v))
+	if res == graphql.Null {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "must not be null")
+		}
+	}
+	return res
 }
 
 func (ec *executionContext) unmarshalNOnboardingStatus2githubᚗcomᚋalexrv11ᚋcredicuotasᚋserverᚋgraphᚋmodelᚐOnboardingStatus(ctx context.Context, v interface{}) (model.OnboardingStatus, error) {

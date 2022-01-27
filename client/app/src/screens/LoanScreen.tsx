@@ -30,7 +30,6 @@ const LoanScreen = () => {
       return;
     }
     return documents.map(doc => {
-      console.log('docs', doc);
       return (
         <View style={styles.documentItem}>
           <Text style={styles.documentItemDescription}>{doc?.description}</Text>
@@ -47,7 +46,9 @@ const LoanScreen = () => {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.textStatus}>{data?.getLoan?.status}</Text>
+        <Text style={styles.textStatus}>
+          {data?.getLoan?.statusDescription}
+        </Text>
         {getStatusDescriptionView(data?.getLoan?.status)}
       </View>
       <View style={styles.loanContainer}>

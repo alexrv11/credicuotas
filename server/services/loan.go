@@ -18,7 +18,7 @@ type Loan interface {
 	GetLoanOrders(provider *providers.Provider) ([]*modeldb.Loan, error)
 	GetLoanRequirements(provider *providers.Provider, userXid, loanID string, documentType modeldb.DocumentType) ([]*modeldb.Requirement, error)
 	GetDocuments(provider *providers.Provider, loanID uint) ([]*modeldb.Document, error)
-	ChangeDocumentStatus(provider *providers.Provider, documentID string, status modeldb.DocumentStatus) error
+	ChangeDocumentStatus(provider *providers.Provider, documentID string, note string, status modeldb.DocumentStatus) error
 }
 
 type LoanImpl struct{}
@@ -130,11 +130,12 @@ func (r *LoanImpl) SaveDocuments(provider *providers.Provider, userXid, loanID, 
 
 	if errors.Is(err, gorm.ErrRecordNotFound) {
 		document = modeldb.Document{
-			UserID: user.ID,
-			LoanID: loan.ID,
-			Type:   requirementType,
-			Url:    fileName,
-			Status: modeldb.DocumentStatusPendingReview,
+			UserID:      user.ID,
+			LoanID:      loan.ID,
+			Type:        requirementType,
+			Description: getDocumentDescription(modeldb.RequirementType(requirementType)),
+			Url:         fileName,
+			Status:      modeldb.DocumentStatusPendingReview,
 		}
 	}
 
@@ -145,13 +146,25 @@ func (r *LoanImpl) SaveDocuments(provider *providers.Provider, userXid, loanID, 
 		return err
 	}
 
-	err = db.Save(document).Error
+	err = db.Save(&document).Error
 
 	if err != nil {
 		return err
 	}
 
 	return nil
+}
+
+func getDocumentDescription(requirementType modeldb.RequirementType) string {
+	if modeldb.RequirementTypeClientDocumentPhoto == requirementType {
+		return "Documento de identidad"
+	}
+
+	if modeldb.RequirementTypeLastInvoicePhoto == requirementType {
+		return "Ultima boleta de pago"
+	}
+
+	return ""
 }
 
 func (r *LoanImpl) GetLoanRequirements(provider *providers.Provider, userXid, loanID string, documentType modeldb.DocumentType) ([]*modeldb.Requirement, error) {
@@ -285,7 +298,7 @@ func (r *LoanImpl) GetDocuments(provider *providers.Provider, loanID uint) ([]*m
 	return documents, nil
 }
 
-func (r *LoanImpl) ChangeDocumentStatus(provider *providers.Provider, documentID string, status modeldb.DocumentStatus) error {
+func (r *LoanImpl) ChangeDocumentStatus(provider *providers.Provider, documentID, note string, status modeldb.DocumentStatus) error {
 	db := provider.GormClient()
 
 	var document modeldb.Document
@@ -303,6 +316,7 @@ func (r *LoanImpl) ChangeDocumentStatus(provider *providers.Provider, documentID
 	}
 
 	document.Status = status
+	document.Note = note
 
 	return db.Save(&document).Error
 }

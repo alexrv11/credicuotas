@@ -7,6 +7,7 @@ import { useGetRequirementsQuery } from '../api/graphql/generated/graphql';
 import { useLoan } from 'context/LoanContext';
 import Loading from 'components/Loading';
 import { useEffect } from 'react';
+import { StackActions } from '@react-navigation/native';
 
 const LoanRequirementListScreen = ({ route, navigation }) => {
   const { loanId, requirementType } = useLoan();
@@ -23,7 +24,9 @@ const LoanRequirementListScreen = ({ route, navigation }) => {
         item => item?.status === false,
       );
       if (uploadRequirements.length > 0) {
-        navigation.navigate('LoanDocs', { ...uploadRequirements[0] });
+        navigation.dispatch(
+          StackActions.replace('LoanDocs', { ...uploadRequirements[0] }),
+        );
       }
     }
   }, [data?.getLoanRequirements, navigation]);

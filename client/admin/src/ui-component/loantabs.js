@@ -2,8 +2,26 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
-import { Typography, Grid, Button, Box, Chip } from '@mui/material';
+import { Typography, Grid, Button, Box, Chip, TextField } from '@mui/material';
+
+import Dialog from '@mui/material/Dialog';
+import ListItemText from '@mui/material/ListItemText';
+import ListItem from '@mui/material/ListItem';
+import List from '@mui/material/List';
+import Divider from '@mui/material/Divider';
+import AppBar from '@mui/material/AppBar';
+import Toolbar from '@mui/material/Toolbar';
+import IconButton from '@mui/material/IconButton';
+import CloseIcon from '@mui/icons-material/Close';
+import Slide from '@mui/material/Slide';
+
 import styled from '@emotion/styled';
+
+import axios from 'axios';
+import CHANGE_DOCUMENT_STATUS from 'api/gql/mutations/change-document-status';
+import { useMutation } from '@apollo/client';
+
+const Transition = React.forwardRef((props, ref) => <Slide direction="up" ref={ref} {...props} />);
 
 const ValidateTextWrapper = styled.span(({ theme }) => ({
     color: theme.palette.secondary.dark,
@@ -36,8 +54,60 @@ function a11yProps(index) {
     };
 }
 
+const TitleWrapper = styled.div(({ theme }) => ({
+    padding: 20,
+    fontSize: 18,
+    color: '#fff'
+}));
+
+const focusUsernameInputField = (input) => {
+    if (input) {
+        setTimeout(() => {
+            input.focus();
+        }, 100);
+    }
+};
+
 export default function LoanTabs({ loan }) {
     const [value, setValue] = React.useState(0);
+    const [open, setOpen] = React.useState(false);
+    const [selectedDoc, setSelectedDoc] = React.useState(null);
+    const [image, setImage] = React.useState(null);
+    const [note, setNote] = React.useState('');
+
+    const [changeDocumentStatus, { loading }] = useMutation(CHANGE_DOCUMENT_STATUS);
+
+    const handleClose = () => {
+        setImage(null);
+        setOpen(false);
+    };
+
+    const handleChangeDocumentStatus = (doc, note, status) => {
+        changeDocumentStatus({ variables: { documentId: doc.id, note, status } });
+        setImage(null);
+        setOpen(false);
+    };
+
+    const downloadFile = React.useCallback(async (url) => {
+        await axios.get(`http://localhost:8181/download/${url}`, { responseType: 'arraybuffer' }).then((res) => {
+            const base64ImageString = Buffer.from(res.data, 'binary').toString('base64');
+            setImage(base64ImageString);
+        });
+    }, []);
+
+    const imageView = (image) => {
+        if (!image) {
+            return <Typography>Cargando...</Typography>;
+        }
+        return <img src={`data:image/png;base64, ${image}`} alt="" />;
+    };
+
+    const verDocument = (doc) => {
+        setSelectedDoc(doc);
+        setOpen(true);
+        console.log(doc);
+        downloadFile(doc.url);
+    };
 
     const viewDocuments = (documents) =>
         documents.map((doc) => (
@@ -58,7 +128,7 @@ export default function LoanTabs({ loan }) {
                     </Typography>
                 </Grid>
                 <Chip label={doc.statusDescription} variant="outlined" />
-                <Button>
+                <Button onClick={() => verDocument(doc)}>
                     <ValidateTextWrapper>Ver</ValidateTextWrapper>
                 </Button>
             </Grid>
@@ -75,6 +145,43 @@ export default function LoanTabs({ loan }) {
                     <Tab label={`Documentos (${loan?.documents?.length})`} {...a11yProps(0)} />
                     <Tab label="Garantes" {...a11yProps(1)} />
                 </Tabs>
+                <Dialog fullScreen open={open} onClose={handleClose} TransitionComponent={Transition}>
+                    <AppBar sx={{ position: 'relative' }}>
+                        <Toolbar>
+                            <IconButton edge="start" color="inherit" onClick={handleClose} aria-label="close">
+                                <CloseIcon />
+                            </IconButton>
+                            <Typography sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
+                                <TitleWrapper>{selectedDoc?.description}</TitleWrapper>
+                            </Typography>
+                            <TextField
+                                id="note"
+                                sx={{
+                                    m: 1,
+                                    width: '350px',
+                                    input: { color: '#fff' }
+                                }}
+                                label=""
+                                variant="standard"
+                                maxRows={4}
+                                placeholder="Nota"
+                                color="info"
+                                value={note}
+                                onChange={(event) => setNote(event?.target.value)}
+                                autoFocus
+                            />
+                            <Button color="inherit" onClick={() => handleChangeDocumentStatus(selectedDoc, note, 'APPROVED')}>
+                                Aprobar
+                            </Button>
+                            <Button color="inherit" onClick={() => handleChangeDocumentStatus(selectedDoc, note, 'DECLINED')}>
+                                Observar
+                            </Button>
+                        </Toolbar>
+                    </AppBar>
+                    <Grid container spacing={2} alignContent="center" justifyContent="center" alignItems="center" style={{ marginTop: 10 }}>
+                        {imageView(image)}
+                    </Grid>
+                </Dialog>
             </Box>
             <LoanTabPanel value={value} index={0}>
                 {viewDocuments(loan?.documents)}

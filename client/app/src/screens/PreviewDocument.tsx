@@ -13,11 +13,11 @@ const PreviewDocumentScreen = ({ route, navigation }) => {
   const [name, setName] = useState('');
   const { loanId } = useLoan();
   const { requirementType } = route.params;
-  console.log("preview loan document", loanId, requirementType);
   const [loading, setLoading] = useState(false);
   const { uri } = route.params;
 
   const onSubmit = useCallback(async () => {
+    setLoading(true);
     const data = new FormData();
 
     const uriFile = Platform.OS === 'ios' ? uri.replace('file://', '') : uri;
@@ -42,7 +42,8 @@ const PreviewDocumentScreen = ({ route, navigation }) => {
       },
     });
     navigation.navigate('LoanRequirementList');
-  }, [loanId, requirementType, uri]);
+    setLoading(false);
+  }, [uri, loanId, requirementType, navigation]);
 
   if (loading) {
     return <Loading />;

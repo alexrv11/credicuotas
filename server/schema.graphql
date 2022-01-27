@@ -96,7 +96,18 @@ type Mutation {
   savePhoneNumber(phone: String!, code: String!): Boolean! @authenticated
   saveLoan(amount: Int!, totalInstallments: Int!, incomeType: IncomeType!): String! @authenticated
   logout: Boolean! @authenticated
-  changeDocumentStatus(documentId: String!, status: DocumentStatus!): Boolean! @authenticated
+  changeDocumentStatus(documentId: String!, note: String!, status: DocumentStatus!): Boolean! @authenticated
+}
+
+enum LoanStatus {
+  REGISTERED
+  PENDING_REQUIREMENTS
+  PENDING_PRE_APPROVED
+  REJECTED
+  HAS_OBSERVATION
+  PRE_APPROVED
+  APPROVED
+  RUNNING
 }
 
 type Loan {
@@ -104,7 +115,8 @@ type Loan {
   amount: Int!
   totalInstallments: Int!
   incomeType: String!
-  status: String!
+  status: LoanStatus!
+  statusDescription: String!
   ownerName: String!
   Timeline: Timeline!
   rateAmount: String!
