@@ -10,6 +10,7 @@ export default gql`
       ownerName
       id
       incomeType
+      requirementType
       rateAmount
       ratePercentage
       observation

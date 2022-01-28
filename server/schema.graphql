@@ -52,6 +52,7 @@ type Requirement {
   title: String!
   description: String!
   status: Boolean!
+  documentStatus: DocumentStatus!
 }
 
 directive @authenticated on | OBJECT | FIELD_DEFINITION | ENUM
@@ -94,7 +95,7 @@ type Mutation {
   saveUserInfo(name: String!, identifier: String!): Boolean! @authenticated
   sendCodeByPhone(phone: String!): Boolean! @authenticated
   savePhoneNumber(phone: String!, code: String!): Boolean! @authenticated
-  saveLoan(amount: Int!, totalInstallments: Int!, incomeType: IncomeType!): String! @authenticated
+  saveLoan(amount: Int!, totalInstallments: Int!, incomeType: IncomeType!, requirementType: String!): String! @authenticated
   logout: Boolean! @authenticated
   changeDocumentStatus(documentId: String!, note: String!, status: DocumentStatus!): Boolean! @authenticated
 }
@@ -115,6 +116,7 @@ type Loan {
   amount: Int!
   totalInstallments: Int!
   incomeType: String!
+  requirementType: String!
   status: LoanStatus!
   statusDescription: String!
   ownerName: String!

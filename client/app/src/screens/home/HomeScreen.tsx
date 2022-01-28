@@ -9,7 +9,7 @@ const HomeScreen = ({ navigation }) => {
       <TouchableOpacity
         style={styles.requestLoanButton}
         onPress={() => {
-          navigation.navigate('RegisterLoanFlow');
+          navigation.navigate('LoanAmount');
         }}>
         <Avatar
           size={90}

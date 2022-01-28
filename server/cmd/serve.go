@@ -38,6 +38,7 @@ var serveCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		provider := providers.NewProvider()
 		core := services.NewCore()
+		auth := middlewares.NewAuth(provider, core)
 		logger := provider.Logger()
 		if config.Env() == "PROD" {
 			// Profiler initialization
@@ -67,7 +68,7 @@ var serveCmd = &cobra.Command{
 		}))
 		router.Use(middleware.Recoverer)
 		router.Use(middleware.Logger)
-		router.Use(middlewares.Authentication)
+		router.Use(auth.Authentication)
 		router.Get("/", playground.Handler("GraphQL playground", "/query"))
 
 		fileHandler := handlers.NewFile(provider, core)
@@ -84,8 +85,6 @@ var serveCmd = &cobra.Command{
 			if len(userXid) == 0 {
 				return nil, fmt.Errorf("you need to login")
 			}
-
-			logger.With(zap.String("userXid", userXid)).Info("user info")
 
 			return next(ctx)
 		}

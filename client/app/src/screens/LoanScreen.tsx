@@ -1,14 +1,21 @@
 import Loading from 'components/Loading';
 import PrimaryButton from 'components/PrimaryButton';
-import React from 'react';
+import { useLoan } from 'context/LoanContext';
+import React, { useEffect } from 'react';
 import { StyleSheet, Text, View, SafeAreaView } from 'react-native';
 import { Icon } from 'react-native-elements';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-import { useGetLoanQuery } from '../api/graphql/generated/graphql';
+import { useGetLoanQuery, RequirementType } from '../api/graphql/generated/graphql';
+import { getData } from '../auth/data';
 
 const LoanScreen = ({ navigation }) => {
   const { data, error, loading } = useGetLoanQuery();
+  const { setLoanId, setRequirementType } = useLoan();
 
+  useEffect(() => {
+    setLoanId(data?.getLoan.id);
+    setRequirementType(data?.getLoan.requirementType);
+  }, [data?.getLoan, setLoanId]);
   if (loading) {
     return <Loading />;
   }

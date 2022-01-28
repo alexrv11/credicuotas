@@ -19,7 +19,6 @@ const LoanRequirementListScreen = ({ route, navigation }) => {
 
   const onSubmit = useCallback(() => {
     if (data?.getLoanRequirements) {
-      console.log(data?.getLoanRequirements);
       const uploadRequirements = data?.getLoanRequirements.filter(
         item => item?.status === false,
       );
@@ -44,6 +43,20 @@ const LoanRequirementListScreen = ({ route, navigation }) => {
     return <Loading />;
   }
 
+  const descriptionStatus = status => {
+    if (status === 'DECLINED') {
+      return 'Observado';
+    }
+
+    if (status === 'PENDING_REVIEW') {
+      return 'En revision';
+    }
+
+    if (status === 'APPROVED') {
+      return 'Aprobado';
+    }
+  };
+
   function viewRequirements(values) {
     if (!values) {
       return;
@@ -61,6 +74,9 @@ const LoanRequirementListScreen = ({ route, navigation }) => {
           <View style={styles.incomeDescriptionContainer}>
             <Text style={styles.text}>{requirement?.title}</Text>
             <Text style={styles.description}>{requirement?.description}</Text>
+            <Text style={styles[requirement?.documentStatus]}>
+              {descriptionStatus(requirement?.documentStatus)}
+            </Text>
           </View>
         </View>
       );
@@ -133,6 +149,18 @@ const styles = StyleSheet.create({
   },
   footer: {
     width: '100%',
+  },
+  DECLINED: {
+    marginTop: 10,
+    color: '#e43f16',
+  },
+  PENDING_REVIEW: {
+    marginTop: 10,
+    color: '#25263f',
+  },
+  APPROVED: {
+    marginTop: 10,
+    color: '#1ca81c',
   },
 });
 

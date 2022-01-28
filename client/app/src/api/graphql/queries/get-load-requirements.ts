@@ -7,6 +7,7 @@ const GET_LOAN_REQUIREMENTS = gql`
       title
       requirementType
       description
+      documentStatus
     }
   }
 `;

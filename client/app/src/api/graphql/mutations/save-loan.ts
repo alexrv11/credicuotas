@@ -5,11 +5,13 @@ export default gql`
     $amount: Int!
     $totalInstallments: Int!
     $incomeType: IncomeType!
+    $requirementType: String!
   ) {
     saveLoan(
       amount: $amount
       totalInstallments: $totalInstallments
       incomeType: $incomeType
+      requirementType: $requirementType
     )
   }
 `;

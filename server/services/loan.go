@@ -10,7 +10,7 @@ import (
 )
 
 type Loan interface {
-	Save(provider *providers.Provider, userXid string, amount, totalInstallments int, incomeType model.IncomeType) (string, error)
+	Save(provider *providers.Provider, userXid string, amount, totalInstallments int, incomeType model.IncomeType, requirementType string) (string, error)
 	SaveDocuments(provider *providers.Provider, userXid, loanID, requirementType, fileName string) error
 	GetLoans(provider *providers.Provider, userXid string) ([]*modeldb.Loan, error)
 	GetLoan(provider *providers.Provider, userXid string) (*modeldb.Loan, error)
@@ -24,7 +24,7 @@ type Loan interface {
 
 type LoanImpl struct{}
 
-func (r *LoanImpl) Save(provider *providers.Provider, userXid string, amount, totalInstallments int, incomeType model.IncomeType) (string, error) {
+func (r *LoanImpl) Save(provider *providers.Provider, userXid string, amount, totalInstallments int, incomeType model.IncomeType, requirementType string) (string, error) {
 	db := provider.GormClient()
 	var user modeldb.User
 	err := db.Model(&modeldb.User{}).Where("xid = ?", userXid).First(&user).Error
@@ -61,6 +61,7 @@ func (r *LoanImpl) Save(provider *providers.Provider, userXid string, amount, to
 			Status:            modeldb.LoanStatusRegister,
 			UserID:            user.ID,
 			Rate:              rate,
+			RequirementType:   requirementType,
 		}
 
 		err = db.Save(newLoan).Error
@@ -165,6 +166,10 @@ func getDocumentDescription(requirementType modeldb.RequirementType) string {
 		return "Ultima boleta de pago"
 	}
 
+	if modeldb.RequirementTypeOwnAssetPhoto == requirementType {
+		return "Propiedad, Auto, artefacto  en garantia"
+	}
+
 	return ""
 }
 
@@ -221,30 +226,34 @@ func getRequirementsByDocumentType(provider *providers.Provider, user modeldb.Us
 	}
 
 	err := db.Model(&modeldb.Document{}).
-		Where("user_id = ? AND type = ? AND status != ?", user.ID, modeldb.RequirementTypeClientDocumentPhoto, modeldb.DocumentStatusDeclined).
+		Where("user_id = ? AND type = ?", user.ID, modeldb.RequirementTypeClientDocumentPhoto).
 		First(&documentCI).Error
 
 	if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
 		return nil, err
 	}
 
-	if errors.Is(err, gorm.ErrRecordNotFound) {
+	if errors.Is(err, gorm.ErrRecordNotFound) || documentCI.Status == modeldb.DocumentStatusDeclined {
 		requirementCI.Status = false
 	}
+
+	requirementCI.DocumentStatus = documentCI.Status
 
 	var documentByType modeldb.Document
 
 	err = db.Model(&modeldb.Document{}).
-		Where("loan_id = ? AND type = ? AND status != ?", loan.ID, requimentType, modeldb.DocumentStatusDeclined).
+		Where("loan_id = ? AND type = ?", loan.ID, requimentType).
 		First(&documentByType).Error
 
 	if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
 		return nil, err
 	}
 
-	if errors.Is(err, gorm.ErrRecordNotFound) {
+	if errors.Is(err, gorm.ErrRecordNotFound) || documentByType.Status == modeldb.DocumentStatusDeclined {
 		requirementByType.Status = false
 	}
+
+	requirementByType.DocumentStatus = documentByType.Status
 
 	requirements = append(requirements, &requirementCI, &requirementByType)
 
@@ -326,11 +335,12 @@ func (r *LoanImpl) ChangeDocumentStatus(provider *providers.Provider, documentID
 
 	if status == modeldb.DocumentStatusDeclined {
 		var loan modeldb.Loan
-		err = db.Model(&modeldb.Document{}).Where("id = ?", document.LoanID).First(&loan).Error
+		err = db.Model(&modeldb.Loan{}).Where("id = ?", document.LoanID).First(&loan).Error
 		if err != nil {
 			return err
 		}
 		loan.Status = modeldb.LoanStatusHasObservation
+		loan.Observation = "Documentos observados"
 		err = db.Save(&loan).Error
 		if err != nil {
 			return err

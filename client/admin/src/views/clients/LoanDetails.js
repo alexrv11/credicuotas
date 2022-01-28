@@ -41,7 +41,7 @@ const ValueWrapper = styled.span(({ theme }) => ({
 const LoanDetails = () => {
     const { id } = useParams();
     console.log('loan id', id);
-    const { data, error, loading } = useQuery(GET_LOAN, { variables: { id } });
+    const { data, error, loading } = useQuery(GET_LOAN, { variables: { id }, pollInterval: 500 });
     const [activeTab, setActiveTab] = useState(0);
 
     const handleChange = (event, newValue) => {

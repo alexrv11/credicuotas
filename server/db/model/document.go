@@ -40,6 +40,7 @@ type Requirement struct {
 	Title           string          `json:"title"`
 	Description     string          `json:"description"`
 	Status          bool            `json:"status"`
+	DocumentStatus  DocumentStatus  `gorm:"-"`
 }
 
 type Document struct {

@@ -1,9 +1,11 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { SafeAreaView, StyleSheet, View, TouchableOpacity } from 'react-native';
 import { Avatar, Text, Icon } from 'react-native-elements';
 import Spacer from 'components/Spacer';
 import PrimaryButton from 'components/PrimaryButton';
 import { useLoan } from '../context/LoanContext';
+import { useSaveLoanMutation } from 'api/graphql/generated/graphql';
+import { StackActions } from '@react-navigation/native';
 
 const types = {
   OWN_BUSINESS: [
@@ -41,14 +43,38 @@ const types = {
 };
 
 const LoanRequirementTypeScreen = ({ route, navigation }) => {
-  const { incomeType, setRequirementType } = useLoan();
+  const {
+    amount,
+    totalInstallments,
+    setLoanId,
+    setIncomeType,
+    incomeType,
+    setRequirementType,
+  } = useLoan();
+
+  const [saveLoan, { data, error }] = useSaveLoanMutation();
+
+  useEffect(() => {
+    if (data?.saveLoan) {
+      console.log('save loan', data?.saveLoan);
+      setLoanId(data?.saveLoan);
+      navigation.dispatch(StackActions.replace('LoanRequirementList'));
+    }
+  }, [data, navigation, setLoanId]);
 
   const onSubmit = useCallback(
     type => {
-      navigation.navigate('LoanRequirementList');
       setRequirementType(type);
+      saveLoan({
+        variables: {
+          amount,
+          totalInstallments,
+          incomeType,
+          requirementType: type,
+        },
+      });
     },
-    [navigation],
+    [amount, incomeType, saveLoan, setRequirementType, totalInstallments],
   );
 
   function viewTypes(values) {
