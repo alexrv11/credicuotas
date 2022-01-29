@@ -93,7 +93,7 @@ var serveCmd = &cobra.Command{
 			userRole, _ := ctx.Value(middlewares.UserInfoRoleKey).(string)
 
 			if userRole != string(role) {
-				return nil, fmt.Errorf("you need dont have access for this resource")
+				return nil, fmt.Errorf("you dont have access for this resource")
 			}
 
 			return next(ctx)

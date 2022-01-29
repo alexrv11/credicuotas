@@ -58,6 +58,7 @@ type ComplexityRoot struct {
 	Document struct {
 		Description       func(childComplexity int) int
 		ID                func(childComplexity int) int
+		Note              func(childComplexity int) int
 		Status            func(childComplexity int) int
 		StatusDescription func(childComplexity int) int
 		Url               func(childComplexity int) int
@@ -218,6 +219,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Document.ID(childComplexity), true
+
+	case "Document.note":
+		if e.complexity.Document.Note == nil {
+			break
+		}
+
+		return e.complexity.Document.Note(childComplexity), true
 
 	case "Document.status":
 		if e.complexity.Document.Status == nil {
@@ -890,6 +898,7 @@ enum DocumentStatus {
 type Document {
   id: String!
   description: String!
+  note: String!
   url: String!
   status: DocumentStatus!
   statusDescription: String!
@@ -1381,6 +1390,41 @@ func (ec *executionContext) _Document_description(ctx context.Context, field gra
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
 		return obj.Description, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Document_note(ctx context.Context, field graphql.CollectedField, obj *model1.Document) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Document",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Note, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -4985,6 +5029,11 @@ func (ec *executionContext) _Document(ctx context.Context, sel ast.SelectionSet,
 			})
 		case "description":
 			out.Values[i] = ec._Document_description(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&invalids, 1)
+			}
+		case "note":
+			out.Values[i] = ec._Document_note(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				atomic.AddUint32(&invalids, 1)
 			}

@@ -3,7 +3,7 @@ import MuiTypography from '@mui/material/Typography';
 import { useParams } from 'react-router-dom';
 
 // material-ui
-import { Divider, Grid, Typography } from '@mui/material';
+import { CircularProgress, Divider, Grid, Typography } from '@mui/material';
 
 // project imports
 import MainCard from 'ui-component/cards/MainCard';
@@ -31,7 +31,7 @@ const LoanDetails = () => {
     };
 
     if (loading) {
-        return <Loader />;
+        return <CircularProgress />;
     }
 
     return (

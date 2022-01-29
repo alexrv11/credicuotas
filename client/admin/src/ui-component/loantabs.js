@@ -1,14 +1,24 @@
-import * as React from 'react';
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
-import { Typography, Grid, Button, Box, Chip, TextField, CircularProgress } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
+import {
+    Typography,
+    Grid,
+    Button,
+    Box,
+    Chip,
+    CircularProgress,
+    Paper,
+    TextareaAutosize,
+    FormControl,
+    RadioGroup,
+    FormControlLabel,
+    Radio
+} from '@mui/material';
 
 import Dialog from '@mui/material/Dialog';
-import ListItemText from '@mui/material/ListItemText';
-import ListItem from '@mui/material/ListItem';
-import List from '@mui/material/List';
-import Divider from '@mui/material/Divider';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import IconButton from '@mui/material/IconButton';
@@ -27,6 +37,14 @@ const ValidateTextWrapper = styled.span(({ theme }) => ({
     color: theme.palette.secondary.dark,
     textDecorationLine: 'underline'
 }));
+
+const Item = styled(Paper)(({ theme }) => ({
+    ...theme.typography.body2,
+    padding: theme.spacing(1),
+    textAlign: 'center',
+    color: theme.palette.text.secondary
+}));
+
 function LoanTabPanel(props) {
     const { children, value, index, ...other } = props;
 
@@ -56,24 +74,17 @@ function a11yProps(index) {
 
 const TitleWrapper = styled.div(({ theme }) => ({
     padding: 20,
-    fontSize: 18,
-    color: '#fff'
+    fontSize: 18
 }));
 
-const focusUsernameInputField = (input) => {
-    if (input) {
-        setTimeout(() => {
-            input.focus();
-        }, 100);
-    }
-};
-
 export default function LoanTabs({ loan }) {
+    const theme = useTheme();
     const [value, setValue] = React.useState(0);
     const [open, setOpen] = React.useState(false);
     const [selectedDoc, setSelectedDoc] = React.useState(null);
     const [image, setImage] = React.useState(null);
     const [note, setNote] = React.useState('');
+    const [action, setAction] = React.useState('APPROVED');
 
     const [changeDocumentStatus, { loading }] = useMutation(CHANGE_DOCUMENT_STATUS);
 
@@ -81,6 +92,10 @@ export default function LoanTabs({ loan }) {
         setImage(null);
         setOpen(false);
     };
+
+    useEffect(() => {
+        setNote(selectedDoc?.note);
+    }, [selectedDoc]);
 
     const handleChangeDocumentStatus = (doc, note, status) => {
         changeDocumentStatus({ variables: { documentId: doc.id, note, status } });
@@ -145,40 +160,49 @@ export default function LoanTabs({ loan }) {
                     <Tab label="Garantes" {...a11yProps(1)} />
                 </Tabs>
                 <Dialog fullScreen open={open} onClose={handleClose} TransitionComponent={Transition}>
-                    <AppBar sx={{ position: 'relative' }}>
+                    <AppBar sx={{ position: 'relative', bgcolor: theme.palette.secondary.light, color: theme.palette.secondary.dark }}>
                         <Toolbar>
                             <IconButton edge="start" color="inherit" onClick={handleClose} aria-label="close">
                                 <CloseIcon />
                             </IconButton>
-                            <Typography sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
+                            <Typography sx={{ ml: 2, flex: 1 }} variant="h6" component="div" color="inherit">
                                 <TitleWrapper>{selectedDoc?.description}</TitleWrapper>
                             </Typography>
-                            <TextField
-                                id="note"
-                                sx={{
-                                    m: 1,
-                                    width: '350px',
-                                    input: { color: '#fff' }
-                                }}
-                                label=""
-                                variant="standard"
-                                maxRows={4}
-                                placeholder="Nota"
-                                color="info"
-                                value={note}
-                                onChange={(event) => setNote(event?.target.value)}
-                                autoFocus
-                            />
-                            <Button color="inherit" onClick={() => handleChangeDocumentStatus(selectedDoc, note, 'APPROVED')}>
-                                Aprobar
-                            </Button>
-                            <Button color="inherit" onClick={() => handleChangeDocumentStatus(selectedDoc, note, 'DECLINED')}>
-                                Observar
-                            </Button>
+                            <Chip label={selectedDoc?.statusDescription} variant="outlined" sx={{ marginRight: 10 }} />
                         </Toolbar>
                     </AppBar>
-                    <Grid container spacing={2} alignContent="center" justifyContent="center" alignItems="center" style={{ marginTop: 10 }}>
-                        {imageView(image)}
+                    <Grid container spacing={2} style={{ padding: 10 }}>
+                        <Grid item lg={7} md={7} sm={12} xs={12}>
+                            <Item>{imageView(image)}</Item>
+                        </Grid>
+                        <Grid item lg={5} md={5} sm={12} xs={12}>
+                            <Item>
+                                <FormControl>
+                                    <TextareaAutosize
+                                        aria-label="minimum height"
+                                        minRows={5}
+                                        placeholder="Nota"
+                                        style={{ width: 320 }}
+                                        value={note}
+                                        onChange={(event) => setNote(event?.target?.value)}
+                                    />
+                                    <RadioGroup
+                                        aria-labelledby="demo-radio-buttons-group-label"
+                                        value={action}
+                                        onChange={(event) => setAction(event?.target?.value)}
+                                        name="radio-buttons-group"
+                                    >
+                                        <FormControlLabel value="APPROVED" control={<Radio />} label="Aprobado" />
+                                        <FormControlLabel value="DECLINED" control={<Radio />} label="Observaciones" />
+                                    </RadioGroup>
+                                    {loan.status === 'RUNNING' ? null : (
+                                        <Button variant="contained" onClick={() => handleChangeDocumentStatus(selectedDoc, note, action)}>
+                                            Guardar
+                                        </Button>
+                                    )}
+                                </FormControl>
+                            </Item>
+                        </Grid>
                     </Grid>
                 </Dialog>
             </Box>

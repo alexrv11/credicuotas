@@ -162,6 +162,7 @@ enum DocumentStatus {
 type Document {
   id: String!
   description: String!
+  note: String!
   url: String!
   status: DocumentStatus!
   statusDescription: String!

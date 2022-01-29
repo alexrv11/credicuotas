@@ -25,6 +25,7 @@ const GET_LOAN = gql`
                 description
                 status
                 statusDescription
+                note
             }
         }
     }
