@@ -4,7 +4,7 @@ const config = {
     defaultPaths: {
         ADMIN: 'staff/profiles',
         CREDIT_ASSISTANT: '/admin/clients/orders',
-        MANAGER: '/dashboard/default'
+        MANAGER: '/admin/dashboard/default'
     },
     fontFamily: `'Roboto', sans-serif`,
     borderRadius: 12

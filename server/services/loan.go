@@ -79,20 +79,10 @@ func (r *LoanImpl) Save(provider *providers.Provider, userXid string, amount, to
 
 func (r *LoanImpl) GetLoans(provider *providers.Provider, userXid string) ([]*modeldb.Loan, error) {
 	db := provider.GormClient()
-	var user modeldb.User
-	err := db.Model(&modeldb.User{}).Where("xid = ?", userXid).First(&user).Error
-
-	if errors.Is(err, gorm.ErrRecordNotFound) {
-		return nil, fmt.Errorf("not found user")
-	}
-
-	if err != nil {
-		return nil, err
-	}
 
 	loans := make([]*modeldb.Loan, 0)
 
-	err = db.Where("user_id = ?", user.ID).Find(&loans).Error
+	err := db.Preload("User").Where("status = ?", modeldb.LoanStatusRunning).Find(&loans).Error
 
 	return loans, err
 }
@@ -415,10 +405,21 @@ func (r *LoanImpl) Timeline(provider *providers.Provider, loan *modeldb.Loan) ([
 		Status: modeldb.TimelineStatusPending,
 	}
 
+	if loan.Status == modeldb.LoanStatusApproved {
+		approvedState.Status = modeldb.TimelineStatusDone
+		clientSignState.Status = modeldb.TimelineStatusDone
+	}
+
 	runningState := &modeldb.TimelineState{
 		ID:     "RUNNING",
 		Label:  "En ejecucion",
 		Status: modeldb.TimelineStatusPending,
+	}
+
+	if loan.Status == modeldb.LoanStatusRunning {
+		approvedState.Status = modeldb.TimelineStatusDone
+		clientSignState.Status = modeldb.TimelineStatusDone
+		runningState.Status = modeldb.TimelineStatusDone
 	}
 
 	timeline = append(timeline, registeredState, requiredDocumentState, preApprovedState, approvedState, clientSignState, runningState)

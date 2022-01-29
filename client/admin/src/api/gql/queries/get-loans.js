@@ -1,8 +1,8 @@
 import gql from 'graphql-tag';
 
-const GET_LOAN_ORDERS = gql`
-    query getLoanOrders {
-        getLoanOrders {
+const GET_LOANS = gql`
+    query getLoans {
+        getLoans {
             id
             totalInstallments
             status
@@ -14,4 +14,4 @@ const GET_LOAN_ORDERS = gql`
     }
 `;
 
-export default GET_LOAN_ORDERS;
+export default GET_LOANS;

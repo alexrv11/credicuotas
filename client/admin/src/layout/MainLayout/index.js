@@ -82,21 +82,15 @@ const MainLayout = () => {
     };
 
     useEffect(() => {
-        console.log(loading, error, data);
-    }, [loading, error, data]);
-
-    useEffect(() => {
         const role = data?.getUser?.role;
         if (role && location.pathname === '/admin') {
-            console.log('page', location.pathname, data);
             navigate(config.defaultPaths[role]);
         }
     }, [location, data, navigate]);
 
     useEffect(() => {
         dispatch({ type: SET_MENU, opened: !matchDownMd });
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [matchDownMd]);
+    }, [dispatch, matchDownMd]);
 
     if (loading) {
         return <CircularProgress />;

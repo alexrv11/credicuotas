@@ -7,9 +7,10 @@ import StepContent from '@mui/material/StepContent';
 import Button from '@mui/material/Button';
 import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
-import { getCardActionsUtilityClass } from '@mui/material';
-import { useLazyQuery, useMutation } from '@apollo/client';
+import { CircularProgress, getCardActionsUtilityClass } from '@mui/material';
+import { useLazyQuery, useMutation, useQuery } from '@apollo/client';
 import CHANGE_LOAN_STATUS from 'api/gql/mutations/change-loan-status';
+import GET_USER from 'api/gql/queries/get-user';
 
 const steps = [
     {
@@ -47,6 +48,11 @@ const steps = [
 export default function VerticalLinearStepper({ timeline, loan }) {
     const [activeStep, setActiveStep] = React.useState(0);
     const [changeLoanStatus, { data, error, loading }] = useMutation(CHANGE_LOAN_STATUS);
+    const {
+        userLoading,
+        error: userError,
+        data: { getUser: user }
+    } = useQuery(GET_USER);
 
     const handleNext = () => {
         setActiveStep((prevActiveStep) => prevActiveStep + 1);
@@ -74,8 +80,7 @@ export default function VerticalLinearStepper({ timeline, loan }) {
         changeLoanStatus({ variables: { loanId, status } });
     };
 
-    const getActions = (step) => {
-        console.log('get actions', step);
+    const getActions = (step, user) => {
         if (step.id === 'PRE_APPROVED') {
             return (
                 <Button variant="contained" onClick={() => handlerChangeLoanStatus(loan?.id, 'PRE_APPROVED')}>
@@ -83,6 +88,23 @@ export default function VerticalLinearStepper({ timeline, loan }) {
                 </Button>
             );
         }
+
+        if (step.id === 'APPROVED' && user?.role === 'MANAGER') {
+            return (
+                <Button variant="contained" onClick={() => handlerChangeLoanStatus(loan?.id, 'APPROVED')}>
+                    Aceptar
+                </Button>
+            );
+        }
+
+        if (step.id === 'CLIENT_SIGN') {
+            return (
+                <Button variant="contained" onClick={() => handlerChangeLoanStatus(loan?.id, 'RUNNING')}>
+                    Aceptar
+                </Button>
+            );
+        }
+
         return <></>;
     };
 
@@ -99,6 +121,10 @@ export default function VerticalLinearStepper({ timeline, loan }) {
         setActiveStep(counter);
     }, [timeline]);
 
+    if (loading || userLoading) {
+        return <CircularProgress />;
+    }
+
     return (
         <Box sx={{ maxWidth: 400 }}>
             <Stepper activeStep={activeStep} orientation="vertical">
@@ -107,17 +133,14 @@ export default function VerticalLinearStepper({ timeline, loan }) {
                         {viewStepLabel(step)}
                         <StepContent>
                             <Typography>{step?.title}</Typography>
-                            {getActions(step)}
+                            {getActions(step, user)}
                         </StepContent>
                     </Step>
                 ))}
             </Stepper>
             {activeStep === steps.length && (
                 <Paper square elevation={0} sx={{ p: 3 }}>
-                    <Typography>All steps completed - you&apos;re finished</Typography>
-                    <Button onClick={handleReset} sx={{ mt: 1, mr: 1 }}>
-                        Reset
-                    </Button>
+                    <Typography>Prestamo otorgado</Typography>
                 </Paper>
             )}
         </Box>

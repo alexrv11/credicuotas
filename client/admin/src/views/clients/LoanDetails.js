@@ -8,11 +8,7 @@ import { Divider, Grid, Typography } from '@mui/material';
 // project imports
 import MainCard from 'ui-component/cards/MainCard';
 import { gridSpacing } from 'store/constant';
-import LoanTimeline from 'ui-component/timeline';
 import styled from '@emotion/styled';
-import Box from '@mui/material/Box';
-import Tabs from '@mui/material/Tabs';
-import Tab from '@mui/material/Tab';
 import { useState } from 'react';
 import VerticalLinearStepper from 'ui-component/stepper';
 import LoanTabs from 'ui-component/loantabs';
@@ -25,22 +21,8 @@ const DetailWrapper = styled.div(({ theme }) => ({
     color: theme.palette.secondary.dark
 }));
 
-const TitleWrapper = styled.p(({ theme }) => ({
-    color: theme.palette.secondary.dark,
-    fontSize: 20,
-    fontWeight: 'bold'
-}));
-
-const ValueWrapper = styled.span(({ theme }) => ({
-    color: theme.palette.secondary.dark,
-    paddingTop: 10,
-    fontSize: 16,
-    fontWeight: 'bold'
-}));
-
 const LoanDetails = () => {
     const { id } = useParams();
-    console.log('loan id', id);
     const { data, error, loading } = useQuery(GET_LOAN, { variables: { id }, pollInterval: 500 });
     const [activeTab, setActiveTab] = useState(0);
 
@@ -72,7 +54,7 @@ const LoanDetails = () => {
                                 Estado
                             </Typography>
                             <Typography variant="h6" gutterBottom component="div">
-                                {data?.getLoanById?.status}
+                                {data?.getLoanById?.statusDescription}
                             </Typography>
                         </DetailWrapper>
                     </Grid>

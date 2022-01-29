@@ -13,6 +13,7 @@ const (
 	LoanStatusPendingPreApproved  LoanStatus = "PENDING_PRE_APPROVED"
 	LoanStatusPendingRejected     LoanStatus = "REJECTED"
 	LoanStatusHasObservation      LoanStatus = "HAS_OBSERVATION"
+	LoanStatusClientSigned        LoanStatus = "CLIENT_SIGNED"
 	LoanStatusPreApproved         LoanStatus = "PRE_APPROVED"
 	LoanStatusApproved            LoanStatus = "APPROVED"
 	LoanStatusRunning             LoanStatus = "RUNNING"

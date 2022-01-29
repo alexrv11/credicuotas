@@ -838,6 +838,7 @@ enum LoanStatus {
   PRE_APPROVED
   APPROVED
   RUNNING
+  CLIENT_SIGNED
 }
 
 type Loan {

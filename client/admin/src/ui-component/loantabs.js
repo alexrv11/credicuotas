@@ -2,7 +2,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
-import { Typography, Grid, Button, Box, Chip, TextField } from '@mui/material';
+import { Typography, Grid, Button, Box, Chip, TextField, CircularProgress } from '@mui/material';
 
 import Dialog from '@mui/material/Dialog';
 import ListItemText from '@mui/material/ListItemText';
@@ -97,7 +97,7 @@ export default function LoanTabs({ loan }) {
 
     const imageView = (image) => {
         if (!image) {
-            return <Typography>Cargando...</Typography>;
+            return <CircularProgress />;
         }
         return <img src={`data:image/png;base64, ${image}`} alt="" />;
     };

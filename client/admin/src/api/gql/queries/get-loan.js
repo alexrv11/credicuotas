@@ -4,6 +4,7 @@ const GET_LOAN = gql`
     query getLoan($id: String!) {
         getLoanById(id: $id) {
             status
+            statusDescription
             totalInstallments
             amount
             ownerName

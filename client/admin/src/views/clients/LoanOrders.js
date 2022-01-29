@@ -1,4 +1,4 @@
-import { Grid } from '@mui/material';
+import { CircularProgress, Grid } from '@mui/material';
 import MuiTypography from '@mui/material/Typography';
 import { DataGrid } from '@mui/x-data-grid';
 
@@ -46,7 +46,7 @@ const LoanOrders = () => {
             editable: false
         },
         {
-            field: 'status',
+            field: 'statusDescription',
             headerName: 'Estado',
             width: 120,
             editable: false
@@ -61,7 +61,7 @@ const LoanOrders = () => {
                         <MuiTypography variant="h6" gutterBottom>
                             Solicitudes de Prestamos
                         </MuiTypography>
-                        <MuiTypography gutterBottom>Cargando...</MuiTypography>
+                        <CircularProgress />
                     </Grid>
                 </Grid>
             </MainCard>
