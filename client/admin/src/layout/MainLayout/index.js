@@ -115,7 +115,7 @@ const MainLayout = () => {
                 }}
             >
                 <Toolbar>
-                    <Header handleLeftDrawerToggle={handleLeftDrawerToggle} userRole={data?.getUser?.role} />
+                    <Header handleLeftDrawerToggle={handleLeftDrawerToggle} user={data?.getUser} />
                 </Toolbar>
             </AppBar>
 

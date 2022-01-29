@@ -44,7 +44,8 @@ import LOGOUT from 'api/gql/queries/logout';
 
 // ==============================|| PROFILE MENU ||============================== //
 
-const ProfileSection = () => {
+const ProfileSection = ({ user }) => {
+    console.log(user);
     const theme = useTheme();
     const customization = useSelector((state) => state.customization);
     const navigate = useNavigate();
@@ -154,10 +155,10 @@ const ProfileSection = () => {
                                         <Stack>
                                             <Stack direction="row" spacing={0.5} alignItems="center">
                                                 <Typography component="span" variant="h4" sx={{ fontWeight: 400 }}>
-                                                    Alex Ventura
+                                                    {user?.name}
                                                 </Typography>
                                             </Stack>
-                                            <Typography variant="subtitle2">Admin</Typography>
+                                            <Typography variant="subtitle2">{user?.role}</Typography>
                                         </Stack>
                                     </Box>
                                     <PerfectScrollbar style={{ height: '100%', maxHeight: 'calc(100vh - 250px)', overflowX: 'hidden' }}>
