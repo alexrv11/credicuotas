@@ -98,6 +98,7 @@ type Mutation {
   saveLoan(amount: Int!, totalInstallments: Int!, incomeType: IncomeType!, requirementType: String!): String! @authenticated
   logout: Boolean! @authenticated
   changeDocumentStatus(documentId: String!, note: String!, status: DocumentStatus!): Boolean! @authenticated
+  changeLoanStatus(loanId: String!, status: LoanStatus!): Boolean! @authenticated
 }
 
 enum LoanStatus {

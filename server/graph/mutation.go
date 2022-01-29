@@ -135,3 +135,8 @@ func (r *mutationResolver) ChangeDocumentStatus(ctx context.Context, documentID 
 
 	return true, nil
 }
+
+func (r *mutationResolver) ChangeLoanStatus(ctx context.Context, loanId string, status model1.LoanStatus) (bool, error) {
+
+	return r.core.Loan.ChangeLoanStatus(r.provider, loanId, status)
+}

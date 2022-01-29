@@ -82,6 +82,7 @@ type ComplexityRoot struct {
 
 	Mutation struct {
 		ChangeDocumentStatus func(childComplexity int, documentID string, note string, status model1.DocumentStatus) int
+		ChangeLoanStatus     func(childComplexity int, loanID string, status model1.LoanStatus) int
 		CreateUser           func(childComplexity int, email string, password string, name string, role model.Role) int
 		Login                func(childComplexity int, email string, password string) int
 		Logout               func(childComplexity int) int
@@ -163,6 +164,7 @@ type MutationResolver interface {
 	SaveLoan(ctx context.Context, amount int, totalInstallments int, incomeType model.IncomeType, requirementType string) (string, error)
 	Logout(ctx context.Context) (bool, error)
 	ChangeDocumentStatus(ctx context.Context, documentID string, note string, status model1.DocumentStatus) (bool, error)
+	ChangeLoanStatus(ctx context.Context, loanID string, status model1.LoanStatus) (bool, error)
 }
 type QueryResolver interface {
 	GetUser(ctx context.Context) (*model1.User, error)
@@ -347,6 +349,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Mutation.ChangeDocumentStatus(childComplexity, args["documentId"].(string), args["note"].(string), args["status"].(model1.DocumentStatus)), true
+
+	case "Mutation.changeLoanStatus":
+		if e.complexity.Mutation.ChangeLoanStatus == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_changeLoanStatus_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.ChangeLoanStatus(childComplexity, args["loanId"].(string), args["status"].(model1.LoanStatus)), true
 
 	case "Mutation.createUser":
 		if e.complexity.Mutation.CreateUser == nil {
@@ -812,6 +826,7 @@ type Mutation {
   saveLoan(amount: Int!, totalInstallments: Int!, incomeType: IncomeType!, requirementType: String!): String! @authenticated
   logout: Boolean! @authenticated
   changeDocumentStatus(documentId: String!, note: String!, status: DocumentStatus!): Boolean! @authenticated
+  changeLoanStatus(loanId: String!, status: LoanStatus!): Boolean! @authenticated
 }
 
 enum LoanStatus {
@@ -932,6 +947,30 @@ func (ec *executionContext) field_Mutation_changeDocumentStatus_args(ctx context
 		}
 	}
 	args["status"] = arg2
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_changeLoanStatus_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 string
+	if tmp, ok := rawArgs["loanId"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("loanId"))
+		arg0, err = ec.unmarshalNString2string(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["loanId"] = arg0
+	var arg1 model1.LoanStatus
+	if tmp, ok := rawArgs["status"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("status"))
+		arg1, err = ec.unmarshalNLoanStatus2githubᚗcomᚋalexrv11ᚋcredicuotasᚋserverᚋdbᚋmodelᚐLoanStatus(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["status"] = arg1
 	return args, nil
 }
 
@@ -2552,6 +2591,68 @@ func (ec *executionContext) _Mutation_changeDocumentStatus(ctx context.Context, 
 		directive0 := func(rctx context.Context) (interface{}, error) {
 			ctx = rctx // use context from middleware stack in children
 			return ec.resolvers.Mutation().ChangeDocumentStatus(rctx, args["documentId"].(string), args["note"].(string), args["status"].(model1.DocumentStatus))
+		}
+		directive1 := func(ctx context.Context) (interface{}, error) {
+			if ec.directives.Authenticated == nil {
+				return nil, errors.New("directive authenticated is not implemented")
+			}
+			return ec.directives.Authenticated(ctx, nil, directive0)
+		}
+
+		tmp, err := directive1(rctx)
+		if err != nil {
+			return nil, graphql.ErrorOnPath(ctx, err)
+		}
+		if tmp == nil {
+			return nil, nil
+		}
+		if data, ok := tmp.(bool); ok {
+			return data, nil
+		}
+		return nil, fmt.Errorf(`unexpected type %T from directive, should be bool`, tmp)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(bool)
+	fc.Result = res
+	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Mutation_changeLoanStatus(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Mutation_changeLoanStatus_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		directive0 := func(rctx context.Context) (interface{}, error) {
+			ctx = rctx // use context from middleware stack in children
+			return ec.resolvers.Mutation().ChangeLoanStatus(rctx, args["loanId"].(string), args["status"].(model1.LoanStatus))
 		}
 		directive1 := func(ctx context.Context) (interface{}, error) {
 			if ec.directives.Authenticated == nil {
@@ -5161,6 +5262,11 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 			}
 		case "changeDocumentStatus":
 			out.Values[i] = ec._Mutation_changeDocumentStatus(ctx, field)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "changeLoanStatus":
+			out.Values[i] = ec._Mutation_changeLoanStatus(ctx, field)
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}

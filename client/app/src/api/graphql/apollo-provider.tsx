@@ -14,7 +14,7 @@ import { setContext } from '@apollo/client/link/context';
 
 export default function GraphqlProvider({ children }: PropsWithChildren<any>) {
   const httpLink = createHttpLink({
-    uri: 'http://localhost:8181/graphql',
+    uri: 'http://localhost:8282/graphql',
   });
 
 

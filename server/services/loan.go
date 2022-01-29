@@ -20,6 +20,7 @@ type Loan interface {
 	GetDocuments(provider *providers.Provider, loanID uint) ([]*modeldb.Document, error)
 	ChangeDocumentStatus(provider *providers.Provider, documentID string, note string, status modeldb.DocumentStatus) error
 	Timeline(provider *providers.Provider, loan *modeldb.Loan) ([]*modeldb.TimelineState, error)
+	ChangeLoanStatus(provider *providers.Provider, loanId string, status modeldb.LoanStatus) (bool, error)
 }
 
 type LoanImpl struct{}
@@ -375,10 +376,17 @@ func (r *LoanImpl) Timeline(provider *providers.Provider, loan *modeldb.Loan) ([
 		return nil, err
 	}
 
+	preApprovedState := &modeldb.TimelineState{
+		ID:     "PRE_APPROVED",
+		Label:  "Pre aprobado",
+		Status: modeldb.TimelineStatusDone,
+	}
+
 	//required documents
 	for _, doc := range docs {
 		if doc.Status == modeldb.DocumentStatusPendingReview {
 			requiredDocumentState.Status = modeldb.TimelineStatusPending
+			preApprovedState.Status = modeldb.TimelineStatusPending
 			break
 		}
 
@@ -386,20 +394,19 @@ func (r *LoanImpl) Timeline(provider *providers.Provider, loan *modeldb.Loan) ([
 			requiredDocumentState.Status = modeldb.TimelineStatusRejected
 			requiredDocumentState.Description = "Documentos rechazados"
 			requiredDocumentState.Title = doc.Note
+			preApprovedState.Status = modeldb.TimelineStatusPending
 			break
 		}
-	}
-
-	preApprovedState := &modeldb.TimelineState{
-		ID:     "PRE_APPROVED",
-		Label:  "Pre aprobado",
-		Status: modeldb.TimelineStatusPending,
 	}
 
 	approvedState := &modeldb.TimelineState{
 		ID:     "APPROVED",
 		Label:  "Aprobado",
 		Status: modeldb.TimelineStatusPending,
+	}
+
+	if loan.Status == modeldb.LoanStatusPreApproved {
+		approvedState.Status = modeldb.TimelineStatusDone
 	}
 
 	clientSignState := &modeldb.TimelineState{
@@ -417,4 +424,23 @@ func (r *LoanImpl) Timeline(provider *providers.Provider, loan *modeldb.Loan) ([
 	timeline = append(timeline, registeredState, requiredDocumentState, preApprovedState, approvedState, clientSignState, runningState)
 
 	return timeline, nil
+}
+
+func (r *LoanImpl) ChangeLoanStatus(provider *providers.Provider, loanId string, status modeldb.LoanStatus) (bool, error) {
+	db := provider.GormClient()
+	var loan modeldb.Loan
+	err := db.Model(&modeldb.Loan{}).Where("xid = ?", loanId).First(&loan).Error
+
+	if err != nil {
+		return false, err
+	}
+
+	loan.Status = status
+	err = db.Save(&loan).Error
+
+	if err != nil {
+		return false, err
+	}
+
+	return true, nil
 }

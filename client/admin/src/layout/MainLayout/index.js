@@ -86,7 +86,6 @@ const MainLayout = () => {
     }, [loading, error, data]);
 
     useEffect(() => {
-        console.log('page', location.pathname, data);
         const role = data?.getUser?.role;
         if (role && location.pathname === '/admin') {
             console.log('page', location.pathname, data);

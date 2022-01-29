@@ -7,6 +7,9 @@ import StepContent from '@mui/material/StepContent';
 import Button from '@mui/material/Button';
 import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
+import { getCardActionsUtilityClass } from '@mui/material';
+import { useLazyQuery, useMutation } from '@apollo/client';
+import CHANGE_LOAN_STATUS from 'api/gql/mutations/change-loan-status';
 
 const steps = [
     {
@@ -41,9 +44,9 @@ const steps = [
     }
 ];
 
-export default function VerticalLinearStepper({ timeline }) {
-    console.log(timeline);
+export default function VerticalLinearStepper({ timeline, loan }) {
     const [activeStep, setActiveStep] = React.useState(0);
+    const [changeLoanStatus, { data, error, loading }] = useMutation(CHANGE_LOAN_STATUS);
 
     const handleNext = () => {
         setActiveStep((prevActiveStep) => prevActiveStep + 1);
@@ -67,6 +70,22 @@ export default function VerticalLinearStepper({ timeline }) {
         return <StepLabel {...res}>{step.label}</StepLabel>;
     };
 
+    const handlerChangeLoanStatus = (loanId, status) => {
+        changeLoanStatus({ variables: { loanId, status } });
+    };
+
+    const getActions = (step) => {
+        console.log('get actions', step);
+        if (step.id === 'PRE_APPROVED') {
+            return (
+                <Button variant="contained" onClick={() => handlerChangeLoanStatus(loan?.id, 'PRE_APPROVED')}>
+                    Aceptar
+                </Button>
+            );
+        }
+        return <></>;
+    };
+
     useEffect(() => {
         let counter = 0;
         for (let index = 0; index < timeline.length; index += 1) {
@@ -88,6 +107,7 @@ export default function VerticalLinearStepper({ timeline }) {
                         {viewStepLabel(step)}
                         <StepContent>
                             <Typography>{step?.title}</Typography>
+                            {getActions(step)}
                         </StepContent>
                     </Step>
                 ))}

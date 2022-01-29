@@ -33,7 +33,7 @@ const PreviewDocumentScreen = ({ route, navigation }) => {
 
     const token = await AsyncStorage.getItem('token');
 
-    await fetch('http://localhost:8181/upload-file', {
+    await fetch('http://localhost:8282/upload-file', {
       method: 'post',
       body: data,
       headers: {

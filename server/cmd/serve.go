@@ -25,7 +25,7 @@ import (
 	"github.com/go-chi/chi/v5/middleware"
 )
 
-const defaultPort = "8181"
+const defaultPort = "8282"
 
 func init() {
 	rootCmd.AddCommand(serveCmd)
