@@ -23,7 +23,7 @@
 
 - Configure a env variable
 
-``ENV=dev``
+``ENV=development``
 
 ### config database
 
