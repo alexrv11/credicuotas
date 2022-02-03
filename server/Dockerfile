@@ -28,6 +28,5 @@ COPY --from=prod-build /code/config/default.json /config/default.json
 # port exposed for when it runs as server. When started as a worker, it is ignored.
 EXPOSE 8181
 
-
 # NOTE: to start as bckground worker, use: ENTRYPOINT [ "/usr/local/bin/gocredit", "work" ]
 ENTRYPOINT [ "/usr/local/bin/gocredit", "serve" ]
