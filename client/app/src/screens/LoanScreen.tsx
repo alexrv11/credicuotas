@@ -92,10 +92,6 @@ const LoanScreen = ({ navigation }) => {
           </Text>
         </View>
       </View>
-      <View style={styles.nextInstallments}>
-        <Icon name="business" style={styles.incomeIcon} type="material" />
-        <Text style={styles.installmentsTitle}>Proxima cuota 1/10</Text>
-      </View>
       <View style={styles.documents}>
         <Text style={styles.documentTitle}>Documentos</Text>
         <View style={styles.docs}>

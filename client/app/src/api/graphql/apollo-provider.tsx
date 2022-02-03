@@ -17,7 +17,6 @@ export default function GraphqlProvider({ children }: PropsWithChildren<any>) {
     uri: 'http://localhost:8282/graphql',
   });
 
-
   const authLink = setContext(async (_, { headers }) => {
     // get the authentication token from local storage if it exists
     const token = await AsyncStorage.getItem('token');

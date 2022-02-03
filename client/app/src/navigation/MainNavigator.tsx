@@ -166,8 +166,20 @@ const MainNavigator = () => {
   return (
     <NavigationContainer>
       <AppStack.Navigator initialRouteName={error ? 'SignInFlow' : 'MainFlow'}>
-        <AppStack.Screen name="SignInFlow" component={SignInFlow} />
-        <AppStack.Screen name="OnboardingFlow" component={OnboardingFlow} />
+        <AppStack.Screen
+          name="SignInFlow"
+          options={{
+            title: '',
+          }}
+          component={SignInFlow}
+        />
+        <AppStack.Screen
+          name="OnboardingFlow"
+          options={{
+            title: '',
+          }}
+          component={OnboardingFlow}
+        />
         <AppStack.Screen
           name="MainFlow"
           options={{

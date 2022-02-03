@@ -26,6 +26,7 @@ client/mobile/node_modules/
 
 **/credicuotas*.json
 
-
+docs/**/*.png
+docs/**/*.svg
 
 **/google-services.json

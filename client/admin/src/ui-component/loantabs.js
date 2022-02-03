@@ -84,7 +84,7 @@ export default function LoanTabs({ loan }) {
     const [selectedDoc, setSelectedDoc] = React.useState(null);
     const [image, setImage] = React.useState(null);
     const [note, setNote] = React.useState('');
-    const [action, setAction] = React.useState('APPROVED');
+    const [action, setAction] = React.useState('DECLINED');
 
     const [changeDocumentStatus, { loading }] = useMutation(CHANGE_DOCUMENT_STATUS);
 
@@ -192,8 +192,8 @@ export default function LoanTabs({ loan }) {
                                         onChange={(event) => setAction(event?.target?.value)}
                                         name="radio-buttons-group"
                                     >
-                                        <FormControlLabel value="APPROVED" control={<Radio />} label="Aprobado" />
-                                        <FormControlLabel value="DECLINED" control={<Radio />} label="Observaciones" />
+                                        <FormControlLabel value="DECLINED" control={<Radio />} label="Rechazar" />
+                                        <FormControlLabel value="APPROVED" control={<Radio />} label="Aprobar" />
                                     </RadioGroup>
                                     {loan.status === 'RUNNING' ? null : (
                                         <Button variant="contained" onClick={() => handleChangeDocumentStatus(selectedDoc, note, action)}>

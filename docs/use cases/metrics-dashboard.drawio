@@ -1,47 +1,41 @@
 <mxfile host="65bd71144e">
     <diagram id="1fi5Kx5LPePZL9SqUFNj" name="Page-1">
-        <mxGraphModel dx="1384" dy="959" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="0" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+        <mxGraphModel dx="1277" dy="1185" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="0" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
             <root>
                 <mxCell id="0"/>
                 <mxCell id="1" parent="0"/>
                 <mxCell id="39" value="" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
-                    <mxGeometry x="80" y="-210" width="367" height="516" as="geometry"/>
+                    <mxGeometry x="80" y="-210" width="367" height="422" as="geometry"/>
                 </mxCell>
-                <mxCell id="16" value="Total pagos en demora" style="ellipse;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                <mxCell id="16" value="Total solicitudes de prestamos" style="ellipse;whiteSpace=wrap;html=1;" parent="1" vertex="1">
                     <mxGeometry x="204" y="-73" width="140" height="70" as="geometry"/>
                 </mxCell>
                 <mxCell id="49" style="edgeStyle=none;html=1;entryX=0.007;entryY=0.314;entryDx=0;entryDy=0;entryPerimeter=0;" parent="1" source="21" target="44" edge="1">
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
-                <mxCell id="50" style="edgeStyle=none;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="21" target="16">
+                <mxCell id="50" style="edgeStyle=none;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="21" target="16" edge="1">
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
-                <mxCell id="51" style="edgeStyle=none;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="21" target="43">
+                <mxCell id="51" style="edgeStyle=none;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="21" target="43" edge="1">
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
-                <mxCell id="52" style="edgeStyle=none;html=1;entryX=0.029;entryY=0.614;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="21" target="42">
-                    <mxGeometry relative="1" as="geometry"/>
-                </mxCell>
-                <mxCell id="54" style="edgeStyle=none;html=1;entryX=0.007;entryY=0.4;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="21" target="53">
+                <mxCell id="52" style="edgeStyle=none;html=1;entryX=0.029;entryY=0.614;entryDx=0;entryDy=0;entryPerimeter=0;" parent="1" source="21" target="42" edge="1">
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
                 <mxCell id="21" value="Gerentes&lt;br&gt;" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;" parent="1" vertex="1">
                     <mxGeometry x="-27" y="3" width="30" height="60" as="geometry"/>
                 </mxCell>
-                <mxCell id="40" value="Metricas a nivel de negocio" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;" parent="1" vertex="1">
-                    <mxGeometry x="184" y="-205.24" width="155" height="18" as="geometry"/>
+                <mxCell id="40" value="Indicadores a nivel de negocio" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;" parent="1" vertex="1">
+                    <mxGeometry x="176" y="-205.24" width="172" height="18" as="geometry"/>
                 </mxCell>
-                <mxCell id="42" value="Total ingresos" style="ellipse;whiteSpace=wrap;html=1;" parent="1" vertex="1">
-                    <mxGeometry x="209" y="-163" width="140" height="70" as="geometry"/>
+                <mxCell id="42" value="Total clientes &lt;br&gt;registrados" style="ellipse;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="199" y="-163" width="140" height="70" as="geometry"/>
                 </mxCell>
-                <mxCell id="43" value="Ver total dinero en prestamo" style="ellipse;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                <mxCell id="43" value="Total dinero prestado" style="ellipse;whiteSpace=wrap;html=1;" parent="1" vertex="1">
                     <mxGeometry x="206" y="20" width="140" height="70" as="geometry"/>
                 </mxCell>
-                <mxCell id="44" value="Ver total prestamos anual/mensual" style="ellipse;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                <mxCell id="44" value="Total cuotas demoradas" style="ellipse;whiteSpace=wrap;html=1;" parent="1" vertex="1">
                     <mxGeometry x="206" y="108" width="140" height="70" as="geometry"/>
-                </mxCell>
-                <mxCell id="53" value="Ver grafica de barras ganancias, perdidas por mes" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
-                    <mxGeometry x="208" y="196" width="140" height="70" as="geometry"/>
                 </mxCell>
             </root>
         </mxGraphModel>
