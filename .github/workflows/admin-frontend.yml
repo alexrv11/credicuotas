@@ -20,6 +20,7 @@ on:
 env:
   PROJECT_ID: ${{ secrets.GKE_PROJECT_ID }}
   GKE_CLUSTER: ${{ secrets.GKE_CLUSTER }}
+  GAR_LOCATION: us-central1
   GKE_ZONE: ${{ secrets.GKE_ZONE }}
   DEPLOYMENT_NAME: porvenir-gke
   IMAGE: porvenir-gke
@@ -50,7 +51,7 @@ jobs:
     - uses: google-github-actions/get-gke-credentials@v0.2.1
       with:
         cluster_name: ${{ env.GKE_CLUSTER }}
-        location: ${{ env.GKE_ZONE }}
+        location: ${{ env.GAR_LOCATION }}
         credentials: ${{ secrets.GKE_SA_KEY }}
 
     # Build the Docker image
