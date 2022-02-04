@@ -33,7 +33,7 @@ spec:
     spec:
       containers:
       - name: porvenir-gke
-        image: LOCATION-docker.pkg.dev/PROJECT_ID/REPOSITORY/IMAGE:TAG
+        image: gcr.io/PROJECT_ID/REPOSITORY/IMAGE:TAG
         ports:
         - containerPort: 3000
         resources:
