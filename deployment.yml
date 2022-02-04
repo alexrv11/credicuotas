@@ -32,8 +32,8 @@ spec:
         app: porvenir-gke-deployment
     spec:
       containers:
-      - name: porvenir-gke
-        image: gcr.io/PROJECT_ID/REPOSITORY/IMAGE:TAG
+      - name: admin-porvenir
+        image: gcr.io/PROJECT_ID/APP/IMAGE:TAG
         ports:
         - containerPort: 3000
         resources:
