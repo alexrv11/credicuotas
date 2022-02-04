@@ -33,7 +33,7 @@ spec:
     spec:
       containers:
       - name: porvenir-gke
-        image: gcr.io/credicuotas/porvenir-gke:1.0.0
+        image: gcr.io/credicuotas/porvenir-gke:1.0.1
         ports:
         - containerPort: 3000
         resources:
