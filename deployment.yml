@@ -15,12 +15,12 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: porvenir-gke
+  name: porvenir-gke-deployment
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: porvenir-gke
+      app: porvenir-gke-deployment
   strategy:
     rollingUpdate:
       maxSurge: 1
@@ -29,11 +29,11 @@ spec:
   template:
     metadata:
       labels:
-        app: porvenir-gke
+        app: porvenir-gke-deployment
     spec:
       containers:
       - name: porvenir-gke
-        image: gcr.io/credicuotas/porvenir-gke:1.0.1
+        image: LOCATION-docker.pkg.dev/PROJECT_ID/REPOSITORY/IMAGE:TAG
         ports:
         - containerPort: 3000
         resources:
