@@ -19,10 +19,10 @@ on:
 
 env:
   PROJECT_ID: ${{ secrets.GKE_PROJECT_ID }}
-  GKE_CLUSTER: my-first-cluster-1
+  GKE_CLUSTER: ${{ secrets.GKE_CLUSTER }}
   GKE_ZONE: us-central1-c
-  DEPLOYMENT_NAME: gke-credicuotas
-  IMAGE: gke-credicuotas
+  DEPLOYMENT_NAME: porvenir-gke
+  IMAGE: porvenir-gke
   TAG: 1.0.0
 
 jobs:
