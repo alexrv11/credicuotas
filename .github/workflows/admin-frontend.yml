@@ -20,7 +20,7 @@ on:
 env:
   PROJECT_ID: ${{ secrets.GKE_PROJECT_ID }}
   GKE_CLUSTER: ${{ secrets.GKE_CLUSTER }}
-  GAR_LOCATION: us-central1
+  GAR_LOCATION: ${{ secrets.GKE_ZONE }}
   GKE_ZONE: ${{ secrets.GKE_ZONE }}
   DEPLOYMENT_NAME: porvenir-gke
   IMAGE: porvenir-gke
