@@ -114,7 +114,6 @@ const StaffProfiles = () => {
                         <DialogContentText>Para el registro de un usuario adminimistrativo ingrese:</DialogContentText>
                         <Box sx={{ mt: 3 }}>
                             <TextField
-                                autoFocus
                                 margin="dense"
                                 id="name"
                                 label="Nombre"
