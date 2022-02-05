@@ -24,7 +24,7 @@ env:
   GKE_ZONE: ${{ secrets.GKE_ZONE }}
   DEPLOYMENT_NAME: admin-credicuotas
   APP: admin-client
-  IMAGE: admin-porvenir
+  IMAGE: admin
   TAG: "1.0.${{ github.run_number }}"
 
 jobs:

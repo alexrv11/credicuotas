@@ -32,7 +32,7 @@ spec:
         app: admin-credicuotas
     spec:
       containers:
-      - name: admin-credicuotas
+      - name: admin
         image: gcr.io/PROJECT_ID/IMAGE:TAG
         env:
         - name: "PORT"
