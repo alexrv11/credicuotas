@@ -12,19 +12,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-apiVersion: apps/v1
-kind: Deployment
+apiVersion: v1
+kind: Service
 metadata:
-  name: porvenir-gke-service
+  name: gke-credicuotas-service
 spec:
+  type: LoadBalancer
+  ports:
+    - port: 80
+      targetPort: 3000
   selector:
-    matchLabels:
-      app: products
-      department: sales
-  replicas: 3
-  template:
-    metadata:
-      labels:
-        app: products
-        department: sales
-    spec:
+    app: admin-credicuotas

@@ -15,12 +15,12 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: porvenir-gke-deployment
+  name: admin-credicuotas
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: porvenir-gke-deployment
+      app: admin-credicuotas
   strategy:
     rollingUpdate:
       maxSurge: 1
@@ -29,13 +29,14 @@ spec:
   template:
     metadata:
       labels:
-        app: porvenir-gke-deployment
+        app: admin-credicuotas
     spec:
       containers:
-      - name: admin-porvenir
-        image: gcr.io/PROJECT_ID/APP/IMAGE:TAG
-        ports:
-        - containerPort: 3000
+      - name: admin-credicuotas
+        image: gcr.io/PROJECT_ID/IMAGE:TAG
+        env:
+        - name: "PORT"
+          value: "3000"
         resources:
           requests:
             cpu: 100m
