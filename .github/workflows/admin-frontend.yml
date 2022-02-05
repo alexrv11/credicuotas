@@ -22,7 +22,7 @@ env:
   GKE_CLUSTER: ${{ secrets.GKE_CLUSTER }}
   GAR_LOCATION: ${{ secrets.GKE_ZONE }}
   GKE_ZONE: ${{ secrets.GKE_ZONE }}
-  DEPLOYMENT_NAME: porvenir-gke-deployment
+  DEPLOYMENT_NAME: admin-credicuotas
   APP: admin-client
   IMAGE: admin-porvenir
   TAG: "1.0.${{ github.run_number }}"
