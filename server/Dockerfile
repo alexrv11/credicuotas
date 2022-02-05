@@ -22,11 +22,8 @@ RUN update-ca-certificates
 
 COPY --from=prod-build /usr/local/bin/gocredit /usr/local/bin/gocredit
 
-# copy the default config from the codebase so checked-in changes to this file make it to production
-COPY --from=prod-build /code/config/default.json /config/default.json
-
 # port exposed for when it runs as server. When started as a worker, it is ignored.
 EXPOSE 8181
 
-# NOTE: to start as bckground worker, use: ENTRYPOINT [ "/usr/local/bin/gocredit", "work" ]
+# NOTE: to start as bckground worker, use: ENTRYPOINT [ "/usr/local/bin/gocredit", "serve" ]
 ENTRYPOINT [ "/usr/local/bin/gocredit", "serve" ]
