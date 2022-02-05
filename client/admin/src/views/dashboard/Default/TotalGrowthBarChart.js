@@ -96,17 +96,7 @@ const TotalGrowthBarChart = ({ isLoading }) => {
                 <MainCard>
                     <Grid container spacing={gridSpacing}>
                         <Grid item xs={12}>
-                            <Grid container alignItems="center" justifyContent="space-between">
-                                <Grid item>
-                                    <Grid container direction="column" spacing={1}>
-                                        <Grid item>
-                                            <Typography variant="subtitle2">Total Ganancias</Typography>
-                                        </Grid>
-                                        <Grid item>
-                                            <Typography variant="h3">$2,324.00</Typography>
-                                        </Grid>
-                                    </Grid>
-                                </Grid>
+                            <Grid container alignItems="center" justifyContent="flex-end">
                                 <Grid item>
                                     <TextField
                                         id="standard-select-currency"
