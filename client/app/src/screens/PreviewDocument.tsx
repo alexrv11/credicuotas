@@ -34,7 +34,7 @@ const PreviewDocumentScreen = ({ route, navigation }) => {
     const token = await AsyncStorage.getItem('token');
 
     try {
-      const res = await fetch('http://192.168.1.187:8282/upload-file', {
+      const res = await fetch('https://api-4huvpq5kca-uc.a.run.app/upload-file', {
         method: 'post',
         body: data,
         headers: {
