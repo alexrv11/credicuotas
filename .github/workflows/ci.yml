@@ -28,6 +28,7 @@ env:
   API_APP: api-server
   ENV: prod
   IMAGE: admin
+  API_IMAGE: api
   TAG: "1.0.${{ github.run_number }}"
 
 jobs:
