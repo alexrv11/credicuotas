@@ -88,7 +88,7 @@ jobs:
     - run: go version
     - run: cd server/ && go mod download
     - run: go generate server/...
-    - run: go build -v -o gocredit ./server/main/main.go
+    - run: cd server/ && go build -v -o gocredit ./main/main.go
 
     #Pre build
     - name: DB migrate
