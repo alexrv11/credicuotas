@@ -1,11 +1,14 @@
 import React from 'react';
 import { View, StyleSheet, Text } from 'react-native';
 import { Avatar } from 'react-native-elements';
-import { TouchableOpacity } from 'react-native-gesture-handler';
+import { TouchableOpacity } from 'react-native';
+import Spacer from 'components/Spacer';
 
 const HomeScreen = ({ navigation }) => {
   return (
     <View style={styles.container}>
+      <Text style={styles.textTitle}>Solicita tu prestamo</Text>
+      <Spacer />
       <TouchableOpacity
         style={styles.requestLoanButton}
         onPress={() => {
@@ -27,7 +30,7 @@ const HomeScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     marginHorizontal: 20,
-    flex: 5,
+    flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -41,6 +44,11 @@ const styles = StyleSheet.create({
   },
   requestLoanText: {
     marginTop: 10,
+  },
+  textTitle: {
+    fontSize: 18,
+    color: '#070D99',
+    textAlign: 'center',
   },
 });
 

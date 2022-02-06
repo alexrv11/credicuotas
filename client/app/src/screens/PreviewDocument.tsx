@@ -33,14 +33,19 @@ const PreviewDocumentScreen = ({ route, navigation }) => {
 
     const token = await AsyncStorage.getItem('token');
 
-    await fetch('http://localhost:8282/upload-file', {
-      method: 'post',
-      body: data,
-      headers: {
-        'Content-Type': 'multipart/form-data; ',
-        Authorization: `Bearer ${token}`,
-      },
-    });
+    try {
+      const res = await fetch('http://192.168.1.187:8282/upload-file', {
+        method: 'post',
+        body: data,
+        headers: {
+          'Content-Type': 'multipart/form-data; ',
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      console.log('result upload', res);
+    } catch (error) {
+      console.log('upload error', error);
+    }
     navigation.navigate('LoanRequirementList');
     setLoading(false);
   }, [uri, loanId, requirementType, navigation]);

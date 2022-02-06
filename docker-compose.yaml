@@ -16,9 +16,12 @@ services:
     container_name: porvenir-server
     build: ./server
     ports:
-      - "8005:8005"
+      - "8282:8282"
     environment:
       DATABASE_URL: postgres://admin:admin123!@porvenir-db:5432/porvenir
+      ENV: dev
+    volumes:
+      - /Users/alexventura/go/pkg/mod:/go/pkg/mod
     command: /server
     depends_on:
       - porvenir-db

@@ -8,14 +8,15 @@ import (
 type RequirementType string
 
 const (
-	RequirementTypeClientDocumentPhoto    RequirementType = "CLIENT_DOCUMENT_PHOTO"
-	RequirementTypeLastInvoicePhoto       RequirementType = "LAST_INVOICE_PHOTO"
-	RequirementTypeGuaranteeDocumentPhoto RequirementType = "GUARANTEE_DOCUMENT_PHOTO"
-	RequirementTypeOwnAssetPhoto          RequirementType = "OWN_ASSET_PHOTO"
-	RequirementTypeGuaranteeName          RequirementType = "GUARANTEE_NAME"
-	RequirementTypeGuaranteeCI            RequirementType = "GUARANTEE_CI"
-	RequirementTypeCoBorrowerName         RequirementType = "CO_BORROWER_NAME"
-	RequirementTypeCoBorrowerCI           RequirementType = "CO_BORROWER_CI"
+	RequirementTypeClientDocumentPhotoFront RequirementType = "CLIENT_DOCUMENT_PHOTO_FRONT"
+	RequirementTypeClientDocumentPhotoBack  RequirementType = "CLIENT_DOCUMENT_PHOTO_BACK"
+	RequirementTypeLastInvoicePhoto         RequirementType = "LAST_INVOICE_PHOTO"
+	RequirementTypeGuaranteeDocumentPhoto   RequirementType = "GUARANTEE_DOCUMENT_PHOTO"
+	RequirementTypeOwnAssetPhoto            RequirementType = "OWN_ASSET_PHOTO"
+	RequirementTypeGuaranteeName            RequirementType = "GUARANTEE_NAME"
+	RequirementTypeGuaranteeCI              RequirementType = "GUARANTEE_CI"
+	RequirementTypeCoBorrowerName           RequirementType = "CO_BORROWER_NAME"
+	RequirementTypeCoBorrowerCI             RequirementType = "CO_BORROWER_CI"
 )
 
 type DocumentType string

@@ -64,6 +64,7 @@ const LoanRequirementTypeScreen = ({ route, navigation }) => {
 
   const onSubmit = useCallback(
     type => {
+      console.log('hello test');
       setRequirementType(type);
       saveLoan({
         variables: {

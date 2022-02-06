@@ -3,9 +3,11 @@ package services
 import (
 	"errors"
 	"fmt"
+	"github.com/alexrv11/credicuotas/server/config"
 	modeldb "github.com/alexrv11/credicuotas/server/db/model"
 	"github.com/alexrv11/credicuotas/server/graph/model"
 	"github.com/alexrv11/credicuotas/server/providers"
+	"go.uber.org/zap"
 	"gorm.io/gorm"
 )
 
@@ -149,8 +151,12 @@ func (r *LoanImpl) SaveDocuments(provider *providers.Provider, userXid, loanID, 
 }
 
 func getDocumentDescription(requirementType modeldb.RequirementType) string {
-	if modeldb.RequirementTypeClientDocumentPhoto == requirementType {
-		return "Documento de identidad"
+	if modeldb.RequirementTypeClientDocumentPhotoFront == requirementType {
+		return "Documento de identidad - Vista de frente"
+	}
+
+	if modeldb.RequirementTypeClientDocumentPhotoBack == requirementType {
+		return "Documento de identidad - Vista de atrás"
 	}
 
 	if modeldb.RequirementTypeLastInvoicePhoto == requirementType {
@@ -194,11 +200,19 @@ func getRequirementsByDocumentType(provider *providers.Provider, user modeldb.Us
 
 	requirements := make([]*modeldb.Requirement, 0)
 
-	var documentCI modeldb.Document
-	requirementCI := modeldb.Requirement{
-		RequirementType: modeldb.RequirementTypeClientDocumentPhoto,
+	var documentCIFront modeldb.Document
+	requirementCIFront := modeldb.Requirement{
+		RequirementType: modeldb.RequirementTypeClientDocumentPhotoFront,
 		Title:           "Cedula de identidad",
-		Description:     "foto del documento de identidad",
+		Description:     "foto del documento de identidad de frente",
+		Status:          true,
+	}
+
+	var documentCIBack modeldb.Document
+	requirementCIBack := modeldb.Requirement{
+		RequirementType: modeldb.RequirementTypeClientDocumentPhotoBack,
+		Title:           "Cedula de identidad",
+		Description:     "foto del documento de identidad de atras",
 		Status:          true,
 	}
 
@@ -217,18 +231,34 @@ func getRequirementsByDocumentType(provider *providers.Provider, user modeldb.Us
 	}
 
 	err := db.Model(&modeldb.Document{}).
-		Where("user_id = ? AND type = ?", user.ID, modeldb.RequirementTypeClientDocumentPhoto).
-		First(&documentCI).Error
+		Where("user_id = ? AND type = ?", user.ID, modeldb.RequirementTypeClientDocumentPhotoFront).
+		First(&documentCIFront).Error
 
 	if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
+		config.RootAppLogger().Error(fmt.Sprintf("error getting document ci front %s", err.Error()))
 		return nil, err
 	}
 
-	if errors.Is(err, gorm.ErrRecordNotFound) || documentCI.Status == modeldb.DocumentStatusDeclined {
-		requirementCI.Status = false
+	if errors.Is(err, gorm.ErrRecordNotFound) || documentCIFront.Status == modeldb.DocumentStatusDeclined {
+		requirementCIFront.Status = false
 	}
 
-	requirementCI.DocumentStatus = documentCI.Status
+	requirementCIFront.DocumentStatus = documentCIFront.Status
+
+	err = db.Model(&modeldb.Document{}).
+		Where("user_id = ? AND type = ?", user.ID, modeldb.RequirementTypeClientDocumentPhotoBack).
+		First(&documentCIBack).Error
+
+	if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
+		config.RootAppLogger().Error(fmt.Sprintf("error getting document back front %s", err.Error()))
+		return nil, err
+	}
+
+	if errors.Is(err, gorm.ErrRecordNotFound) || documentCIBack.Status == modeldb.DocumentStatusDeclined {
+		requirementCIBack.Status = false
+	}
+
+	requirementCIBack.DocumentStatus = documentCIBack.Status
 
 	var documentByType modeldb.Document
 
@@ -237,6 +267,7 @@ func getRequirementsByDocumentType(provider *providers.Provider, user modeldb.Us
 		First(&documentByType).Error
 
 	if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
+		config.RootAppLogger().With(zap.String("requirement-type", string(requimentType))).Error(fmt.Sprintf("error document by type %s", err.Error()))
 		return nil, err
 	}
 
@@ -246,7 +277,7 @@ func getRequirementsByDocumentType(provider *providers.Provider, user modeldb.Us
 
 	requirementByType.DocumentStatus = documentByType.Status
 
-	requirements = append(requirements, &requirementCI, &requirementByType)
+	requirements = append(requirements, &requirementCIFront, &requirementCIBack, &requirementByType)
 
 	return requirements, nil
 }

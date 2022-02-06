@@ -23,9 +23,9 @@ var configPaths = [...]string{
 }
 
 var environmentsPermitted = map[string]string{
-	"development": EnvDev,
-	"test":        EnvTest,
-	"production":  EnvProd,
+	"dev":  EnvDev,
+	"test": EnvTest,
+	"prod": EnvProd,
 }
 
 func Configure() {

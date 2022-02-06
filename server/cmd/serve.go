@@ -58,7 +58,7 @@ var serveCmd = &cobra.Command{
 		router := chi.NewRouter()
 
 		router.Use(cors.Handler(cors.Options{
-			AllowedOrigins: []string{"https://*", "http://*"},
+			AllowedOrigins: []string{"*", "http://*"},
 			// AllowOriginFunc:  func(r *http.Request, origin string) bool { return true },
 			AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
 			AllowedHeaders:   []string{"Accept", "Authorization", "Content-Type", "X-CSRF-Token"},

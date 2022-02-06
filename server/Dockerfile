@@ -2,13 +2,11 @@
 # and a workspace (GOPATH) configured at /go.
 FROM golang:1.15.14-buster AS prod-build
 
-COPY . /code
-WORKDIR /code
-ENV GO111MODULE=on
-ENV GOPROXY=direct
-ENV GOSUMDB=off
+COPY . /server-credicuotas
+WORKDIR /server-credicuotas
 
-RUN go get -d -v ./...
+RUN go mod download
+
 RUN go generate ./...
 RUN go build -v -o /usr/local/bin/gocredit ./main/main.go
 
@@ -22,8 +20,8 @@ RUN update-ca-certificates
 
 COPY --from=prod-build /usr/local/bin/gocredit /usr/local/bin/gocredit
 
-# port exposed for when it runs as server. When started as a worker, it is ignored.
-EXPOSE 8181
+
+EXPOSE 8282
 
 # NOTE: to start as bckground worker, use: ENTRYPOINT [ "/usr/local/bin/gocredit", "serve" ]
 ENTRYPOINT [ "/usr/local/bin/gocredit", "serve" ]

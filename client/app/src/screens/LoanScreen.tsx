@@ -1,9 +1,10 @@
+import { StackActions } from '@react-navigation/native';
 import Loading from 'components/Loading';
 import { useLoan } from 'context/LoanContext';
 import React, { useEffect } from 'react';
 import { StyleSheet, Text, View, SafeAreaView } from 'react-native';
 import { Icon } from 'react-native-elements';
-import { TouchableOpacity } from 'react-native-gesture-handler';
+import { TouchableOpacity } from 'react-native';
 import { useGetLoanQuery } from '../api/graphql/generated/graphql';
 
 const LoanScreen = ({ navigation }) => {
