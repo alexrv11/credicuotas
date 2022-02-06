@@ -26,6 +26,7 @@ env:
   POSTGRES_URL: ${{ secrets.POSTGRES_URL }}
   WEB_APP: web-client
   API_APP: web-client
+  ENV: prod
   IMAGE: admin
   TAG: "1.0.${{ github.run_number }}"
 
