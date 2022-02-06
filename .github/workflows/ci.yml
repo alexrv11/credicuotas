@@ -30,7 +30,7 @@ env:
 
 jobs:
   web-admin:
-    name: Setup, Build, Publish, and Deploy
+    name: web admin
     runs-on: ubuntu-latest
     environment: production
 
@@ -63,7 +63,7 @@ jobs:
       run: |-
         docker push "gcr.io/$PROJECT_ID/$WEB_APP/$IMAGE:$TAG"
   api-server:
-    name: Setup, Build, Publish, and Deploy
+    name: api server
     runs-on: ubuntu-latest
     environment: production
 
@@ -87,6 +87,7 @@ jobs:
         go-version: '^1.15.14' # The Go version to download (if necessary) and use.
     - run: go version
     - run: cd server
+    - run: ls .
     - run: go mod download
     - run: go generate ./...
     - run: go build -v -o gocredit ./main/main.go
