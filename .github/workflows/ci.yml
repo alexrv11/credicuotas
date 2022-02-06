@@ -25,7 +25,7 @@ env:
   DEPLOYMENT_NAME: web-client-admin-credicuotas
   POSTGRES_URL: ${{ secrets.POSTGRES_URL }}
   WEB_APP: web-client
-  API_APP: web-client
+  API_APP: api-server
   ENV: prod
   IMAGE: admin
   TAG: "1.0.${{ github.run_number }}"
@@ -91,7 +91,6 @@ jobs:
     - run: cd server/ && go mod download
     - run: go generate server/...
     - run: cd server/ && go build -v -o gocredit ./main/main.go
-    - run: cd server/ && ls .
 
     #Pre build
     - name: DB migrate
