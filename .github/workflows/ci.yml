@@ -23,6 +23,7 @@ env:
   GAR_LOCATION: ${{ secrets.GKE_ZONE }}
   GKE_ZONE: ${{ secrets.GKE_ZONE }}
   DEPLOYMENT_NAME: web-client-admin-credicuotas
+  POSTGRES_URL: ${{ secrets.POSTGRES_URL }}
   WEB_APP: web-client
   API_APP: web-client
   IMAGE: admin
@@ -89,11 +90,12 @@ jobs:
     - run: cd server/ && go mod download
     - run: go generate server/...
     - run: cd server/ && go build -v -o gocredit ./main/main.go
+    - run: cd server/ && ls .
 
     #Pre build
     - name: DB migrate
       run: |-
-        ./gocredit migrate
+        ./server/gocredit migrate
         
 
     # Build the Docker image
