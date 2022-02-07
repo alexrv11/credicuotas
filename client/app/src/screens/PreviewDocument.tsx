@@ -24,7 +24,7 @@ const PreviewDocumentScreen = ({ route, navigation }) => {
     var filename = uri.replace(/^.*[\\\/]/, '');
     data.append('data', {
       name: filename,
-      type: 'image',
+      type: 'image/jpeg',
       uri: uriFile,
     });
 
@@ -34,14 +34,17 @@ const PreviewDocumentScreen = ({ route, navigation }) => {
     const token = await AsyncStorage.getItem('token');
 
     try {
-      const res = await fetch('https://api-4huvpq5kca-uc.a.run.app/upload-file', {
-        method: 'post',
-        body: data,
-        headers: {
-          'Content-Type': 'multipart/form-data; ',
-          Authorization: `Bearer ${token}`,
+      const res = await fetch(
+        'https://api-4huvpq5kca-uc.a.run.app/upload-file',
+        {
+          method: 'POST',
+          body: data,
+          headers: {
+            'Content-Type': 'multipart/form-data; ',
+            Authorization: `Bearer ${token}`,
+          },
         },
-      });
+      );
       console.log('result upload', res);
     } catch (error) {
       console.log('upload error', error);

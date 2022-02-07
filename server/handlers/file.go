@@ -29,7 +29,8 @@ func (f *File) UploadFile(w http.ResponseWriter, r *http.Request) {
 	file, header, err := r.FormFile("data")
 	if err != nil {
 		logger.Error(fmt.Sprintf("input upload file error %s", err.Error()))
-		http.Error(w, err.Error(), 400)
+		w.Write([]byte(err.Error()))
+		http.Error(w, http.StatusText(400), 400)
 		return
 	}
 
@@ -40,7 +41,8 @@ func (f *File) UploadFile(w http.ResponseWriter, r *http.Request) {
 	err = f.provider.Storage().UploadFile(file, bucket, fileName)
 	if err != nil {
 		logger.Error(fmt.Sprintf("error upload google storage %s", err.Error()))
-		http.Error(w, err.Error(), 400)
+		w.Write([]byte(err.Error()))
+		http.Error(w, http.StatusText(400), 400)
 		return
 	}
 
@@ -52,7 +54,8 @@ func (f *File) UploadFile(w http.ResponseWriter, r *http.Request) {
 	err = f.core.Loan.SaveDocuments(f.provider, userXid, loanID, requirementType, fileName)
 	if err != nil {
 		logger.Error(fmt.Sprintf("error save doc on db %s", err.Error()))
-		http.Error(w, err.Error(), 400)
+		w.Write([]byte(err.Error()))
+		http.Error(w, http.StatusText(400), 400)
 		return
 	}
 	w.WriteHeader(http.StatusOK)
@@ -69,6 +72,7 @@ func (f *File) GetFile(w http.ResponseWriter, r *http.Request) {
 	data, err := f.provider.Storage().DownloadFile(bucket, fileName)
 	if err != nil {
 		logger.Error(zap.Error(err))
+		w.Write([]byte(err.Error()))
 		http.Error(w, http.StatusText(400), 400)
 		return
 	}
