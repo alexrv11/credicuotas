@@ -40,7 +40,7 @@ const PreviewDocumentScreen = ({ route, navigation }) => {
           method: 'POST',
           body: data,
           headers: {
-            'Content-Type': 'multipart/form-data; ',
+            'Content-Type': 'multipart/form-data',
             Authorization: `Bearer ${token}`,
           },
         },
