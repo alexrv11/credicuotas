@@ -29,7 +29,7 @@ import CREATE_USER from 'api/gql/mutations/create-user';
 const StaffProfiles = () => {
     const [pageSize, setPageSize] = useState(25);
     const { loading, error, data } = useQuery(GET_STAFF);
-    const [createUser, { error: createError }] = useMutation(CREATE_USER);
+    const [createUser] = useMutation(CREATE_USER);
 
     const columns = [
         {
