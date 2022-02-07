@@ -1,6 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
 
-import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 
 import { useMutation } from '@apollo/client';
@@ -10,22 +9,16 @@ import { useTheme } from '@mui/material/styles';
 import {
     Avatar,
     Box,
-    Card,
-    CardContent,
     Chip,
     ClickAwayListener,
     Divider,
-    Grid,
-    InputAdornment,
     List,
     ListItemButton,
     ListItemIcon,
     ListItemText,
-    OutlinedInput,
     Paper,
     Popper,
     Stack,
-    Switch,
     Typography
 } from '@mui/material';
 
@@ -35,11 +28,10 @@ import PerfectScrollbar from 'react-perfect-scrollbar';
 // project imports
 import MainCard from 'ui-component/cards/MainCard';
 import Transitions from 'ui-component/extended/Transitions';
-import UpgradePlanCard from './UpgradePlanCard';
 import User1 from 'assets/images/users/user-round.svg';
 
 // assets
-import { IconLogout, IconSearch, IconSettings, IconUser } from '@tabler/icons';
+import { IconLogout, IconSettings } from '@tabler/icons';
 import LOGOUT from 'api/gql/queries/logout';
 
 // ==============================|| PROFILE MENU ||============================== //
@@ -48,14 +40,9 @@ const ProfileSection = ({ user }) => {
     console.log(user);
     const theme = useTheme();
     const customization = useSelector((state) => state.customization);
-    const navigate = useNavigate();
-
     const [logout] = useMutation(LOGOUT);
 
-    const [sdm, setSdm] = useState(true);
-    const [value, setValue] = useState('');
-    const [notification, setNotification] = useState(false);
-    const [selectedIndex, setSelectedIndex] = useState(-1);
+    const [selectedIndex] = useState(-1);
     const [open, setOpen] = useState(false);
 
     const anchorRef = useRef(null);
@@ -183,7 +170,7 @@ const ProfileSection = ({ user }) => {
                                                 <ListItemButton
                                                     sx={{ borderRadius: `${customization.borderRadius}px` }}
                                                     selected={selectedIndex === 0}
-                                                    onClick={(event) => alert('it is coming user profile')}
+                                                    onClick={() => alert('it is coming user profile')}
                                                 >
                                                     <ListItemIcon>
                                                         <IconSettings stroke={1.5} size="1.3rem" />

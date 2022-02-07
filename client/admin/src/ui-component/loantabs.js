@@ -72,7 +72,7 @@ function a11yProps(index) {
     };
 }
 
-const TitleWrapper = styled.div(({ theme }) => ({
+const TitleWrapper = styled.div(() => ({
     padding: 20,
     fontSize: 18
 }));
@@ -86,7 +86,7 @@ export default function LoanTabs({ loan }) {
     const [note, setNote] = React.useState('');
     const [action, setAction] = React.useState('DECLINED');
 
-    const [changeDocumentStatus, { loading }] = useMutation(CHANGE_DOCUMENT_STATUS);
+    const [changeDocumentStatus] = useMutation(CHANGE_DOCUMENT_STATUS);
 
     const handleClose = () => {
         setImage(null);

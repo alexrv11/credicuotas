@@ -7,8 +7,8 @@ import StepContent from '@mui/material/StepContent';
 import Button from '@mui/material/Button';
 import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
-import { CircularProgress, getCardActionsUtilityClass } from '@mui/material';
-import { useLazyQuery, useMutation, useQuery } from '@apollo/client';
+import { CircularProgress } from '@mui/material';
+import { useMutation, useQuery } from '@apollo/client';
 import CHANGE_LOAN_STATUS from 'api/gql/mutations/change-loan-status';
 import GET_USER from 'api/gql/queries/get-user';
 
@@ -47,24 +47,11 @@ const steps = [
 
 export default function VerticalLinearStepper({ timeline, loan }) {
     const [activeStep, setActiveStep] = React.useState(0);
-    const [changeLoanStatus, { data, error, loading }] = useMutation(CHANGE_LOAN_STATUS);
+    const [changeLoanStatus, { loading }] = useMutation(CHANGE_LOAN_STATUS);
     const {
         userLoading,
-        error: userError,
         data: { getUser: user }
     } = useQuery(GET_USER);
-
-    const handleNext = () => {
-        setActiveStep((prevActiveStep) => prevActiveStep + 1);
-    };
-
-    const handleBack = () => {
-        setActiveStep((prevActiveStep) => prevActiveStep - 1);
-    };
-
-    const handleReset = () => {
-        setActiveStep(0);
-    };
 
     const viewStepLabel = (step) => {
         const res = {};

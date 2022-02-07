@@ -1,4 +1,3 @@
-import dashboard from './dashboard';
 import manager from './manager';
 import admin from './admin';
 import assistant from './assistant';

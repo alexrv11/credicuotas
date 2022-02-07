@@ -1,5 +1,3 @@
-import MuiTypography from '@mui/material/Typography';
-
 import { useParams } from 'react-router-dom';
 
 // material-ui
@@ -9,12 +7,10 @@ import { CircularProgress, Divider, Grid, Typography } from '@mui/material';
 import MainCard from 'ui-component/cards/MainCard';
 import { gridSpacing } from 'store/constant';
 import styled from '@emotion/styled';
-import { useState } from 'react';
 import VerticalLinearStepper from 'ui-component/stepper';
 import LoanTabs from 'ui-component/loantabs';
 import { useQuery } from '@apollo/client';
 import GET_LOAN from 'api/gql/queries/get-loan';
-import Loader from 'ui-component/Loader';
 
 const DetailWrapper = styled.div(({ theme }) => ({
     padding: 20,
@@ -23,12 +19,7 @@ const DetailWrapper = styled.div(({ theme }) => ({
 
 const LoanDetails = () => {
     const { id } = useParams();
-    const { data, error, loading } = useQuery(GET_LOAN, { variables: { id }, pollInterval: 500 });
-    const [activeTab, setActiveTab] = useState(0);
-
-    const handleChange = (event, newValue) => {
-        setActiveTab(newValue);
-    };
+    const { data, loading } = useQuery(GET_LOAN, { variables: { id }, pollInterval: 500 });
 
     if (loading) {
         return <CircularProgress />;

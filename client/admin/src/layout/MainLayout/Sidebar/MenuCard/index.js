@@ -11,7 +11,6 @@ import {
     List,
     ListItem,
     ListItemAvatar,
-    ListItemText,
     Typography,
     linearProgressClasses
 } from '@mui/material';
