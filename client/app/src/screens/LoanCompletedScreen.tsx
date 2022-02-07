@@ -28,7 +28,7 @@ const LoanCompletedScreen = ({ route, navigation }) => {
       </View>
       <Spacer />
       <PrimaryButton
-        onPress={() => navigation.navigate('Prestamo')}
+        onPress={() => navigation.dispatch(StackActions.replace('Prestamos'))}
         text="Volver"
         disabled={false}
       />
