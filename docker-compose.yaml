@@ -5,7 +5,7 @@ services:
       context: ./client/admin
       dockerfile: Dockerfile
     ports:
-      - 3000:3000
+      - 3000:80
     volumes:
       - ./client/admin:/admin-frontend
     depends_on:

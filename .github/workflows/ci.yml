@@ -52,6 +52,13 @@ jobs:
     - run: |-
         gcloud --quiet auth configure-docker
 
+    - uses: actions/setup-node@v2
+      with:
+        node-version: '14'
+    
+    - run: cd client/admin && yarn install
+    - run: cd client/admin && yarn build
+
     # Build the Docker image
     - name: Build-Admin
       run: |-
