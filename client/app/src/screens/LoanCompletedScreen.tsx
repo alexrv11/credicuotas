@@ -4,6 +4,7 @@ import { Avatar, Text } from 'react-native-elements';
 import Spacer from 'components/Spacer';
 import PrimaryButton from 'components/PrimaryButton';
 import navigation from 'navigation';
+import { StackActions } from '@react-navigation/native';
 
 const LoanCompletedScreen = ({ route, navigation }) => {
   return (
@@ -28,7 +29,7 @@ const LoanCompletedScreen = ({ route, navigation }) => {
       </View>
       <Spacer />
       <PrimaryButton
-        onPress={() => navigation.dispatch(StackActions.replace('Prestamos'))}
+        onPress={() => navigation.dispatch(StackActions.replace('MainFlow'))}
         text="Volver"
         disabled={false}
       />

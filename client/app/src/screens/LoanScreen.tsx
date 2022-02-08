@@ -52,9 +52,17 @@ const LoanScreen = ({ navigation }) => {
       return;
     }
     return documents.map(doc => {
+      const desc = doc?.description.split('-');
       return (
         <View key={doc.id} style={styles.documentItem}>
-          <Text style={styles.documentItemDescription}>{doc?.description}</Text>
+          <View>
+            <Text style={styles.documentItemDescription}>{desc[0]}</Text>
+            {desc[1] ? (
+              <Text style={styles.documentItemDescription}>{desc[1]}</Text>
+            ) : (
+              <></>
+            )}
+          </View>
           <Text
             style={styles.documentItemDescriptionVer}
             onPress={() => console.log('hello', doc)}>
@@ -210,6 +218,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     flex: 1,
     flexWrap: 'wrap',
+    color: '#03064e',
   },
   docs: {
     marginTop: 10,
@@ -218,7 +227,7 @@ const styles = StyleSheet.create({
     height: 50,
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginTop: 4,
+    marginTop: 6,
     padding: 10,
     backgroundColor: '#eaeaf5',
   },
