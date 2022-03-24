@@ -148,6 +148,49 @@ export default function LoanTabs({ loan }) {
             </Grid>
         ));
 
+    const history = [
+        {
+            date: '12/05/2021',
+            amount: 'bs. 10000',
+            installments: '20 cuotas',
+            pointStatus: 'success',
+            point: '8'
+        },
+        {
+            date: '01/11/2020',
+            amount: 'bs. 12000',
+            installments: '10 cuotas',
+            pointStatus: 'warning',
+            point: '7'
+        }
+    ];
+
+    const viewHistory = () =>
+        history.map((loan) => (
+            <Grid
+                container
+                lg={12}
+                md={12}
+                sm={12}
+                xs={12}
+                direction="row"
+                justifyContent="space-between"
+                alignItems="center"
+                style={{ color: 'white', backgroundColor: '#e3f2fd', marginTop: 5, padding: 10, borderRadius: 5 }}
+            >
+                <Typography variant="h6" gutterBottom component="div">
+                    {loan.date}
+                </Typography>
+                <Typography variant="h6" gutterBottom component="div">
+                    {loan.amount}
+                </Typography>
+                <Typography variant="h6" gutterBottom component="div">
+                    {loan.installments}
+                </Typography>
+                <Chip label={loan.point} color={loan.pointStatus} />
+            </Grid>
+        ));
+
     const handleChange = (event, newValue) => {
         setValue(newValue);
     };
@@ -157,7 +200,8 @@ export default function LoanTabs({ loan }) {
             <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
                 <Tabs value={value} onChange={handleChange} aria-label="">
                     <Tab label={`Documentos (${loan?.documents?.length})`} {...a11yProps(0)} />
-                    <Tab label="Garantes" {...a11yProps(1)} />
+                    <Tab label="Garantes (0)" {...a11yProps(1)} />
+                    <Tab label={`Historial (${history?.length})`} {...a11yProps(1)} />
                 </Tabs>
                 <Dialog fullScreen open={open} onClose={handleClose} TransitionComponent={Transition}>
                     <AppBar sx={{ position: 'relative', bgcolor: theme.palette.secondary.light, color: theme.palette.secondary.dark }}>
@@ -211,6 +255,9 @@ export default function LoanTabs({ loan }) {
             </LoanTabPanel>
             <LoanTabPanel value={value} index={1}>
                 {}
+            </LoanTabPanel>
+            <LoanTabPanel value={value} index={2}>
+                {viewHistory()}
             </LoanTabPanel>
         </Box>
     );

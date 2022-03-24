@@ -34,7 +34,7 @@ const LoanScreen = ({ navigation }) => {
           <TouchableOpacity
             style={styles.buttonReview}
             onPress={() => navigation.navigate('LoanRequirementList')}>
-            <Text>Revisar</Text>
+            <Text style={styles.text}>Revisar</Text>
           </TouchableOpacity>
         </View>
       );
@@ -113,16 +113,16 @@ const LoanScreen = ({ navigation }) => {
 
 const styles = StyleSheet.create({
   container: {
-    margin: 20,
+    margin: 10,
     flex: 1,
     alignItems: 'center',
     justifyContent: 'flex-start',
     padding: 10,
   },
   header: {
-    height: 60,
+    height: 80,
     justifyContent: 'center',
-    marginTop: 50,
+    marginTop: 10,
     width: '100%',
     flexDirection: 'column',
   },
