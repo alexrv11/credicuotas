@@ -1,76 +1,76 @@
 <mxfile host="65bd71144e">
     <diagram id="1fi5Kx5LPePZL9SqUFNj" name="Page-1">
-        <mxGraphModel dx="1277" dy="1185" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="0" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+        <mxGraphModel dx="1531" dy="885" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="0" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
             <root>
                 <mxCell id="0"/>
                 <mxCell id="1" parent="0"/>
-                <mxCell id="65" value="" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                <mxCell id="65" value="" style="rounded=0;whiteSpace=wrap;html=1;fontSize=14;fontFamily=Times New Roman;" parent="1" vertex="1">
                     <mxGeometry x="27" y="74" width="462" height="261" as="geometry"/>
                 </mxCell>
-                <mxCell id="39" value="" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                <mxCell id="39" value="" style="rounded=0;whiteSpace=wrap;html=1;fontSize=14;fontFamily=Times New Roman;" parent="1" vertex="1">
                     <mxGeometry x="26" y="-219" width="462" height="283" as="geometry"/>
                 </mxCell>
-                <mxCell id="40" value="Autenticacion - aplicacion movil&lt;br&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;" parent="1" vertex="1">
-                    <mxGeometry x="204" y="-205" width="177" height="18" as="geometry"/>
+                <mxCell id="40" value="&lt;span id=&quot;docs-internal-guid-254b071b-7fff-619b-bcc3-f632610e774d&quot; style=&quot;font-size: 14px;&quot;&gt;&lt;span style=&quot;font-size: 14px; color: rgb(36, 36, 36); vertical-align: baseline;&quot;&gt;Autenticación - aplicación móvil&lt;/span&gt;&lt;/span&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fontSize=14;fontFamily=Times New Roman;" parent="1" vertex="1">
+                    <mxGeometry x="197" y="-206" width="194" height="21" as="geometry"/>
                 </mxCell>
-                <mxCell id="73" style="edgeStyle=none;html=1;dashed=1;" parent="1" source="42" target="71" edge="1">
+                <mxCell id="73" style="edgeStyle=none;html=1;dashed=1;fontSize=14;fontFamily=Times New Roman;" parent="1" source="42" target="71" edge="1">
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
-                <mxCell id="42" value="Iniciar sesion &lt;br&gt;email" style="ellipse;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                <mxCell id="42" value="&lt;span id=&quot;docs-internal-guid-8cefaea0-7fff-6c85-2a23-4637aa1b3503&quot;&gt;&lt;p dir=&quot;ltr&quot; style=&quot;line-height: 1.38 ; text-align: justify ; margin-top: 0pt ; margin-bottom: 0pt&quot;&gt;&lt;span style=&quot;font-size: 10.5pt ; color: rgb(36 , 36 , 36) ; vertical-align: baseline&quot;&gt;Iniciar sesión&lt;/span&gt;&lt;/p&gt;&lt;p dir=&quot;ltr&quot; style=&quot;line-height: 1.38 ; margin-top: 0pt ; margin-bottom: 0pt&quot;&gt;&lt;span style=&quot;font-size: 10.5pt ; color: rgb(36 , 36 , 36) ; vertical-align: baseline&quot;&gt;email&lt;/span&gt;&lt;/p&gt;&lt;/span&gt;" style="ellipse;whiteSpace=wrap;html=1;fontSize=14;fontFamily=Times New Roman;" parent="1" vertex="1">
                     <mxGeometry x="112" y="-151" width="140" height="70" as="geometry"/>
                 </mxCell>
-                <mxCell id="43" value="Iniciar sesion&lt;br&gt;email / contraseña" style="ellipse;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                <mxCell id="43" value="Iniciar&amp;nbsp;&lt;span id=&quot;docs-internal-guid-9de1ebfd-7fff-7b5a-eb31-299195e3676c&quot;&gt;&lt;span style=&quot;font-size: 10.5pt ; color: rgb(36 , 36 , 36) ; vertical-align: baseline&quot;&gt;sesión&lt;/span&gt;&lt;/span&gt;&lt;br style=&quot;font-size: 14px&quot;&gt;email / contraseña" style="ellipse;whiteSpace=wrap;html=1;fontSize=14;fontFamily=Times New Roman;" parent="1" vertex="1">
                     <mxGeometry x="290" y="167" width="140" height="70" as="geometry"/>
                 </mxCell>
-                <mxCell id="62" style="edgeStyle=none;html=1;entryX=0.961;entryY=0.244;entryDx=0;entryDy=0;entryPerimeter=0;" parent="1" source="61" target="43" edge="1">
+                <mxCell id="62" style="edgeStyle=none;html=1;entryX=0.961;entryY=0.244;entryDx=0;entryDy=0;entryPerimeter=0;fontSize=14;fontFamily=Times New Roman;" parent="1" source="61" target="43" edge="1">
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
-                <mxCell id="61" value="Asesor de credito" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;" parent="1" vertex="1">
+                <mxCell id="61" value="&lt;span id=&quot;docs-internal-guid-a1e2d61a-7fff-554b-abac-8dddb17401ed&quot;&gt;&lt;span style=&quot;font-size: 10.5pt ; color: rgb(36 , 36 , 36) ; vertical-align: baseline&quot;&gt;Asesor de crédito&lt;/span&gt;&lt;/span&gt;" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;fontSize=14;fontFamily=Times New Roman;" parent="1" vertex="1">
                     <mxGeometry x="570" y="67" width="30" height="60" as="geometry"/>
                 </mxCell>
-                <mxCell id="66" value="Autenticacion - aplicacion web" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;" parent="1" vertex="1">
-                    <mxGeometry x="204" y="85" width="171" height="18" as="geometry"/>
+                <mxCell id="66" value="&lt;span id=&quot;docs-internal-guid-82047baf-7fff-ec66-f510-b4cca4f108e6&quot;&gt;&lt;span style=&quot;font-size: 10.5pt ; color: rgb(36 , 36 , 36) ; vertical-align: baseline&quot;&gt;Autenticación - aplicación web&lt;/span&gt;&lt;/span&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fontSize=14;fontFamily=Times New Roman;" parent="1" vertex="1">
+                    <mxGeometry x="198" y="84" width="185" height="21" as="geometry"/>
                 </mxCell>
-                <mxCell id="75" style="edgeStyle=none;html=1;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="67" target="43" edge="1">
+                <mxCell id="75" style="edgeStyle=none;html=1;entryX=1;entryY=0.5;entryDx=0;entryDy=0;fontSize=14;fontFamily=Times New Roman;" parent="1" source="67" target="43" edge="1">
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
-                <mxCell id="67" value="Gerente" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;" parent="1" vertex="1">
+                <mxCell id="67" value="Gerente" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;fontSize=14;fontFamily=Times New Roman;" parent="1" vertex="1">
                     <mxGeometry x="574" y="169" width="30" height="60" as="geometry"/>
                 </mxCell>
-                <mxCell id="76" style="edgeStyle=none;html=1;entryX=0.938;entryY=0.71;entryDx=0;entryDy=0;entryPerimeter=0;" parent="1" source="68" target="43" edge="1">
+                <mxCell id="76" style="edgeStyle=none;html=1;entryX=0.938;entryY=0.71;entryDx=0;entryDy=0;entryPerimeter=0;fontSize=14;fontFamily=Times New Roman;" parent="1" source="68" target="43" edge="1">
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
-                <mxCell id="68" value="Administrador de sistemas" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;" parent="1" vertex="1">
+                <mxCell id="68" value="Administrador de sistemas" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;fontSize=14;fontFamily=Times New Roman;" parent="1" vertex="1">
                     <mxGeometry x="574" y="271" width="30" height="60" as="geometry"/>
                 </mxCell>
-                <mxCell id="70" style="edgeStyle=none;html=1;" parent="1" source="69" target="42" edge="1">
+                <mxCell id="70" style="edgeStyle=none;html=1;fontSize=14;fontFamily=Times New Roman;" parent="1" source="69" target="42" edge="1">
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
-                <mxCell id="69" value="Cliente" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;" parent="1" vertex="1">
+                <mxCell id="69" value="Cliente" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;fontSize=14;fontFamily=Times New Roman;" parent="1" vertex="1">
                     <mxGeometry x="-69" y="-124" width="30" height="60" as="geometry"/>
                 </mxCell>
-                <mxCell id="74" style="edgeStyle=none;html=1;entryX=0;entryY=1;entryDx=0;entryDy=0;dashed=1;" parent="1" source="71" target="72" edge="1">
+                <mxCell id="74" style="edgeStyle=none;html=1;entryX=0;entryY=1;entryDx=0;entryDy=0;dashed=1;fontSize=14;fontFamily=Times New Roman;" parent="1" source="71" target="72" edge="1">
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
-                <mxCell id="71" value="Registro de cuenta" style="ellipse;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                <mxCell id="71" value="Registro de cuenta" style="ellipse;whiteSpace=wrap;html=1;fontSize=14;fontFamily=Times New Roman;" parent="1" vertex="1">
                     <mxGeometry x="267" y="-45" width="140" height="70" as="geometry"/>
                 </mxCell>
-                <mxCell id="72" value="Registro telefono" style="ellipse;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                <mxCell id="72" value="&lt;span id=&quot;docs-internal-guid-0e8b1a09-7fff-fd49-e51c-306c02f8a478&quot;&gt;&lt;span style=&quot;font-size: 10.5pt ; color: rgb(36 , 36 , 36) ; vertical-align: baseline&quot;&gt;Registro teléfono&lt;/span&gt;&lt;/span&gt;" style="ellipse;whiteSpace=wrap;html=1;fontSize=14;fontFamily=Times New Roman;" parent="1" vertex="1">
                     <mxGeometry x="321" y="-151" width="140" height="70" as="geometry"/>
                 </mxCell>
-                <mxCell id="79" value="Pagina de inicio por rol de usuario" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+                <mxCell id="79" value="Pagina de inicio por rol de usuario" style="ellipse;whiteSpace=wrap;html=1;fontSize=14;fontFamily=Times New Roman;" parent="1" vertex="1">
                     <mxGeometry x="101" y="167" width="140" height="70" as="geometry"/>
                 </mxCell>
-                <mxCell id="81" style="edgeStyle=none;html=1;dashed=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="43" target="79">
+                <mxCell id="81" style="edgeStyle=none;html=1;dashed=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;fontSize=14;fontFamily=Times New Roman;" parent="1" source="43" target="79" edge="1">
                     <mxGeometry relative="1" as="geometry">
                         <mxPoint x="254.9967577022456" y="258.99676286618904" as="sourcePoint"/>
                         <mxPoint x="312.8370299272013" y="299.3185135924181" as="targetPoint"/>
                     </mxGeometry>
                 </mxCell>
-                <mxCell id="82" value="Cargar codigo &lt;br&gt;6 digitos" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+                <mxCell id="82" value="&lt;span id=&quot;docs-internal-guid-416d4be7-7fff-440d-8334-b0a5e7427e2f&quot;&gt;&lt;p dir=&quot;ltr&quot; style=&quot;line-height: 1.38 ; text-align: justify ; margin-top: 0pt ; margin-bottom: 0pt&quot;&gt;&lt;span style=&quot;font-size: 10.5pt ; color: rgb(36 , 36 , 36) ; vertical-align: baseline&quot;&gt;Cargar código&lt;/span&gt;&lt;/p&gt;&lt;p dir=&quot;ltr&quot; style=&quot;line-height: 1.38 ; margin-top: 0pt ; margin-bottom: 0pt&quot;&gt;&lt;span style=&quot;font-size: 10.5pt ; color: rgb(36 , 36 , 36) ; vertical-align: baseline&quot;&gt;6 dígitos&lt;/span&gt;&lt;/p&gt;&lt;/span&gt;" style="ellipse;whiteSpace=wrap;html=1;fontSize=14;fontFamily=Times New Roman;" parent="1" vertex="1">
                     <mxGeometry x="90" y="-14" width="140" height="70" as="geometry"/>
                 </mxCell>
-                <mxCell id="83" value="Incluye" style="endArrow=block;endSize=16;endFill=0;html=1;dashed=1;" edge="1" parent="1" source="42" target="82">
+                <mxCell id="83" value="Incluye" style="endArrow=block;endSize=16;endFill=0;html=1;dashed=1;fontSize=14;fontFamily=Times New Roman;" parent="1" source="42" target="82" edge="1">
                     <mxGeometry x="-0.177" y="21" width="160" relative="1" as="geometry">
                         <mxPoint x="92.98000000000002" y="-64" as="sourcePoint"/>
                         <mxPoint x="204" y="-88.99000000000001" as="targetPoint"/>

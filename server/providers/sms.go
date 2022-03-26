@@ -24,7 +24,7 @@ func (t *TwilioClient) SendSMSCode(phone, code string) error {
 	params := &openapi.CreateMessageParams{}
 	params.SetTo(phone)
 	params.SetFrom(viper.GetString("TWILIO_PHONE_NUMBER"))
-	params.SetBody(fmt.Sprintf("Porvenir - codigo de verificacion: %s ", code))
+	params.SetBody(fmt.Sprintf("Porvenir - código de verificación: %s ", code))
 
 	_, err := client.ApiV2010.CreateMessage(params)
 	if err != nil {

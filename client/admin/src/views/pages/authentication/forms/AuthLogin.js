@@ -120,7 +120,7 @@ const Login = ({ ...others }) => {
                                         </IconButton>
                                     </InputAdornment>
                                 }
-                                label="Contrasena"
+                                label="Contraseña"
                                 inputProps={{}}
                             />
                             {touched.password && errors.password && (
@@ -146,7 +146,7 @@ const Login = ({ ...others }) => {
                                     variant="contained"
                                     color="secondary"
                                 >
-                                    Iniciar Session
+                                    Iniciar Sesión
                                 </Button>
                             </AnimateButton>
                         </Box>

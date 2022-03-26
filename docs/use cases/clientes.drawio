@@ -1,57 +1,57 @@
 <mxfile host="65bd71144e">
     <diagram id="1fi5Kx5LPePZL9SqUFNj" name="Page-1">
-        <mxGraphModel dx="902" dy="878" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="0" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+        <mxGraphModel dx="1131" dy="885" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="0" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
             <root>
                 <mxCell id="0"/>
                 <mxCell id="1" parent="0"/>
-                <mxCell id="39" value="" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                <mxCell id="39" value="" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Times New Roman;fontSize=14;" parent="1" vertex="1">
                     <mxGeometry x="125" y="-50" width="309" height="297" as="geometry"/>
                 </mxCell>
-                <mxCell id="57" style="edgeStyle=none;html=1;dashed=1;" parent="1" source="16" target="53" edge="1">
+                <mxCell id="57" style="edgeStyle=none;html=1;dashed=1;fontFamily=Times New Roman;fontSize=14;" parent="1" source="16" target="53" edge="1">
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
-                <mxCell id="63" style="edgeStyle=none;html=1;dashed=1;" parent="1" source="16" target="44" edge="1">
+                <mxCell id="63" style="edgeStyle=none;html=1;dashed=1;fontFamily=Times New Roman;fontSize=14;" parent="1" source="16" target="44" edge="1">
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
-                <mxCell id="64" style="edgeStyle=none;html=1;dashed=1;" parent="1" source="16" target="43" edge="1">
+                <mxCell id="64" style="edgeStyle=none;html=1;dashed=1;fontFamily=Times New Roman;fontSize=14;" parent="1" source="16" target="43" edge="1">
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
-                <mxCell id="16" value="Ver perfil de un cliente" style="ellipse;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                <mxCell id="16" value="Ver perfil de un cliente" style="ellipse;whiteSpace=wrap;html=1;fontFamily=Times New Roman;fontSize=14;" parent="1" vertex="1">
                     <mxGeometry x="174" y="86" width="140" height="70" as="geometry"/>
                 </mxCell>
-                <mxCell id="50" style="edgeStyle=none;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="21" target="16" edge="1">
+                <mxCell id="50" style="edgeStyle=none;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;fontFamily=Times New Roman;fontSize=14;" parent="1" source="21" target="16" edge="1">
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
-                <mxCell id="52" style="edgeStyle=none;html=1;entryX=0.029;entryY=0.614;entryDx=0;entryDy=0;entryPerimeter=0;" parent="1" source="21" target="42" edge="1">
+                <mxCell id="52" style="edgeStyle=none;html=1;entryX=0.029;entryY=0.614;entryDx=0;entryDy=0;entryPerimeter=0;fontFamily=Times New Roman;fontSize=14;" parent="1" source="21" target="42" edge="1">
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
-                <mxCell id="21" value="Gerente" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;" parent="1" vertex="1">
+                <mxCell id="21" value="Gerente" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;fontFamily=Times New Roman;fontSize=14;" parent="1" vertex="1">
                     <mxGeometry x="47" y="26" width="30" height="60" as="geometry"/>
                 </mxCell>
-                <mxCell id="40" value="Clientes" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;" parent="1" vertex="1">
-                    <mxGeometry x="133" y="-39" width="53" height="18" as="geometry"/>
+                <mxCell id="40" value="Clientes" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fontFamily=Times New Roman;fontSize=14;" parent="1" vertex="1">
+                    <mxGeometry x="132" y="-40" width="56" height="21" as="geometry"/>
                 </mxCell>
-                <mxCell id="42" value="Ver lista de clientes &lt;br&gt;de la empresa" style="ellipse;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                <mxCell id="42" value="Ver lista de clientes &lt;br style=&quot;font-size: 14px;&quot;&gt;de la empresa" style="ellipse;whiteSpace=wrap;html=1;fontFamily=Times New Roman;fontSize=14;" parent="1" vertex="1">
                     <mxGeometry x="196" y="-39" width="140" height="70" as="geometry"/>
                 </mxCell>
-                <mxCell id="43" value="Historial de prestamos" style="ellipse;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                <mxCell id="43" value="Historial de&amp;nbsp;&lt;span id=&quot;docs-internal-guid-a3b66510-7fff-748d-baf4-240754dd279b&quot;&gt;&lt;span style=&quot;font-size: 10.5pt ; color: rgb(36 , 36 , 36) ; vertical-align: baseline&quot;&gt;préstamos&lt;/span&gt;&lt;/span&gt;" style="ellipse;whiteSpace=wrap;html=1;fontFamily=Times New Roman;fontSize=14;" parent="1" vertex="1">
                     <mxGeometry x="285" y="24" width="140" height="70" as="geometry"/>
                 </mxCell>
-                <mxCell id="44" value="Documentos del cliente" style="ellipse;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                <mxCell id="44" value="Documentos del cliente" style="ellipse;whiteSpace=wrap;html=1;fontFamily=Times New Roman;fontSize=14;" parent="1" vertex="1">
                     <mxGeometry x="283" y="152" width="140" height="70" as="geometry"/>
                 </mxCell>
-                <mxCell id="53" value="Ver incidencias" style="ellipse;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                <mxCell id="53" value="Ver incidencias" style="ellipse;whiteSpace=wrap;html=1;fontFamily=Times New Roman;fontSize=14;" parent="1" vertex="1">
                     <mxGeometry x="137" y="171" width="140" height="70" as="geometry"/>
                 </mxCell>
-                <mxCell id="59" style="edgeStyle=none;html=1;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="61" target="16" edge="1">
+                <mxCell id="59" style="edgeStyle=none;html=1;entryX=1;entryY=0.5;entryDx=0;entryDy=0;fontFamily=Times New Roman;fontSize=14;" parent="1" source="61" target="16" edge="1">
                     <mxGeometry relative="1" as="geometry">
                         <mxPoint x="616" y="160.51960784313724" as="sourcePoint"/>
                     </mxGeometry>
                 </mxCell>
-                <mxCell id="62" style="edgeStyle=none;html=1;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="61" target="42" edge="1">
+                <mxCell id="62" style="edgeStyle=none;html=1;entryX=1;entryY=0.5;entryDx=0;entryDy=0;fontFamily=Times New Roman;fontSize=14;" parent="1" source="61" target="42" edge="1">
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
-                <mxCell id="61" value="Asesor Comercial" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;" parent="1" vertex="1">
+                <mxCell id="61" value="Asesor créditos" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;fontFamily=Times New Roman;fontSize=14;" parent="1" vertex="1">
                     <mxGeometry x="489" y="36" width="30" height="60" as="geometry"/>
                 </mxCell>
             </root>

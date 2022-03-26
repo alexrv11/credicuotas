@@ -1,80 +1,80 @@
 <mxfile host="65bd71144e">
     <diagram id="1fi5Kx5LPePZL9SqUFNj" name="Page-1">
-        <mxGraphModel dx="1277" dy="1185" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="0" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+        <mxGraphModel dx="1531" dy="885" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="0" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
             <root>
                 <mxCell id="0"/>
                 <mxCell id="1" parent="0"/>
-                <mxCell id="81" value="" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                <mxCell id="81" value="" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Times New Roman;fontSize=14;" parent="1" vertex="1">
                     <mxGeometry x="76" y="66" width="414" height="423" as="geometry"/>
                 </mxCell>
-                <mxCell id="39" value="" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                <mxCell id="39" value="" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Times New Roman;fontSize=14;" parent="1" vertex="1">
                     <mxGeometry x="76" y="-212" width="414" height="268" as="geometry"/>
                 </mxCell>
-                <mxCell id="16" value="Ver estado de &lt;br&gt;solicitud de prestamo" style="ellipse;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                <mxCell id="16" value="Ver estado de &lt;br style=&quot;font-size: 14px&quot;&gt;solicitud de&amp;nbsp;&lt;span id=&quot;docs-internal-guid-fa9ec0e2-7fff-3394-8a7c-40f6800a1c9c&quot;&gt;&lt;span style=&quot;font-size: 10.5pt ; color: rgb(36 , 36 , 36) ; vertical-align: baseline&quot;&gt;préstamo&lt;/span&gt;&lt;/span&gt;" style="ellipse;whiteSpace=wrap;html=1;fontFamily=Times New Roman;fontSize=14;" parent="1" vertex="1">
                     <mxGeometry x="181" y="-13" width="140" height="61" as="geometry"/>
                 </mxCell>
-                <mxCell id="40" value="Gestion de prestamos - Aplicacion Movil" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;" parent="1" vertex="1">
-                    <mxGeometry x="171.5" y="-194" width="223" height="18" as="geometry"/>
+                <mxCell id="40" value="&lt;span id=&quot;docs-internal-guid-40a8a800-7fff-940c-196f-b262e223e86f&quot;&gt;&lt;span style=&quot;font-size: 10.5pt ; color: rgb(36 , 36 , 36) ; vertical-align: baseline&quot;&gt;Gestión de préstamos - Aplicación móvil&lt;/span&gt;&lt;/span&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fontFamily=Times New Roman;fontSize=14;" parent="1" vertex="1">
+                    <mxGeometry x="164.5" y="-195" width="239" height="21" as="geometry"/>
                 </mxCell>
-                <mxCell id="42" value="Registro&lt;br&gt;solicitud de prestamo" style="ellipse;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                <mxCell id="42" value="&lt;span id=&quot;docs-internal-guid-9d7fdbcb-7fff-656a-2601-6d5e32c1ed53&quot;&gt;&lt;p dir=&quot;ltr&quot; style=&quot;line-height: 1.38 ; margin-top: 0pt ; margin-bottom: 0pt&quot;&gt;&lt;span style=&quot;font-size: 10.5pt ; color: rgb(36 , 36 , 36) ; vertical-align: baseline&quot;&gt;Registro&lt;/span&gt;&lt;/p&gt;&lt;p dir=&quot;ltr&quot; style=&quot;line-height: 1.38 ; text-align: justify ; margin-top: 0pt ; margin-bottom: 0pt&quot;&gt;&lt;span style=&quot;font-size: 10.5pt ; color: rgb(36 , 36 , 36) ; vertical-align: baseline&quot;&gt;solicitud de préstamo&lt;/span&gt;&lt;/p&gt;&lt;/span&gt;" style="ellipse;whiteSpace=wrap;html=1;fontFamily=Times New Roman;fontSize=14;" parent="1" vertex="1">
                     <mxGeometry x="174.5" y="-167" width="149" height="55" as="geometry"/>
                 </mxCell>
-                <mxCell id="43" value="Carga de requisitos del prestamo" style="ellipse;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                <mxCell id="43" value="Carga de requisitos del&amp;nbsp;&lt;span id=&quot;docs-internal-guid-a9796045-7fff-ea98-c575-21d667e8b88e&quot;&gt;&lt;span style=&quot;font-size: 10.5pt ; color: rgb(36 , 36 , 36) ; vertical-align: baseline&quot;&gt;préstamo&lt;/span&gt;&lt;/span&gt;" style="ellipse;whiteSpace=wrap;html=1;fontFamily=Times New Roman;fontSize=14;" parent="1" vertex="1">
                     <mxGeometry x="179" y="-91" width="140" height="60" as="geometry"/>
                 </mxCell>
-                <mxCell id="73" style="edgeStyle=none;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" parent="1" target="42" edge="1">
+                <mxCell id="73" style="edgeStyle=none;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;fontFamily=Times New Roman;fontSize=14;" parent="1" target="42" edge="1">
                     <mxGeometry relative="1" as="geometry">
                         <mxPoint x="23" y="-74" as="sourcePoint"/>
                     </mxGeometry>
                 </mxCell>
-                <mxCell id="79" style="edgeStyle=none;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" parent="1" target="16" edge="1">
+                <mxCell id="79" style="edgeStyle=none;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;fontFamily=Times New Roman;fontSize=14;" parent="1" target="16" edge="1">
                     <mxGeometry relative="1" as="geometry">
                         <mxPoint x="22" y="-50" as="sourcePoint"/>
                     </mxGeometry>
                 </mxCell>
-                <mxCell id="65" value="Cliente" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;" parent="1" vertex="1">
+                <mxCell id="65" value="Cliente" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;fontFamily=Times New Roman;fontSize=14;" parent="1" vertex="1">
                     <mxGeometry x="-14" y="-91" width="30" height="60" as="geometry"/>
                 </mxCell>
-                <mxCell id="93" style="edgeStyle=none;html=1;" parent="1" source="76" target="91" edge="1">
+                <mxCell id="93" style="edgeStyle=none;html=1;fontFamily=Times New Roman;fontSize=14;" parent="1" source="76" target="91" edge="1">
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
-                <mxCell id="94" style="edgeStyle=none;html=1;entryX=0.957;entryY=0.586;entryDx=0;entryDy=0;entryPerimeter=0;" parent="1" source="76" target="84" edge="1">
+                <mxCell id="94" style="edgeStyle=none;html=1;entryX=0.957;entryY=0.586;entryDx=0;entryDy=0;entryPerimeter=0;fontFamily=Times New Roman;fontSize=14;" parent="1" source="76" target="84" edge="1">
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
-                <mxCell id="95" style="edgeStyle=none;html=1;entryX=0.964;entryY=0.729;entryDx=0;entryDy=0;entryPerimeter=0;" parent="1" source="76" target="83" edge="1">
+                <mxCell id="95" style="edgeStyle=none;html=1;entryX=0.964;entryY=0.729;entryDx=0;entryDy=0;entryPerimeter=0;fontFamily=Times New Roman;fontSize=14;" parent="1" source="76" target="83" edge="1">
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
-                <mxCell id="76" value="Gerente" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;" parent="1" vertex="1">
+                <mxCell id="76" value="Gerente" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;fontFamily=Times New Roman;fontSize=14;" parent="1" vertex="1">
                     <mxGeometry x="588" y="360" width="30" height="60" as="geometry"/>
                 </mxCell>
-                <mxCell id="87" style="edgeStyle=none;html=1;exitX=0.5;exitY=0.5;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0.986;entryY=0.6;entryDx=0;entryDy=0;entryPerimeter=0;" parent="1" source="77" target="83" edge="1">
+                <mxCell id="87" style="edgeStyle=none;html=1;exitX=0.5;exitY=0.5;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0.986;entryY=0.6;entryDx=0;entryDy=0;entryPerimeter=0;fontFamily=Times New Roman;fontSize=14;" parent="1" source="77" target="83" edge="1">
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
-                <mxCell id="88" style="edgeStyle=none;html=1;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="77" target="84" edge="1">
+                <mxCell id="88" style="edgeStyle=none;html=1;entryX=1;entryY=0.5;entryDx=0;entryDy=0;fontFamily=Times New Roman;fontSize=14;" parent="1" source="77" target="84" edge="1">
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
-                <mxCell id="92" style="edgeStyle=none;html=1;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="77" target="89" edge="1">
+                <mxCell id="92" style="edgeStyle=none;html=1;entryX=1;entryY=0.5;entryDx=0;entryDy=0;fontFamily=Times New Roman;fontSize=14;" parent="1" source="77" target="89" edge="1">
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
-                <mxCell id="77" value="Asesor de credito" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;" parent="1" vertex="1">
+                <mxCell id="77" value="Asesor de credito" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;fontFamily=Times New Roman;fontSize=14;" parent="1" vertex="1">
                     <mxGeometry x="565" y="224" width="30" height="60" as="geometry"/>
                 </mxCell>
-                <mxCell id="82" value="Gestion de prestamos - Aplicacion Web" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;" parent="1" vertex="1">
-                    <mxGeometry x="173" y="80" width="220" height="18" as="geometry"/>
+                <mxCell id="82" value="&lt;span id=&quot;docs-internal-guid-29dd4a9c-7fff-b052-4d80-a8ba4639154e&quot;&gt;&lt;span style=&quot;font-size: 10.5pt ; color: rgb(36 , 36 , 36) ; vertical-align: baseline&quot;&gt;Gestión de préstamos&lt;/span&gt;&lt;/span&gt;&amp;nbsp;-&amp;nbsp;&lt;span id=&quot;docs-internal-guid-8fee6780-7fff-d6c3-c8ea-d4e713e81d3c&quot;&gt;&lt;span style=&quot;font-size: 10.5pt ; color: rgb(36 , 36 , 36) ; vertical-align: baseline&quot;&gt;Aplicación&lt;/span&gt;&lt;/span&gt;&amp;nbsp;web" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fontFamily=Times New Roman;fontSize=14;" parent="1" vertex="1">
+                    <mxGeometry x="169" y="79" width="230" height="21" as="geometry"/>
                 </mxCell>
-                <mxCell id="83" value="Ver&amp;nbsp;solicitudes de prestamo" style="ellipse;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                <mxCell id="83" value="Ver&amp;nbsp;solicitudes de&amp;nbsp;&lt;span id=&quot;docs-internal-guid-4277a991-7fff-0445-0bc8-72ea54e618ed&quot;&gt;&lt;span style=&quot;font-size: 10.5pt ; color: rgb(36 , 36 , 36) ; vertical-align: baseline&quot;&gt;préstamo&lt;/span&gt;&lt;/span&gt;" style="ellipse;whiteSpace=wrap;html=1;fontFamily=Times New Roman;fontSize=14;" parent="1" vertex="1">
                     <mxGeometry x="217" y="127" width="140" height="70" as="geometry"/>
                 </mxCell>
-                <mxCell id="84" value="Ver&amp;nbsp;detalle de &lt;br&gt;un prestamo" style="ellipse;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                <mxCell id="84" value="Ver&amp;nbsp;detalle de &lt;br style=&quot;font-size: 14px&quot;&gt;un&amp;nbsp;&lt;span id=&quot;docs-internal-guid-4277a991-7fff-0445-0bc8-72ea54e618ed&quot;&gt;&lt;span style=&quot;font-size: 10.5pt ; color: rgb(36 , 36 , 36) ; vertical-align: baseline&quot;&gt;préstamo&lt;/span&gt;&lt;/span&gt;" style="ellipse;whiteSpace=wrap;html=1;fontFamily=Times New Roman;fontSize=14;" parent="1" vertex="1">
                     <mxGeometry x="220" y="219" width="140" height="70" as="geometry"/>
                 </mxCell>
-                <mxCell id="89" value="Pre aprobar, observar, rechazar una solicitud de prestamo" style="ellipse;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                <mxCell id="89" value="Pre aprobar, observar, rechazar una solicitud de&amp;nbsp;&lt;span id=&quot;docs-internal-guid-13a2acdc-7fff-6667-3e23-460df5b7adc0&quot;&gt;&lt;span style=&quot;font-size: 10.5pt ; color: rgb(36 , 36 , 36) ; vertical-align: baseline&quot;&gt;préstamo&lt;/span&gt;&lt;/span&gt;" style="ellipse;whiteSpace=wrap;html=1;fontFamily=Times New Roman;fontSize=14;" parent="1" vertex="1">
                     <mxGeometry x="202" y="307" width="155" height="70" as="geometry"/>
                 </mxCell>
-                <mxCell id="91" value="Aprobar prestamo." style="ellipse;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                <mxCell id="91" value="Aprobar&amp;nbsp;&lt;span id=&quot;docs-internal-guid-bbaecb51-7fff-a92b-1c6b-005b61468eef&quot;&gt;&lt;span style=&quot;font-size: 10.5pt ; color: rgb(36 , 36 , 36) ; vertical-align: baseline&quot;&gt;préstamo&lt;/span&gt;&lt;/span&gt;." style="ellipse;whiteSpace=wrap;html=1;fontFamily=Times New Roman;fontSize=14;" parent="1" vertex="1">
                     <mxGeometry x="220" y="407" width="140" height="70" as="geometry"/>
                 </mxCell>
-                <mxCell id="96" style="edgeStyle=none;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" target="43">
+                <mxCell id="96" style="edgeStyle=none;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;fontFamily=Times New Roman;fontSize=14;" parent="1" target="43" edge="1">
                     <mxGeometry relative="1" as="geometry">
                         <mxPoint x="23" y="-61" as="sourcePoint"/>
                         <mxPoint x="184.5" y="-129.5" as="targetPoint"/>

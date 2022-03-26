@@ -54,7 +54,7 @@ const VerifyPhoneCodeScreen = ({ route, navigation }) => {
         />
         <Spacer />
         <Text style={styles.textAvatar}>
-          Te enviamos un codigo de seis digitos al telefono
+        Te enviamos un código de seis dígitos al teléfono
         </Text>
         <Text style={styles.textPhone}>{userPhone}</Text>
       </View>

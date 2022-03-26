@@ -1,6 +1,6 @@
 <mxfile host="65bd71144e">
     <diagram id="1X4fD_d9n7KFR5atu9PI" name="Page-1">
-        <mxGraphModel dx="1881" dy="1690" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+        <mxGraphModel dx="1981" dy="1585" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
             <root>
                 <mxCell id="0"/>
                 <mxCell id="1" parent="0"/>
@@ -23,7 +23,7 @@
                         </Array>
                     </mxGeometry>
                 </mxCell>
-                <mxCell id="2" value="Administracion manual y presencial de prestamos" style="rounded=1;whiteSpace=wrap;html=1;strokeColor=#36393d;fontColor=#191919;fillColor=#DEEBBC;" parent="1" vertex="1">
+                <mxCell id="2" value="&lt;span id=&quot;docs-internal-guid-859c407c-7fff-82ab-9665-464dbf4a24e5&quot;&gt;&lt;span style=&quot;font-size: 10pt ; font-family: &amp;#34;times new roman&amp;#34; ; color: rgb(36 , 36 , 36) ; vertical-align: baseline&quot;&gt;Administración manual y presencial de préstamos&lt;/span&gt;&lt;/span&gt;" style="rounded=1;whiteSpace=wrap;html=1;strokeColor=#36393d;fontColor=#191919;fillColor=#DEEBBC;" parent="1" vertex="1">
                     <mxGeometry x="250" y="250" width="210" height="60" as="geometry"/>
                 </mxCell>
                 <mxCell id="52" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.567;entryY=1;entryDx=0;entryDy=0;entryPerimeter=0;" parent="1" source="5" target="48" edge="1">
@@ -32,7 +32,7 @@
                 <mxCell id="55" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="5" target="7" edge="1">
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
-                <mxCell id="5" value="Administracion fisica de los documentos" style="rounded=1;whiteSpace=wrap;html=1;strokeColor=#36393d;fontColor=#2B2B2B;fillColor=#F0FFE6;" parent="1" vertex="1">
+                <mxCell id="5" value="&lt;p class=&quot;p1&quot; style=&quot;margin: 0px ; font-stretch: normal ; font-size: 13px ; line-height: normal ; font-family: &amp;#34;helvetica neue&amp;#34; ; color: rgb(0 , 0 , 0)&quot;&gt;Administración fisica de los documentos&lt;/p&gt;" style="rounded=1;whiteSpace=wrap;html=1;strokeColor=#36393d;fontColor=#2B2B2B;fillColor=#F0FFE6;" parent="1" vertex="1">
                     <mxGeometry x="260" y="524" width="150" height="80" as="geometry"/>
                 </mxCell>
                 <mxCell id="18" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontColor=#2B2B2B;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" parent="1" edge="1">
@@ -47,7 +47,7 @@
                 <mxCell id="51" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.1;entryY=1;entryDx=0;entryDy=0;entryPerimeter=0;" parent="1" source="7" target="2" edge="1">
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
-                <mxCell id="7" value="Mucha dedicacion en la busqueda/ordenamiento de&amp;nbsp; solicitudes" style="rounded=1;whiteSpace=wrap;html=1;strokeColor=#36393d;fontColor=#2B2B2B;fillColor=#F0FFE6;" parent="1" vertex="1">
+                <mxCell id="7" value="&lt;p class=&quot;p1&quot; style=&quot;margin: 0px ; font-stretch: normal ; font-size: 13px ; line-height: normal ; font-family: &amp;#34;helvetica neue&amp;#34; ; color: rgb(0 , 0 , 0)&quot;&gt;Mucha dedicación en la búsqueda/ordenamiento de&amp;nbsp; solicitudes&lt;/p&gt;" style="rounded=1;whiteSpace=wrap;html=1;strokeColor=#36393d;fontColor=#2B2B2B;fillColor=#F0FFE6;" parent="1" vertex="1">
                     <mxGeometry x="145" y="380" width="165" height="80" as="geometry"/>
                 </mxCell>
                 <mxCell id="21" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;fontColor=#2B2B2B;exitX=0.5;exitY=0;exitDx=0;exitDy=0;" parent="1" source="10" target="2" edge="1">
@@ -68,22 +68,22 @@
                         </Array>
                     </mxGeometry>
                 </mxCell>
-                <mxCell id="12" value="Los clientes tienen limitado acceso a la informacion de su credito, si tienen una consulta, la realizan por medio de una llamada telefonica o aproximandose a la oficina" style="rounded=1;whiteSpace=wrap;html=1;strokeColor=#36393d;fontColor=#2B2B2B;fillColor=#F0FFE6;" parent="1" vertex="1">
+                <mxCell id="12" value="&lt;p class=&quot;p1&quot; style=&quot;margin: 0px ; font-stretch: normal ; font-size: 13px ; line-height: normal ; font-family: &amp;#34;helvetica neue&amp;#34; ; color: rgb(0 , 0 , 0)&quot;&gt;Los clientes tienen limitado acceso a la información de su crédito, si tienen una consulta, la realizan por medio de una llamada telefónica o aproximandose a la oficina&lt;/p&gt;" style="rounded=1;whiteSpace=wrap;html=1;strokeColor=#36393d;fontColor=#2B2B2B;fillColor=#F0FFE6;" parent="1" vertex="1">
                     <mxGeometry x="600" y="497" width="170" height="107" as="geometry"/>
                 </mxCell>
                 <mxCell id="57" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="17" target="2" edge="1">
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
-                <mxCell id="17" value="Proceso de obtencion de un prestamo es presencial&amp;nbsp;" style="rounded=1;whiteSpace=wrap;html=1;strokeColor=#36393d;fontColor=#2B2B2B;fillColor=#F0FFE6;" parent="1" vertex="1">
+                <mxCell id="17" value="&lt;p class=&quot;p1&quot; style=&quot;margin: 0px ; font-stretch: normal ; font-size: 13px ; line-height: normal ; font-family: &amp;#34;helvetica neue&amp;#34; ; color: rgb(0 , 0 , 0)&quot;&gt;Proceso de obtención de un préstamo es presencial&lt;/p&gt;" style="rounded=1;whiteSpace=wrap;html=1;strokeColor=#36393d;fontColor=#2B2B2B;fillColor=#F0FFE6;" parent="1" vertex="1">
                     <mxGeometry x="620" y="360" width="150" height="70" as="geometry"/>
                 </mxCell>
-                <mxCell id="25" value="Deficiencias en la atencion al cliente" style="rounded=1;whiteSpace=wrap;html=1;strokeColor=#36393d;fontColor=#242424;fillColor=#F0FFE6;" parent="1" vertex="1">
+                <mxCell id="25" value="&lt;span id=&quot;docs-internal-guid-b66695e8-7fff-65a9-9d40-89f563d8915a&quot;&gt;&lt;span style=&quot;font-size: 10pt ; font-family: &amp;#34;times new roman&amp;#34; ; color: rgb(0 , 0 , 0) ; background-color: transparent ; vertical-align: baseline&quot;&gt;Deficiencias en la atención al cliente&lt;/span&gt;&lt;/span&gt;" style="rounded=1;whiteSpace=wrap;html=1;strokeColor=#36393d;fontColor=#242424;fillColor=#F0FFE6;" parent="1" vertex="1">
                     <mxGeometry x="200" width="120" height="60" as="geometry"/>
                 </mxCell>
                 <mxCell id="44" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="27" target="25" edge="1">
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
-                <mxCell id="27" value="Para la solicitud de credito muchas veces el cliente debe ir en varias ocaciones a la oficina, ya sea por documentacion insuficiente o alguna otra observacion." style="rounded=1;whiteSpace=wrap;html=1;strokeColor=#36393d;fontColor=#242424;fillColor=#F0FFE6;" parent="1" vertex="1">
+                <mxCell id="27" value="&lt;span id=&quot;docs-internal-guid-e200ef32-7fff-fc9d-83f3-03c321aee42e&quot;&gt;&lt;span style=&quot;font-size: 10pt ; font-family: &amp;#34;times new roman&amp;#34; ; color: rgb(0 , 0 , 0) ; background-color: transparent ; vertical-align: baseline&quot;&gt;Para la solicitud de crédito muchas veces el cliente debe ir en varias ocasiones a la oficina, ya sea por documentación insuficiente o alguna otra observación.&lt;/span&gt;&lt;/span&gt;" style="rounded=1;whiteSpace=wrap;html=1;strokeColor=#36393d;fontColor=#242424;fillColor=#F0FFE6;" parent="1" vertex="1">
                     <mxGeometry x="90" y="107" width="170" height="90" as="geometry"/>
                 </mxCell>
                 <mxCell id="43" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="28" target="25" edge="1">
@@ -91,7 +91,7 @@
                         <mxPoint x="340" y="50" as="targetPoint"/>
                     </mxGeometry>
                 </mxCell>
-                <mxCell id="28" value="Limitaciones en los metodos de pago que tiene la empresa" style="rounded=1;whiteSpace=wrap;html=1;strokeColor=#36393d;fontColor=#242424;fillColor=#F0FFE6;" parent="1" vertex="1">
+                <mxCell id="28" value="&lt;p class=&quot;p1&quot; style=&quot;margin: 0px ; font-stretch: normal ; font-size: 13px ; line-height: normal ; font-family: &amp;#34;helvetica neue&amp;#34; ; color: rgb(0 , 0 , 0)&quot;&gt;&lt;span id=&quot;docs-internal-guid-649b3aa1-7fff-326d-fbe5-3ae291051f26&quot;&gt;&lt;span style=&quot;font-size: 10pt ; font-family: &amp;#34;times new roman&amp;#34; ; color: rgb(36 , 36 , 36) ; vertical-align: baseline&quot;&gt;Limitaciones en los métodos de pago que tiene la empresa&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/p&gt;" style="rounded=1;whiteSpace=wrap;html=1;strokeColor=#36393d;fontColor=#242424;fillColor=#F0FFE6;" parent="1" vertex="1">
                     <mxGeometry x="295" y="137.5" width="120" height="55" as="geometry"/>
                 </mxCell>
                 <mxCell id="46" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" parent="1" source="29" target="45" edge="1">
@@ -106,13 +106,13 @@
                 <mxCell id="47" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" parent="1" source="45" target="34" edge="1">
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
-                <mxCell id="45" value="Deficiencia en la gestion" style="rounded=1;whiteSpace=wrap;html=1;strokeColor=#36393d;fontColor=#242424;fillColor=#F0FFE6;" parent="1" vertex="1">
+                <mxCell id="45" value="&lt;span id=&quot;docs-internal-guid-2f9071fe-7fff-d641-0118-9c44e733b44f&quot;&gt;&lt;span style=&quot;font-size: 10pt ; font-family: &amp;#34;times new roman&amp;#34; ; vertical-align: baseline&quot;&gt;Deficiencia en la gestión&lt;/span&gt;&lt;/span&gt;" style="rounded=1;whiteSpace=wrap;html=1;strokeColor=#36393d;fontColor=#242424;fillColor=#F0FFE6;" parent="1" vertex="1">
                     <mxGeometry x="460" y="47" width="120" height="60" as="geometry"/>
                 </mxCell>
                 <mxCell id="53" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.586;entryY=1.05;entryDx=0;entryDy=0;entryPerimeter=0;" parent="1" source="48" target="2" edge="1">
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
-                <mxCell id="48" value="Los documentos fisicos solo pueden ser accedidos por un personal a la vez" style="rounded=1;whiteSpace=wrap;html=1;strokeColor=#36393d;fontColor=#2B2B2B;fillColor=#F0FFE6;" parent="1" vertex="1">
+                <mxCell id="48" value="&lt;p class=&quot;p1&quot; style=&quot;margin: 0px ; font-stretch: normal ; font-size: 13px ; line-height: normal ; font-family: &amp;#34;helvetica neue&amp;#34; ; color: rgb(0 , 0 , 0)&quot;&gt;Los documentos físicos solo pueden ser accedido por un personal a la vez&lt;/p&gt;" style="rounded=1;whiteSpace=wrap;html=1;strokeColor=#36393d;fontColor=#2B2B2B;fillColor=#F0FFE6;" parent="1" vertex="1">
                     <mxGeometry x="320" y="380" width="150" height="80" as="geometry"/>
                 </mxCell>
             </root>

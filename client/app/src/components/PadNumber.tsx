@@ -74,6 +74,7 @@ const styles = StyleSheet.create({
   },
   keyText: {
     fontSize: 22,
+    color: '#d2d2d2',
   },
 });
 

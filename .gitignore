@@ -25,7 +25,7 @@ client/mobile/node_modules/
 .DS_Store
 
 **/credicuotas*.json
-
+client/app/coverage/
 docs/**/*.png
 docs/**/*.svg
 

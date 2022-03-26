@@ -66,7 +66,7 @@ const VerifySignInCodeScreen = ({ route, navigation }) => {
         />
         <Spacer />
         <Text style={styles.textAvatar}>
-          Te enviamos un codigo de seis digitos al email
+        Te enviamos un código de seis dígitos al email
         </Text>
         <Text style={styles.textEmail}>{userEmail}</Text>
       </View>

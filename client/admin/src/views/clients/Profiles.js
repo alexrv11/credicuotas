@@ -27,19 +27,19 @@ const ClientProfiles = () => {
         },
         {
             field: 'email',
-            headerName: 'Correo electronico',
+            headerName: 'Correo electrónico',
             width: 320,
             editable: false
         },
         {
             field: 'phone',
-            headerName: 'Telefono',
+            headerName: 'Teléfono',
             width: 180,
             editable: false
         },
         {
             field: 'identifierNumber',
-            headerName: 'Documento de Identidad',
+            headerName: 'Documento de identidad',
             width: 250,
             editable: false
         }
@@ -47,11 +47,11 @@ const ClientProfiles = () => {
 
     if (loading || error || !data) {
         return (
-            <MainCard title="Solicitudes de Prestamos">
+            <MainCard title="Solicitudes de Préstamos">
                 <Grid container spacing={gridSpacing}>
                     <Grid item xs={12} sm={12}>
                         <MuiTypography variant="h6" gutterBottom>
-                            Solicitudes de Prestamos
+                            Solicitudes de Préstamos
                         </MuiTypography>
                         <Loader />
                     </Grid>

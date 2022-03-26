@@ -53,7 +53,7 @@ const SignInScreen = ({ navigation }) => {
         <Image source={require('../assets/logo.png')} style={styles.logo} />
         <Spacer />
         <Text style={styles.description}>
-          Accede a un prestamo de forma simple y rapida
+          Accede a un préstamo de forma simple y rápida
         </Text>
       </View>
       <View style={styles.form}>
@@ -69,7 +69,7 @@ const SignInScreen = ({ navigation }) => {
         />
         <PrimaryButton
           onPress={onSubmit}
-          text="Iniciar Session"
+          text="Iniciar Sesión"
           disabled={disable}
         />
       </View>

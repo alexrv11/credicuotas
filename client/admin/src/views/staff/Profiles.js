@@ -44,7 +44,7 @@ const StaffProfiles = () => {
         },
         {
             field: 'email',
-            headerName: 'Correo electronico',
+            headerName: 'Correo electrónico',
             width: 320,
             editable: false
         },
@@ -85,7 +85,7 @@ const StaffProfiles = () => {
                 <Grid container spacing={gridSpacing}>
                     <Grid item xs={12} sm={12}>
                         <MuiTypography variant="h6" gutterBottom>
-                            Solicitudes de Prestamos
+                            Solicitudes de Préstamos
                         </MuiTypography>
                         <Loader />
                     </Grid>
@@ -128,7 +128,7 @@ const StaffProfiles = () => {
                             <TextField
                                 margin="dense"
                                 id="name"
-                                label="Correo Electronico"
+                                label="Correo Electrónico"
                                 type="email"
                                 fullWidth
                                 variant="standard"
@@ -146,7 +146,7 @@ const StaffProfiles = () => {
                                     label="Rol del usuario"
                                     onChange={handleChange}
                                 >
-                                    <MenuItem value="CREDIT_ASSISTANT">Asesor de Credito</MenuItem>
+                                    <MenuItem value="CREDIT_ASSISTANT">Asesor de Crédito</MenuItem>
                                     <MenuItem value="MANAGER">Gerente</MenuItem>
                                 </Select>
                             </FormControl>
