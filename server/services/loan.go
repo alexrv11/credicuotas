@@ -203,7 +203,7 @@ func getRequirementsByDocumentType(provider *providers.Provider, user modeldb.Us
 	var documentCIFront modeldb.Document
 	requirementCIFront := modeldb.Requirement{
 		RequirementType: modeldb.RequirementTypeClientDocumentPhotoFront,
-		Title:           "Cedula de identidad",
+		Title:           "Cédula de identidad",
 		Description:     "foto del documento de identidad de frente",
 		Status:          true,
 	}
@@ -211,8 +211,8 @@ func getRequirementsByDocumentType(provider *providers.Provider, user modeldb.Us
 	var documentCIBack modeldb.Document
 	requirementCIBack := modeldb.Requirement{
 		RequirementType: modeldb.RequirementTypeClientDocumentPhotoBack,
-		Title:           "Cedula de identidad",
-		Description:     "foto del documento de identidad de atras",
+		Title:           "Cédula de identidad",
+		Description:     "foto del documento de identidad de atrás",
 		Status:          true,
 	}
 
@@ -220,12 +220,12 @@ func getRequirementsByDocumentType(provider *providers.Provider, user modeldb.Us
 	descriptionType := "foto del artefacto en garantia."
 	if documentType == modeldb.DocumentTypeLastInvoice {
 		requimentType = modeldb.RequirementTypeLastInvoicePhoto
-		descriptionType = "foto de la ultima boleta de pago"
+		descriptionType = "foto de la última boleta de pago"
 	}
 
 	requirementByType := modeldb.Requirement{
 		RequirementType: requimentType,
-		Title:           "Boleto de pago",
+		Title:           "Boleta de pago",
 		Description:     descriptionType,
 		Status:          true,
 	}
