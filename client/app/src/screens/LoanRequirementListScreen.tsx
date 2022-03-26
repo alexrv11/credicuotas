@@ -49,7 +49,7 @@ const LoanRequirementListScreen = ({ route, navigation }) => {
     }
 
     if (status === 'PENDING_REVIEW') {
-      return 'En revision';
+      return 'En revisión';
     }
 
     if (status === 'APPROVED') {

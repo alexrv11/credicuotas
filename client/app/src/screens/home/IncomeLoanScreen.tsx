@@ -59,7 +59,7 @@ const IncomeLoanScreen = ({ navigation }) => {
           }}>
           <Icon name="groups" style={styles.incomeIcon} type="material" />
           <View style={styles.incomeDescriptionContainer}>
-            <Text style={styles.text}>Asalariado funcionario publico</Text>
+            <Text style={styles.text}>Asalariado funcionario público</Text>
           </View>
         </TouchableOpacity>
       </View>

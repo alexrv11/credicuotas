@@ -40,7 +40,7 @@ const steps = [
         description: `Enviar un mensaje al cliente para la firma`
     },
     {
-        label: 'En Ejecucion',
+        label: 'En Ejecución',
         description: ``
     }
 ];

@@ -56,7 +56,7 @@ const LoanAmountScreen = ({ navigation }) => {
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView style={styles.form} contentContainerStyle={styles.content}>
-        <Text style={styles.inputLabel}>Monto del prestamo</Text>
+        <Text style={styles.inputLabel}>Monto del préstamo</Text>
         <Input
           placeholder="500 - 14000bs"
           autoCorrect={false}

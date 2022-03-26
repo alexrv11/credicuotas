@@ -138,7 +138,7 @@ const StaffProfiles = () => {
                         </Box>
                         <Box sx={{ mt: 3 }}>
                             <FormControl sx={{ m: 1, minWidth: 180 }}>
-                                <InputLabel id="create-user-select-role-label">Role del usuario</InputLabel>
+                                <InputLabel id="create-user-select-role-label">Rol del usuario</InputLabel>
                                 <Select
                                     labelId="create-user-select-role-label"
                                     id="select-role-values"

@@ -22,7 +22,7 @@ func (r *Document) StatusDescription(ctx context.Context, doc *model1.Document) 
 	}
 
 	if doc.Status == model1.DocumentStatusPendingReview {
-		return "Pendiente de revision", nil
+		return "Pendiente de revisión", nil
 	}
 
 	return "", nil

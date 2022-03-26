@@ -7,7 +7,7 @@ import Spacer from 'components/Spacer';
 const HomeScreen = ({ navigation }) => {
   return (
     <View style={styles.container}>
-      <Text style={styles.textTitle}>Solicita tu prestamo</Text>
+      <Text style={styles.textTitle}>Solicita tu préstamo</Text>
       <Spacer />
       <TouchableOpacity
         style={styles.requestLoanButton}
@@ -21,7 +21,7 @@ const HomeScreen = ({ navigation }) => {
           activeOpacity={0.7}
           containerStyle={styles.avatarContainer}
         />
-        <Text style={styles.requestLoanText}>Solicitar Prestamo</Text>
+        <Text style={styles.requestLoanText}>Solicitar Préstamo</Text>
       </TouchableOpacity>
     </View>
   );

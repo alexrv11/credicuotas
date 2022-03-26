@@ -83,7 +83,7 @@ const LoanScreen = ({ navigation }) => {
       </View>
       <View style={styles.loanContainer}>
         <View style={styles.details}>
-          <Text style={styles.titleDetails}>Total Prestamo</Text>
+          <Text style={styles.titleDetails}>Total Préstamo</Text>
           <View style={styles.amountContainer}>
             <Text>bs</Text>
             <Text style={styles.amount}>{data?.getLoan?.amount}</Text>
