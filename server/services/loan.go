@@ -15,6 +15,7 @@ type Loan interface {
 	Save(provider *providers.Provider, userXid string, amount, totalInstallments int, incomeType model.IncomeType, requirementType string) (string, error)
 	SaveDocuments(provider *providers.Provider, userXid, loanID, requirementType, fileName string) error
 	GetLoans(provider *providers.Provider, userXid string) ([]*modeldb.Loan, error)
+	GetLoanTypes(provider *providers.Provider) ([]*modeldb.LoanType, error)
 	GetLoan(provider *providers.Provider, userXid string) (*modeldb.Loan, error)
 	GetLoanByID(provider *providers.Provider, id string) (*modeldb.Loan, error)
 	GetLoanOrders(provider *providers.Provider) ([]*modeldb.Loan, error)
@@ -87,6 +88,15 @@ func (r *LoanImpl) GetLoans(provider *providers.Provider, userXid string) ([]*mo
 	err := db.Preload("User").Where("status = ?", modeldb.LoanStatusRunning).Find(&loans).Error
 
 	return loans, err
+}
+
+func (r *LoanImpl) GetLoanTypes(provider *providers.Provider) ([]*modeldb.LoanType, error) {
+	db := provider.GormClient()
+	types := make([]*modeldb.LoanType, 0)
+
+	err := db.Model(&modeldb.LoanType{}).Find(&types).Error
+
+	return types, err
 }
 
 func (r *LoanImpl) GetLoanOrders(provider *providers.Provider) ([]*modeldb.Loan, error) {

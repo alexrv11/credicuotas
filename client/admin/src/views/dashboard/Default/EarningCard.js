@@ -107,7 +107,7 @@ const EarningCard = ({ isLoading }) => {
                                         color: theme.palette.secondary[200]
                                     }}
                                 >
-                                    Total Dinero en Prestamo
+                                    Total Dinero en Préstamo
                                 </Typography>
                             </Grid>
                         </Grid>

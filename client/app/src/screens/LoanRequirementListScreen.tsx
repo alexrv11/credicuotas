@@ -90,7 +90,7 @@ const LoanRequirementListScreen = ({ route, navigation }) => {
   return (
     <SafeAreaView style={styles.container}>
       <Text style={styles.textHeader}>
-        Necesitamos que nos envies la siguiente informacion
+        Necesitamos que nos envíes la siguiente información
       </Text>
       <Spacer />
       <View style={styles.options}>

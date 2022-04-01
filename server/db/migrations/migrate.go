@@ -29,6 +29,7 @@ func MigrateDB(provider *providers.Provider, migrateOpts *MigrateOpts) error {
 			m0005_create_session_table(),
 			m0004_create_loan_co_borrowers_table(),
 			m0004_create_loan_guarantees_table(),
+			m0004_create_type_loans_table(),
 		},
 	)
 

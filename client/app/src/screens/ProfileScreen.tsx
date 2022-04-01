@@ -40,7 +40,7 @@ const ProfileScreen = () => {
           <View style={styles.row}>
             <Icon name="logout" style={styles.icon} type="material" />
             <View style={styles.option}>
-              <Text>Cerrar Sesion</Text>
+              <Text>Cerrar Sesión</Text>
             </View>
           </View>
         </View>

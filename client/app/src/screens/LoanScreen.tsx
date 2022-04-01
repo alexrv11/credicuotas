@@ -22,6 +22,7 @@ const LoanScreen = ({ navigation }) => {
 
   const getStatusDescriptionView = (loan, callback) => {
     let description = '';
+    console.log(loan);
     if (loan?.status === 'REGISTERED') {
       description = 'Estamos analizando su solicitud';
     }
@@ -85,10 +86,10 @@ const LoanScreen = ({ navigation }) => {
         <View style={styles.details}>
           <Text style={styles.titleDetails}>Total Préstamo</Text>
           <View style={styles.amountContainer}>
-            <Text>bs</Text>
+            <Text>Bs</Text>
             <Text style={styles.amount}>{data?.getLoan?.amount}</Text>
           </View>
-          <Text style={styles.rateTitle}>Interes</Text>
+          <Text style={styles.rateTitle}>Interés</Text>
           <View style={styles.rateContainer}>
             <Text>{data?.getLoan?.ratePercentage}</Text>
             <Text style={styles.rate}>{data?.getLoan?.rateAmount}</Text>

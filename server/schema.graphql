@@ -84,6 +84,7 @@ type Query  {
   getLoan: Loan! @authenticated
   getLoanById(id: String!): Loan! @authenticated
   getLoanRequirements(loanId: String!, documentType: DocumentType!): [Requirement]! @authenticated
+  getLoanTypes: [LoanType]! @authenticated
 }
 
 type Mutation {
@@ -129,6 +130,14 @@ type Loan {
   installmentAmount: String!
   observation: String!
   documents: [Document!]!
+}
+
+type LoanType {
+  id: String!
+  name: String!
+  minAmount: Int!
+  maxAmount: Int!
+  rate: String!
 }
 
 type TimelineState {

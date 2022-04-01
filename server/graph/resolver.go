@@ -32,6 +32,10 @@ func (r *Resolver) Loan() LoanResolver {
 	return resolvers.NewLoan(r.provider, r.core)
 }
 
+func (r *Resolver) LoanType() LoanTypeResolver {
+	return resolvers.NewLoanType(r.provider, r.core)
+}
+
 func (r *Resolver) User() UserResolver {
 	return resolvers.NewUser(r.provider, r.core)
 }

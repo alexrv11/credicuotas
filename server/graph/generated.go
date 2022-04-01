@@ -40,6 +40,7 @@ type Config struct {
 type ResolverRoot interface {
 	Document() DocumentResolver
 	Loan() LoanResolver
+	LoanType() LoanTypeResolver
 	Mutation() MutationResolver
 	Query() QueryResolver
 	User() UserResolver
@@ -81,6 +82,14 @@ type ComplexityRoot struct {
 		TotalInstallments func(childComplexity int) int
 	}
 
+	LoanType struct {
+		ID        func(childComplexity int) int
+		MaxAmount func(childComplexity int) int
+		MinAmount func(childComplexity int) int
+		Name      func(childComplexity int) int
+		Rate      func(childComplexity int) int
+	}
+
 	Mutation struct {
 		ChangeDocumentStatus func(childComplexity int, documentID string, note string, status model1.DocumentStatus) int
 		ChangeLoanStatus     func(childComplexity int, loanID string, status model1.LoanStatus) int
@@ -102,6 +111,7 @@ type ComplexityRoot struct {
 		GetLoanByID         func(childComplexity int, id string) int
 		GetLoanOrders       func(childComplexity int) int
 		GetLoanRequirements func(childComplexity int, loanID string, documentType model1.DocumentType) int
+		GetLoanTypes        func(childComplexity int) int
 		GetLoans            func(childComplexity int) int
 		GetStaff            func(childComplexity int) int
 		GetUser             func(childComplexity int) int
@@ -153,6 +163,9 @@ type LoanResolver interface {
 
 	Documents(ctx context.Context, obj *model1.Loan) ([]*model1.Document, error)
 }
+type LoanTypeResolver interface {
+	ID(ctx context.Context, obj *model1.LoanType) (string, error)
+}
 type MutationResolver interface {
 	SendCodeByEmail(ctx context.Context, email string) (bool, error)
 	SignInWithCode(ctx context.Context, email string, code string) (*model2.Credential, error)
@@ -177,6 +190,7 @@ type QueryResolver interface {
 	GetLoan(ctx context.Context) (*model1.Loan, error)
 	GetLoanByID(ctx context.Context, id string) (*model1.Loan, error)
 	GetLoanRequirements(ctx context.Context, loanID string, documentType model1.DocumentType) ([]*model1.Requirement, error)
+	GetLoanTypes(ctx context.Context) ([]*model1.LoanType, error)
 }
 type UserResolver interface {
 	ID(ctx context.Context, obj *model1.User) (string, error)
@@ -345,6 +359,41 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Loan.TotalInstallments(childComplexity), true
+
+	case "LoanType.id":
+		if e.complexity.LoanType.ID == nil {
+			break
+		}
+
+		return e.complexity.LoanType.ID(childComplexity), true
+
+	case "LoanType.maxAmount":
+		if e.complexity.LoanType.MaxAmount == nil {
+			break
+		}
+
+		return e.complexity.LoanType.MaxAmount(childComplexity), true
+
+	case "LoanType.minAmount":
+		if e.complexity.LoanType.MinAmount == nil {
+			break
+		}
+
+		return e.complexity.LoanType.MinAmount(childComplexity), true
+
+	case "LoanType.name":
+		if e.complexity.LoanType.Name == nil {
+			break
+		}
+
+		return e.complexity.LoanType.Name(childComplexity), true
+
+	case "LoanType.rate":
+		if e.complexity.LoanType.Rate == nil {
+			break
+		}
+
+		return e.complexity.LoanType.Rate(childComplexity), true
 
 	case "Mutation.changeDocumentStatus":
 		if e.complexity.Mutation.ChangeDocumentStatus == nil {
@@ -529,6 +578,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Query.GetLoanRequirements(childComplexity, args["loanId"].(string), args["documentType"].(model1.DocumentType)), true
+
+	case "Query.getLoanTypes":
+		if e.complexity.Query.GetLoanTypes == nil {
+			break
+		}
+
+		return e.complexity.Query.GetLoanTypes(childComplexity), true
 
 	case "Query.getLoans":
 		if e.complexity.Query.GetLoans == nil {
@@ -773,7 +829,8 @@ enum DocumentType {
 }
 
 enum RequirementType {
-  CLIENT_DOCUMENT_PHOTO
+  CLIENT_DOCUMENT_PHOTO_FRONT
+  CLIENT_DOCUMENT_PHOTO_BACK
   LAST_INVOICE_PHOTO
   GUARANTEE_DOCUMENT_PHOTO
   OWN_ASSET_PHOTO
@@ -819,6 +876,7 @@ type Query  {
   getLoan: Loan! @authenticated
   getLoanById(id: String!): Loan! @authenticated
   getLoanRequirements(loanId: String!, documentType: DocumentType!): [Requirement]! @authenticated
+  getLoanTypes: [LoanType]! @authenticated
 }
 
 type Mutation {
@@ -864,6 +922,14 @@ type Loan {
   installmentAmount: String!
   observation: String!
   documents: [Document!]!
+}
+
+type LoanType {
+  id: String!
+  name: String!
+  minAmount: Int!
+  maxAmount: Int!
+  rate: String!
 }
 
 type TimelineState {
@@ -2034,6 +2100,181 @@ func (ec *executionContext) _Loan_documents(ctx context.Context, field graphql.C
 	res := resTmp.([]*model1.Document)
 	fc.Result = res
 	return ec.marshalNDocument2ᚕᚖgithubᚗcomᚋalexrv11ᚋcredicuotasᚋserverᚋdbᚋmodelᚐDocumentᚄ(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _LoanType_id(ctx context.Context, field graphql.CollectedField, obj *model1.LoanType) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "LoanType",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.LoanType().ID(rctx, obj)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _LoanType_name(ctx context.Context, field graphql.CollectedField, obj *model1.LoanType) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "LoanType",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Name, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _LoanType_minAmount(ctx context.Context, field graphql.CollectedField, obj *model1.LoanType) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "LoanType",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.MinAmount, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(int)
+	fc.Result = res
+	return ec.marshalNInt2int(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _LoanType_maxAmount(ctx context.Context, field graphql.CollectedField, obj *model1.LoanType) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "LoanType",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.MaxAmount, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(int)
+	fc.Result = res
+	return ec.marshalNInt2int(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _LoanType_rate(ctx context.Context, field graphql.CollectedField, obj *model1.LoanType) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "LoanType",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Rate, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Mutation_sendCodeByEmail(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -3250,6 +3491,61 @@ func (ec *executionContext) _Query_getLoanRequirements(ctx context.Context, fiel
 	res := resTmp.([]*model1.Requirement)
 	fc.Result = res
 	return ec.marshalNRequirement2ᚕᚖgithubᚗcomᚋalexrv11ᚋcredicuotasᚋserverᚋdbᚋmodelᚐRequirement(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Query_getLoanTypes(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Query",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		directive0 := func(rctx context.Context) (interface{}, error) {
+			ctx = rctx // use context from middleware stack in children
+			return ec.resolvers.Query().GetLoanTypes(rctx)
+		}
+		directive1 := func(ctx context.Context) (interface{}, error) {
+			if ec.directives.Authenticated == nil {
+				return nil, errors.New("directive authenticated is not implemented")
+			}
+			return ec.directives.Authenticated(ctx, nil, directive0)
+		}
+
+		tmp, err := directive1(rctx)
+		if err != nil {
+			return nil, graphql.ErrorOnPath(ctx, err)
+		}
+		if tmp == nil {
+			return nil, nil
+		}
+		if data, ok := tmp.([]*model1.LoanType); ok {
+			return data, nil
+		}
+		return nil, fmt.Errorf(`unexpected type %T from directive, should be []*github.com/alexrv11/credicuotas/server/db/model.LoanType`, tmp)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.([]*model1.LoanType)
+	fc.Result = res
+	return ec.marshalNLoanType2ᚕᚖgithubᚗcomᚋalexrv11ᚋcredicuotasᚋserverᚋdbᚋmodelᚐLoanType(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Query___type(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -5245,6 +5541,62 @@ func (ec *executionContext) _Loan(ctx context.Context, sel ast.SelectionSet, obj
 	return out
 }
 
+var loanTypeImplementors = []string{"LoanType"}
+
+func (ec *executionContext) _LoanType(ctx context.Context, sel ast.SelectionSet, obj *model1.LoanType) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, loanTypeImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("LoanType")
+		case "id":
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._LoanType_id(ctx, field, obj)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
+			})
+		case "name":
+			out.Values[i] = ec._LoanType_name(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&invalids, 1)
+			}
+		case "minAmount":
+			out.Values[i] = ec._LoanType_minAmount(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&invalids, 1)
+			}
+		case "maxAmount":
+			out.Values[i] = ec._LoanType_maxAmount(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&invalids, 1)
+			}
+		case "rate":
+			out.Values[i] = ec._LoanType_rate(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&invalids, 1)
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
 var mutationImplementors = []string{"Mutation"}
 
 func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet) graphql.Marshaler {
@@ -5467,6 +5819,20 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 					}
 				}()
 				res = ec._Query_getLoanRequirements(ctx, field)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
+			})
+		case "getLoanTypes":
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Query_getLoanTypes(ctx, field)
 				if res == graphql.Null {
 					atomic.AddUint32(&invalids, 1)
 				}
@@ -6130,6 +6496,43 @@ func (ec *executionContext) marshalNLoanStatus2githubᚗcomᚋalexrv11ᚋcredicu
 	return res
 }
 
+func (ec *executionContext) marshalNLoanType2ᚕᚖgithubᚗcomᚋalexrv11ᚋcredicuotasᚋserverᚋdbᚋmodelᚐLoanType(ctx context.Context, sel ast.SelectionSet, v []*model1.LoanType) graphql.Marshaler {
+	ret := make(graphql.Array, len(v))
+	var wg sync.WaitGroup
+	isLen1 := len(v) == 1
+	if !isLen1 {
+		wg.Add(len(v))
+	}
+	for i := range v {
+		i := i
+		fc := &graphql.FieldContext{
+			Index:  &i,
+			Result: &v[i],
+		}
+		ctx := graphql.WithFieldContext(ctx, fc)
+		f := func(i int) {
+			defer func() {
+				if r := recover(); r != nil {
+					ec.Error(ctx, ec.Recover(ctx, r))
+					ret = nil
+				}
+			}()
+			if !isLen1 {
+				defer wg.Done()
+			}
+			ret[i] = ec.marshalOLoanType2ᚖgithubᚗcomᚋalexrv11ᚋcredicuotasᚋserverᚋdbᚋmodelᚐLoanType(ctx, sel, v[i])
+		}
+		if isLen1 {
+			f(i)
+		} else {
+			go f(i)
+		}
+
+	}
+	wg.Wait()
+	return ret
+}
+
 func (ec *executionContext) unmarshalNOnboardingStatus2githubᚗcomᚋalexrv11ᚋcredicuotasᚋserverᚋgraphᚋmodelᚐOnboardingStatus(ctx context.Context, v interface{}) (model.OnboardingStatus, error) {
 	var res model.OnboardingStatus
 	err := res.UnmarshalGQL(v)
@@ -6590,6 +6993,13 @@ func (ec *executionContext) marshalOLoan2ᚖgithubᚗcomᚋalexrv11ᚋcredicuota
 		return graphql.Null
 	}
 	return ec._Loan(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalOLoanType2ᚖgithubᚗcomᚋalexrv11ᚋcredicuotasᚋserverᚋdbᚋmodelᚐLoanType(ctx context.Context, sel ast.SelectionSet, v *model1.LoanType) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._LoanType(ctx, sel, v)
 }
 
 func (ec *executionContext) marshalORequirement2ᚖgithubᚗcomᚋalexrv11ᚋcredicuotasᚋserverᚋdbᚋmodelᚐRequirement(ctx context.Context, sel ast.SelectionSet, v *model1.Requirement) graphql.Marshaler {
