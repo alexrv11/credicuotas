@@ -120,6 +120,25 @@ func (r *mutationResolver) CreateUser(ctx context.Context, email, password, name
 	return true, nil
 }
 
+func (r *mutationResolver) CreateLoanType(ctx context.Context, name, rate string, minAmount, maxAmount int) (bool, error) {
+	db := r.provider.GormClient()
+
+	loanType := &model1.LoanType{
+		Name:      name,
+		Rate:      rate,
+		MinAmount: minAmount,
+		MaxAmount: maxAmount,
+	}
+
+	err := db.Save(loanType).Error
+
+	if err != nil {
+		return false, err
+	}
+
+	return true, nil
+}
+
 func (r *mutationResolver) ToggleUserDisable(ctx context.Context, userXid string) (bool, error) {
 
 	return r.core.User.ToggleDisableUser(r.provider, userXid)

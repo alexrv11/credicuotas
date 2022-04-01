@@ -93,7 +93,7 @@ type Mutation {
   login(email: String!, password: String!): Credential!
   toggleUserDisable(userXid: String!): Boolean! @authenticated @hasRole(role: ADMIN)
   createUser(email: String!, password: String!, name: String!, role: Role!): Boolean! @authenticated @hasRole(role: ADMIN)
-
+  createLoanType(name: String!, rate: String!, minAmount: Int!, maxAmount: Int!): Boolean! @authenticated
   saveUserInfo(name: String!, identifier: String!): Boolean! @authenticated
   sendCodeByPhone(phone: String!): Boolean! @authenticated
   savePhoneNumber(phone: String!, code: String!): Boolean! @authenticated

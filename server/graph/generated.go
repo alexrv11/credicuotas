@@ -93,6 +93,7 @@ type ComplexityRoot struct {
 	Mutation struct {
 		ChangeDocumentStatus func(childComplexity int, documentID string, note string, status model1.DocumentStatus) int
 		ChangeLoanStatus     func(childComplexity int, loanID string, status model1.LoanStatus) int
+		CreateLoanType       func(childComplexity int, name string, rate string, minAmount int, maxAmount int) int
 		CreateUser           func(childComplexity int, email string, password string, name string, role model.Role) int
 		Login                func(childComplexity int, email string, password string) int
 		Logout               func(childComplexity int) int
@@ -172,6 +173,7 @@ type MutationResolver interface {
 	Login(ctx context.Context, email string, password string) (*model2.Credential, error)
 	ToggleUserDisable(ctx context.Context, userXid string) (bool, error)
 	CreateUser(ctx context.Context, email string, password string, name string, role model.Role) (bool, error)
+	CreateLoanType(ctx context.Context, name string, rate string, minAmount int, maxAmount int) (bool, error)
 	SaveUserInfo(ctx context.Context, name string, identifier string) (bool, error)
 	SendCodeByPhone(ctx context.Context, phone string) (bool, error)
 	SavePhoneNumber(ctx context.Context, phone string, code string) (bool, error)
@@ -418,6 +420,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Mutation.ChangeLoanStatus(childComplexity, args["loanId"].(string), args["status"].(model1.LoanStatus)), true
+
+	case "Mutation.createLoanType":
+		if e.complexity.Mutation.CreateLoanType == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_createLoanType_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.CreateLoanType(childComplexity, args["name"].(string), args["rate"].(string), args["minAmount"].(int), args["maxAmount"].(int)), true
 
 	case "Mutation.createUser":
 		if e.complexity.Mutation.CreateUser == nil {
@@ -885,7 +899,7 @@ type Mutation {
   login(email: String!, password: String!): Credential!
   toggleUserDisable(userXid: String!): Boolean! @authenticated @hasRole(role: ADMIN)
   createUser(email: String!, password: String!, name: String!, role: Role!): Boolean! @authenticated @hasRole(role: ADMIN)
-
+  createLoanType(name: String!, rate: String!, minAmount: Int!, maxAmount: Int!): Boolean! @authenticated
   saveUserInfo(name: String!, identifier: String!): Boolean! @authenticated
   sendCodeByPhone(phone: String!): Boolean! @authenticated
   savePhoneNumber(phone: String!, code: String!): Boolean! @authenticated
@@ -1047,6 +1061,48 @@ func (ec *executionContext) field_Mutation_changeLoanStatus_args(ctx context.Con
 		}
 	}
 	args["status"] = arg1
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_createLoanType_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 string
+	if tmp, ok := rawArgs["name"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("name"))
+		arg0, err = ec.unmarshalNString2string(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["name"] = arg0
+	var arg1 string
+	if tmp, ok := rawArgs["rate"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("rate"))
+		arg1, err = ec.unmarshalNString2string(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["rate"] = arg1
+	var arg2 int
+	if tmp, ok := rawArgs["minAmount"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("minAmount"))
+		arg2, err = ec.unmarshalNInt2int(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["minAmount"] = arg2
+	var arg3 int
+	if tmp, ok := rawArgs["maxAmount"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("maxAmount"))
+		arg3, err = ec.unmarshalNInt2int(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["maxAmount"] = arg3
 	return args, nil
 }
 
@@ -2521,6 +2577,68 @@ func (ec *executionContext) _Mutation_createUser(ctx context.Context, field grap
 		}
 
 		tmp, err := directive2(rctx)
+		if err != nil {
+			return nil, graphql.ErrorOnPath(ctx, err)
+		}
+		if tmp == nil {
+			return nil, nil
+		}
+		if data, ok := tmp.(bool); ok {
+			return data, nil
+		}
+		return nil, fmt.Errorf(`unexpected type %T from directive, should be bool`, tmp)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(bool)
+	fc.Result = res
+	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Mutation_createLoanType(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Mutation_createLoanType_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		directive0 := func(rctx context.Context) (interface{}, error) {
+			ctx = rctx // use context from middleware stack in children
+			return ec.resolvers.Mutation().CreateLoanType(rctx, args["name"].(string), args["rate"].(string), args["minAmount"].(int), args["maxAmount"].(int))
+		}
+		directive1 := func(ctx context.Context) (interface{}, error) {
+			if ec.directives.Authenticated == nil {
+				return nil, errors.New("directive authenticated is not implemented")
+			}
+			return ec.directives.Authenticated(ctx, nil, directive0)
+		}
+
+		tmp, err := directive1(rctx)
 		if err != nil {
 			return nil, graphql.ErrorOnPath(ctx, err)
 		}
@@ -5634,6 +5752,11 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 			}
 		case "createUser":
 			out.Values[i] = ec._Mutation_createUser(ctx, field)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "createLoanType":
+			out.Values[i] = ec._Mutation_createLoanType(ctx, field)
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
