@@ -104,7 +104,7 @@ export default function LoanTabs({ loan }) {
     };
 
     const downloadFile = React.useCallback(async (url) => {
-        await axios.get(`https://api-4huvpq5kca-uc.a.run.app/download/${url}`, { responseType: 'arraybuffer' }).then((res) => {
+        await axios.get(`https://http://localhost:8282/download/${url}`, { responseType: 'arraybuffer' }).then((res) => {
             const base64ImageString = Buffer.from(res.data, 'binary').toString('base64');
             setImage(base64ImageString);
         });

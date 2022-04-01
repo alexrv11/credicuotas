@@ -39,6 +39,14 @@ const assistant = {
                     url: '/clients/profiles',
                     icon: icons.IconShadow,
                     breadcrumbs: false
+                },
+                {
+                    id: 'type-loans',
+                    title: 'Tipos de prestamo',
+                    type: 'item',
+                    url: '/loans/loan-types',
+                    icon: icons.IconShadow,
+                    breadcrumbs: false
                 }
             ]
         }
