@@ -7,7 +7,6 @@ const GET_LOANS = gql`
             totalInstallments
             status
             amount
-            incomeType
             ownerName
             statusDescription
         }

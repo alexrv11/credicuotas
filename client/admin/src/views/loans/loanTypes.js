@@ -142,20 +142,8 @@ const LoanTypes = () => {
                         <Box sx={{ mt: 3 }}>
                             <TextField
                                 margin="dense"
-                                id="minAmount"
-                                label="Monto min"
-                                type="text"
-                                fullWidth
-                                variant="standard"
-                                value={minAmount}
-                                onChange={(e) => setMinAmount(e.target.value)}
-                            />
-                        </Box>
-                        <Box sx={{ mt: 3 }}>
-                            <TextField
-                                margin="dense"
                                 id="maxAmount"
-                                label="Monto max"
+                                label="Numero de Meses"
                                 type="text"
                                 fullWidth
                                 variant="standard"

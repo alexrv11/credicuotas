@@ -66,12 +66,6 @@ const Loans = () => {
             hide: true
         },
         {
-            field: 'incomeType',
-            headerName: 'Tipo de Ingreso',
-            width: 220,
-            editable: false
-        },
-        {
             field: 'amount',
             headerName: 'Monto',
             width: 120,

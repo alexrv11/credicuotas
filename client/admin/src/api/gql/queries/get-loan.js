@@ -9,7 +9,6 @@ const GET_LOAN = gql`
             amount
             ownerName
             id
-            incomeType
             rateAmount
             ratePercentage
             timeline {

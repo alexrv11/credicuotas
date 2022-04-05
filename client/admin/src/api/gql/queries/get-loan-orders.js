@@ -7,7 +7,6 @@ const GET_LOAN_ORDERS = gql`
             totalInstallments
             status
             amount
-            incomeType
             ownerName
             statusDescription
         }
