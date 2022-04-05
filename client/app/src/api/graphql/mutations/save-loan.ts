@@ -4,13 +4,13 @@ export default gql`
   mutation saveLoan(
     $amount: Int!
     $totalInstallments: Int!
-    $incomeType: IncomeType!
+    $loanType: String!
     $requirementType: String!
   ) {
     saveLoan(
       amount: $amount
       totalInstallments: $totalInstallments
-      incomeType: $incomeType
+      loanType: $loanType
       requirementType: $requirementType
     )
   }

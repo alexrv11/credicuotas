@@ -7,50 +7,14 @@ import { useLoan } from '../context/LoanContext';
 import { useSaveLoanMutation } from 'api/graphql/generated/graphql';
 import { StackActions } from '@react-navigation/native';
 
-const types = {
-  OWN_BUSINESS: [
-    {
-      type: 'SIGNATURE_ACKNOWLEDGMENT',
-      icon: 'group',
-      title: 'Grupo de 4 a 6 personas',
-      description: 'Reconocimiento de firmas',
-    },
-    {
-      type: 'TWO_GUARANTEES',
-      icon: 'account-balance',
-      title: '2 garantes con negocio propio',
-      descripcion: 'Reconocimiento de firmas',
-    },
-    { type: 'OWN_ASSET', icon: 'directions-car', title: 'Bienes Personales' },
-  ],
-  ONW_EMPLOYEE: [
-    {
-      type: 'TWO_GUARANTEES',
-      icon: 'account-balance',
-      title: '2 garantes con negocio propio',
-      descripcion: 'Reconocimiento de firmas',
-    },
-    { type: 'OWN_ASSET', icon: 'directions-car', title: 'Bienes Personales' },
-  ],
-  PRIVATE_COMPANY_EMPLOYEE: [
-    { type: 'LAST_INVOICE', icon: 'article', title: 'Ultima boleta de pago' },
-    { type: 'OWN_ASSET', icon: 'directions-car', title: 'Bienes Personales' },
-  ],
-  PUBLIC_EMPLOYEE: [
-    { type: 'LAST_INVOICE', icon: 'article', title: 'Ultima boleta de pago' },
-    { type: 'OWN_ASSET', icon: 'directions-car', title: 'Bienes Personales' },
-  ],
-};
+const types = [
+  { type: 'LAST_INVOICE', icon: 'article', title: 'Ultima boleta de pago' },
+  { type: 'OWN_ASSET', icon: 'directions-car', title: 'Bienes Personales' },
+];
 
 const LoanRequirementTypeScreen = ({ route, navigation }) => {
-  const {
-    amount,
-    totalInstallments,
-    setLoanId,
-    setIncomeType,
-    incomeType,
-    setRequirementType,
-  } = useLoan();
+  const { amount, totalInstallments, setLoanId, loanType, setRequirementType } =
+    useLoan();
 
   const [saveLoan, { data, error }] = useSaveLoanMutation();
 
@@ -69,12 +33,12 @@ const LoanRequirementTypeScreen = ({ route, navigation }) => {
         variables: {
           amount,
           totalInstallments,
-          incomeType,
+          loanType,
           requirementType: type,
         },
       });
     },
-    [amount, incomeType, saveLoan, setRequirementType, totalInstallments],
+    [amount, loanType, saveLoan, setRequirementType, totalInstallments],
   );
 
   function viewTypes(values) {
@@ -101,7 +65,7 @@ const LoanRequirementTypeScreen = ({ route, navigation }) => {
         Seleccione el tipo de documentos a presentar
       </Text>
       <Spacer />
-      <View style={styles.options}>{viewTypes(types[incomeType])}</View>
+      <View style={styles.options}>{viewTypes(types)}</View>
     </SafeAreaView>
   );
 };

@@ -9,7 +9,6 @@ export default gql`
       amount
       ownerName
       id
-      incomeType
       requirementType
       rateAmount
       ratePercentage

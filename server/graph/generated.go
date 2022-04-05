@@ -69,7 +69,6 @@ type ComplexityRoot struct {
 		Amount            func(childComplexity int) int
 		Documents         func(childComplexity int) int
 		ID                func(childComplexity int) int
-		IncomeType        func(childComplexity int) int
 		InstallmentAmount func(childComplexity int) int
 		Observation       func(childComplexity int) int
 		OwnerName         func(childComplexity int) int
@@ -97,7 +96,7 @@ type ComplexityRoot struct {
 		CreateUser           func(childComplexity int, email string, password string, name string, role model.Role) int
 		Login                func(childComplexity int, email string, password string) int
 		Logout               func(childComplexity int) int
-		SaveLoan             func(childComplexity int, amount int, totalInstallments int, incomeType model.IncomeType, requirementType string) int
+		SaveLoan             func(childComplexity int, amount int, totalInstallments int, loanType string, requirementType string) int
 		SavePhoneNumber      func(childComplexity int, phone string, code string) int
 		SaveUserInfo         func(childComplexity int, name string, identifier string) int
 		SendCodeByEmail      func(childComplexity int, email string) int
@@ -153,8 +152,6 @@ type DocumentResolver interface {
 type LoanResolver interface {
 	ID(ctx context.Context, obj *model1.Loan) (string, error)
 
-	IncomeType(ctx context.Context, obj *model1.Loan) (string, error)
-
 	StatusDescription(ctx context.Context, obj *model1.Loan) (string, error)
 	OwnerName(ctx context.Context, obj *model1.Loan) (string, error)
 	Timeline(ctx context.Context, obj *model1.Loan) ([]*model1.TimelineState, error)
@@ -177,7 +174,7 @@ type MutationResolver interface {
 	SaveUserInfo(ctx context.Context, name string, identifier string) (bool, error)
 	SendCodeByPhone(ctx context.Context, phone string) (bool, error)
 	SavePhoneNumber(ctx context.Context, phone string, code string) (bool, error)
-	SaveLoan(ctx context.Context, amount int, totalInstallments int, incomeType model.IncomeType, requirementType string) (string, error)
+	SaveLoan(ctx context.Context, amount int, totalInstallments int, loanType string, requirementType string) (string, error)
 	Logout(ctx context.Context) (bool, error)
 	ChangeDocumentStatus(ctx context.Context, documentID string, note string, status model1.DocumentStatus) (bool, error)
 	ChangeLoanStatus(ctx context.Context, loanID string, status model1.LoanStatus) (bool, error)
@@ -284,13 +281,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Loan.ID(childComplexity), true
-
-	case "Loan.incomeType":
-		if e.complexity.Loan.IncomeType == nil {
-			break
-		}
-
-		return e.complexity.Loan.IncomeType(childComplexity), true
 
 	case "Loan.installmentAmount":
 		if e.complexity.Loan.InstallmentAmount == nil {
@@ -474,7 +464,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Mutation.SaveLoan(childComplexity, args["amount"].(int), args["totalInstallments"].(int), args["incomeType"].(model.IncomeType), args["requirementType"].(string)), true
+		return e.complexity.Mutation.SaveLoan(childComplexity, args["amount"].(int), args["totalInstallments"].(int), args["loanType"].(string), args["requirementType"].(string)), true
 
 	case "Mutation.savePhoneNumber":
 		if e.complexity.Mutation.SavePhoneNumber == nil {
@@ -903,7 +893,7 @@ type Mutation {
   saveUserInfo(name: String!, identifier: String!): Boolean! @authenticated
   sendCodeByPhone(phone: String!): Boolean! @authenticated
   savePhoneNumber(phone: String!, code: String!): Boolean! @authenticated
-  saveLoan(amount: Int!, totalInstallments: Int!, incomeType: IncomeType!, requirementType: String!): String! @authenticated
+  saveLoan(amount: Int!, totalInstallments: Int!, loanType: String!, requirementType: String!): String! @authenticated
   logout: Boolean! @authenticated
   changeDocumentStatus(documentId: String!, note: String!, status: DocumentStatus!): Boolean! @authenticated
   changeLoanStatus(loanId: String!, status: LoanStatus!): Boolean! @authenticated
@@ -925,7 +915,6 @@ type Loan {
   id: String!
   amount: Int!
   totalInstallments: Int!
-  incomeType: String!
   requirementType: String!
   status: LoanStatus!
   statusDescription: String!
@@ -1193,15 +1182,15 @@ func (ec *executionContext) field_Mutation_saveLoan_args(ctx context.Context, ra
 		}
 	}
 	args["totalInstallments"] = arg1
-	var arg2 model.IncomeType
-	if tmp, ok := rawArgs["incomeType"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("incomeType"))
-		arg2, err = ec.unmarshalNIncomeType2githubᚗcomᚋalexrv11ᚋcredicuotasᚋserverᚋgraphᚋmodelᚐIncomeType(ctx, tmp)
+	var arg2 string
+	if tmp, ok := rawArgs["loanType"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("loanType"))
+		arg2, err = ec.unmarshalNString2string(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
 	}
-	args["incomeType"] = arg2
+	args["loanType"] = arg2
 	var arg3 string
 	if tmp, ok := rawArgs["requirementType"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("requirementType"))
@@ -1771,41 +1760,6 @@ func (ec *executionContext) _Loan_totalInstallments(ctx context.Context, field g
 	res := resTmp.(int)
 	fc.Result = res
 	return ec.marshalNInt2int(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _Loan_incomeType(ctx context.Context, field graphql.CollectedField, obj *model1.Loan) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "Loan",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   true,
-		IsResolver: true,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Loan().IncomeType(rctx, obj)
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(string)
-	fc.Result = res
-	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Loan_requirementType(ctx context.Context, field graphql.CollectedField, obj *model1.Loan) (ret graphql.Marshaler) {
@@ -2877,7 +2831,7 @@ func (ec *executionContext) _Mutation_saveLoan(ctx context.Context, field graphq
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		directive0 := func(rctx context.Context) (interface{}, error) {
 			ctx = rctx // use context from middleware stack in children
-			return ec.resolvers.Mutation().SaveLoan(rctx, args["amount"].(int), args["totalInstallments"].(int), args["incomeType"].(model.IncomeType), args["requirementType"].(string))
+			return ec.resolvers.Mutation().SaveLoan(rctx, args["amount"].(int), args["totalInstallments"].(int), args["loanType"].(string), args["requirementType"].(string))
 		}
 		directive1 := func(ctx context.Context) (interface{}, error) {
 			if ec.directives.Authenticated == nil {
@@ -5521,20 +5475,6 @@ func (ec *executionContext) _Loan(ctx context.Context, sel ast.SelectionSet, obj
 			if out.Values[i] == graphql.Null {
 				atomic.AddUint32(&invalids, 1)
 			}
-		case "incomeType":
-			field := field
-			out.Concurrently(i, func() (res graphql.Marshaler) {
-				defer func() {
-					if r := recover(); r != nil {
-						ec.Error(ctx, ec.Recover(ctx, r))
-					}
-				}()
-				res = ec._Loan_incomeType(ctx, field, obj)
-				if res == graphql.Null {
-					atomic.AddUint32(&invalids, 1)
-				}
-				return res
-			})
 		case "requirementType":
 			out.Values[i] = ec._Loan_requirementType(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
@@ -6488,16 +6428,6 @@ func (ec *executionContext) marshalNDocumentType2githubᚗcomᚋalexrv11ᚋcredi
 		}
 	}
 	return res
-}
-
-func (ec *executionContext) unmarshalNIncomeType2githubᚗcomᚋalexrv11ᚋcredicuotasᚋserverᚋgraphᚋmodelᚐIncomeType(ctx context.Context, v interface{}) (model.IncomeType, error) {
-	var res model.IncomeType
-	err := res.UnmarshalGQL(v)
-	return res, graphql.ErrorOnPath(ctx, err)
-}
-
-func (ec *executionContext) marshalNIncomeType2githubᚗcomᚋalexrv11ᚋcredicuotasᚋserverᚋgraphᚋmodelᚐIncomeType(ctx context.Context, sel ast.SelectionSet, v model.IncomeType) graphql.Marshaler {
-	return v
 }
 
 func (ec *executionContext) unmarshalNInt2int(ctx context.Context, v interface{}) (int, error) {

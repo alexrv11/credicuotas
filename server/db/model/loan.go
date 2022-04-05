@@ -24,7 +24,6 @@ type Loan struct {
 	Xid               string
 	Amount            int
 	TotalInstallments int
-	IncomeType        string
 	RequirementType   string
 	Status            LoanStatus
 	Observation       string

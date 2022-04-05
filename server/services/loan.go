@@ -5,14 +5,13 @@ import (
 	"fmt"
 	"github.com/alexrv11/credicuotas/server/config"
 	modeldb "github.com/alexrv11/credicuotas/server/db/model"
-	"github.com/alexrv11/credicuotas/server/graph/model"
 	"github.com/alexrv11/credicuotas/server/providers"
 	"go.uber.org/zap"
 	"gorm.io/gorm"
 )
 
 type Loan interface {
-	Save(provider *providers.Provider, userXid string, amount, totalInstallments int, incomeType model.IncomeType, requirementType string) (string, error)
+	Save(provider *providers.Provider, userXid string, amount, totalInstallments int, loanType string, requirementType string) (string, error)
 	SaveDocuments(provider *providers.Provider, userXid, loanID, requirementType, fileName string) error
 	GetLoans(provider *providers.Provider, userXid string) ([]*modeldb.Loan, error)
 	GetLoanTypes(provider *providers.Provider) ([]*modeldb.LoanType, error)
@@ -28,7 +27,7 @@ type Loan interface {
 
 type LoanImpl struct{}
 
-func (r *LoanImpl) Save(provider *providers.Provider, userXid string, amount, totalInstallments int, incomeType model.IncomeType, requirementType string) (string, error) {
+func (r *LoanImpl) Save(provider *providers.Provider, userXid string, amount, totalInstallments int, loanTypeID string, requirementType string) (string, error) {
 	db := provider.GormClient()
 	var user modeldb.User
 	err := db.Model(&modeldb.User{}).Where("xid = ?", userXid).First(&user).Error
@@ -49,22 +48,19 @@ func (r *LoanImpl) Save(provider *providers.Provider, userXid string, amount, to
 	}
 
 	if errors.Is(err, gorm.ErrRecordNotFound) {
-		rate := 0.24
-		if incomeType == model.IncomeTypePublicEmployee {
-			rate = 0.22
-		}
+		var loanType modeldb.LoanType
+		err := db.Model(&modeldb.LoanType{}).Where("xid = ?", loanTypeID).First(&loanType).Error
 
-		if incomeType == model.IncomeTypeOnwEmployee {
-			rate = 0.30
+		if err != nil {
+			return "", err
 		}
 
 		newLoan := &modeldb.Loan{
 			Amount:            amount,
 			TotalInstallments: totalInstallments,
-			IncomeType:        string(incomeType),
 			Status:            modeldb.LoanStatusRegister,
 			UserID:            user.ID,
-			Rate:              rate,
+			Rate:              loan.Rate,
 			RequirementType:   requirementType,
 		}
 

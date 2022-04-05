@@ -8,8 +8,8 @@ export interface Loan {
   setAmount: Dispatch<SetStateAction<undefined>>;
   totalInstallments?: Number;
   setTotalInstallments: Dispatch<SetStateAction<undefined>>;
-  incomeType?: String;
-  setIncomeType: Dispatch<SetStateAction<undefined>>;
+  loanType?: String;
+  setLoanType: Dispatch<SetStateAction<undefined>>;
   requirementType?: String;
   setRequirementType: Dispatch<SetStateAction<undefined>>;
 }
@@ -24,7 +24,7 @@ function LoanProvider({ children }: React.PropsWithChildren<any>) {
   const [loanId, setLoanId] = React.useState();
   const [amount, setAmount] = React.useState();
   const [totalInstallments, setTotalInstallments] = React.useState();
-  const [incomeType, setIncomeType] = React.useState();
+  const [loanType, setLoanType] = React.useState();
   const [requirementType, setRequirementType] = React.useState();
 
   const values = {
@@ -34,8 +34,8 @@ function LoanProvider({ children }: React.PropsWithChildren<any>) {
     setAmount,
     totalInstallments,
     setTotalInstallments,
-    incomeType,
-    setIncomeType,
+    loanType,
+    setLoanType,
     requirementType,
     setRequirementType,
   };

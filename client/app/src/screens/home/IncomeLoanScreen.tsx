@@ -1,68 +1,54 @@
-import { useCallback } from 'react';
+import { useCallback, useEffect } from 'react';
 import Spacer from 'components/Spacer';
 import React from 'react';
 import { SafeAreaView, StyleSheet, View, TouchableOpacity } from 'react-native';
 import { Text, Icon } from 'react-native-elements';
 import { useLoan } from 'context/LoanContext';
 import { StackActions } from '@react-navigation/native';
+import { useGetLoanTypesQuery } from 'api/graphql/generated/graphql';
+import Loading from 'components/Loading';
+import { ScrollView } from 'react-native-gesture-handler';
 
 const IncomeLoanScreen = ({ navigation }) => {
-  const { setIncomeType } = useLoan();
+  const { setLoanType } = useLoan();
+
+  const { data, error, loading } = useGetLoanTypesQuery();
+
+  useEffect(() => {console.log(data)}, [data]);
 
   const onSubmit = useCallback(
-    (incomeType: String) => {
-      setIncomeType(incomeType);
+    (loanType: String) => {
+      setLoanType(loanType);
       navigation.dispatch(StackActions.replace('LoanRequirementType'));
     },
-    [navigation, setIncomeType],
+    [navigation, setLoanType],
   );
+
+  if (loading) {
+    return <Loading />;
+  }
+
+  const optionsView = options => {
+    return options.map(option => {
+      return (
+        <TouchableOpacity
+          style={styles.incomeContainer}
+          onPress={() => {
+            onSubmit(option?.id);
+          }}>
+          <View style={styles.incomeDescriptionContainer}>
+            <Text style={styles.text}>{option?.name}</Text>
+          </View>
+        </TouchableOpacity>
+      );
+    });
+  };
 
   return (
     <SafeAreaView style={styles.container}>
-      <Text style={styles.textHeader}>Seleccione la fuente de ingreso</Text>
+      <Text style={styles.textHeader}>Seleccione el tipo de prestamo</Text>
       <Spacer />
-      <View style={styles.options}>
-        <TouchableOpacity
-          style={styles.incomeContainer}
-          onPress={() => {
-            onSubmit('OWN_BUSINESS');
-          }}>
-          <Icon name="business" style={styles.incomeIcon} type="material" />
-          <View style={styles.incomeDescriptionContainer}>
-            <Text style={styles.text}>Negocio propio</Text>
-          </View>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.incomeContainer}
-          onPress={() => {
-            onSubmit('ONW_EMPLOYEE');
-          }}>
-          <Icon name="work" style={styles.incomeIcon} type="material" />
-          <View style={styles.incomeDescriptionContainer}>
-            <Text style={styles.text}>Trabajador independiente</Text>
-          </View>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.incomeContainer}
-          onPress={() => {
-            onSubmit('PRIVATE_COMPANY_EMPLOYEE');
-          }}>
-          <Icon name="group-work" style={styles.incomeIcon} type="material" />
-          <View style={styles.incomeDescriptionContainer}>
-            <Text style={styles.text}>Asalariado empresa privada</Text>
-          </View>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.incomeContainer}
-          onPress={() => {
-            onSubmit('PUBLIC_EMPLOYEE');
-          }}>
-          <Icon name="groups" style={styles.incomeIcon} type="material" />
-          <View style={styles.incomeDescriptionContainer}>
-            <Text style={styles.text}>Asalariado funcionario público</Text>
-          </View>
-        </TouchableOpacity>
-      </View>
+      <ScrollView style={styles.options}>{optionsView(data?.getLoanTypes)}</ScrollView>
     </SafeAreaView>
   );
 };
