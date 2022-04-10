@@ -12,9 +12,13 @@ const LoanScreen = ({ navigation }) => {
   const { setLoanId, setRequirementType } = useLoan();
 
   useEffect(() => {
+    if (error?.message === 'not found loan') {
+      navigation.navigate('Inicio');
+    }
+
     setLoanId(data?.getLoan.id);
     setRequirementType(data?.getLoan.requirementType);
-  }, [data?.getLoan, setLoanId, setRequirementType]);
+  }, [data?.getLoan, setLoanId, setRequirementType, error]);
 
   if (loading) {
     return <Loading />;

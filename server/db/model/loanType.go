@@ -7,11 +7,11 @@ import (
 
 type LoanType struct {
 	gorm.Model
-	Xid       string
-	Name      string
-	Rate      string
-	MinAmount int
-	MaxAmount int
+	Xid            string
+	Name           string
+	Rate           string
+	MaxInstallment int
+	MinInstallment int
 }
 
 func (u *LoanType) BeforeCreate(tx *gorm.DB) error {

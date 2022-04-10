@@ -30,6 +30,7 @@ const LoanTypes = () => {
     const [pageSize, setPageSize] = useState(25);
     const { loading, error, data } = useQuery(GET_LOAN_TYPES);
     const [createLoanType] = useMutation(CREATE_LOAN_TYPE);
+    console.log('data', data);
 
     const columns = [
         {
@@ -49,14 +50,8 @@ const LoanTypes = () => {
             editable: false
         },
         {
-            field: 'minAmount',
-            headerName: 'Monto min',
-            width: 120,
-            editable: false
-        },
-        {
-            field: 'maxAmount',
-            headerName: 'Monto max',
+            field: 'minInstallment',
+            headerName: 'Nro de Cuotas',
             width: 120,
             editable: false
         }
@@ -74,13 +69,16 @@ const LoanTypes = () => {
 
     const [name, setName] = useState('');
     const [rate, setRate] = useState('');
-    const [minAmount, setMinAmount] = useState('');
-    const [maxAmount, setMaxAmount] = useState('');
+    const [minInstallment, setMinInstallment] = useState('');
 
     const handleSubmit = useCallback(async () => {
-        await createLoanType({ variables: { name, rate, minAmount, maxAmount }, refetchQueries: [GET_LOAN_TYPES] });
+        console.log('installment', minInstallment);
+        await createLoanType({
+            variables: { name, rate, minInstallment, maxInstallment: minInstallment },
+            refetchQueries: [GET_LOAN_TYPES]
+        });
         setOpen(false);
-    }, [createLoanType, maxAmount, minAmount, name, rate]);
+    }, [createLoanType, minInstallment, name, rate]);
 
     if (loading || error || !data) {
         return (
@@ -147,8 +145,8 @@ const LoanTypes = () => {
                                 type="text"
                                 fullWidth
                                 variant="standard"
-                                value={maxAmount}
-                                onChange={(e) => setMaxAmount(e.target.value)}
+                                value={minInstallment}
+                                onChange={(e) => setMinInstallment(e.target.value)}
                             />
                         </Box>
                     </DialogContent>

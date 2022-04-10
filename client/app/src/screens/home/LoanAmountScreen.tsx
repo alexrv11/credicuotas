@@ -41,7 +41,7 @@ const LoanAmountScreen = ({ navigation }) => {
     if (loanTotalInstallments) {
       const totalNumber = Number(loanTotalInstallments);
       if (totalNumber < 4 || totalNumber > 48) {
-        setErrorTotalInstallments('El plazo debe ser de 4 hasta 48 semanas');
+        setErrorTotalInstallments('El plazo debe ser de 4 hasta 48 meses');
         setDisable(true);
         return;
       }
@@ -72,9 +72,9 @@ const LoanAmountScreen = ({ navigation }) => {
         />
         <Text style={styles.inputError}>{errorAmount}</Text>
         <Spacer />
-        <Text style={styles.inputLabel}>Plazo en Semanas</Text>
+        <Text style={styles.inputLabel}>Plazo en meses</Text>
         <Input
-          placeholder="4 - 48 semanas"
+          placeholder="4 - 48 meses"
           autoCorrect={false}
           underlineColorAndroid="transparent"
           leftIcon={{ type: 'material', name: 'tag', color: '#070D99' }}

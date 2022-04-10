@@ -6,8 +6,8 @@ export default gql`
       name
       id
       rate
-      minAmount
-      maxAmount
+      minInstallment
+      maxInstallment
     }
 }
 `;

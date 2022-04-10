@@ -63,16 +63,31 @@ const StaffProfiles = () => {
     };
 
     const handleClose = () => {
+        setEmail('');
+        setName('');
+        setEmailError(false);
+        setEmailErrorMsg('');
+        setNameError(false);
+        setNameErrorMsg('');
         setOpen(false);
     };
 
     const [userRol, setUserRol] = useState('CREDIT_ASSISTANT');
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
+    const [nameError, setNameError] = useState(false);
+    const [nameErrorMsg, setNameErrorMsg] = useState('');
+    const [emailErrorMsg, setEmailErrorMsg] = useState('');
+    const [emailError, setEmailError] = useState(false);
 
     const handleSubmit = useCallback(async () => {
-        await createUser({ variables: { name, email, role: userRol, password: 'Control123' }, refetchQueries: [GET_STAFF] });
-        setOpen(false);
+        try {
+            await createUser({ variables: { name, email, role: userRol, password: 'Control123' }, refetchQueries: [GET_STAFF] });
+            setOpen(false);
+        } catch (e) {
+            setEmailError(true);
+            setEmailErrorMsg('el email ya fue registrado');
+        }
     }, [createUser, email, name, userRol]);
 
     const handleChange = (event) => {
@@ -121,19 +136,45 @@ const StaffProfiles = () => {
                                 fullWidth
                                 variant="standard"
                                 value={name}
-                                onChange={(e) => setName(e.target.value)}
+                                helperText={nameErrorMsg}
+                                error={nameError}
+                                onChange={(e) => {
+                                    const pattern = /^[ñíóáéú a-zA-Z 0-9]+$/g;
+                                    setName(e.target.value);
+                                    const result = pattern.test(e.target.value);
+                                    if (!result) {
+                                        setNameError(true);
+                                        setNameErrorMsg('El nombre tiene caracteres invalidos');
+                                        return;
+                                    }
+                                    setNameError(false);
+                                    setNameErrorMsg('');
+                                }}
                             />
                         </Box>
                         <Box sx={{ mt: 3 }}>
                             <TextField
                                 margin="dense"
-                                id="name"
+                                id="user-email"
                                 label="Correo Electrónico"
                                 type="email"
                                 fullWidth
                                 variant="standard"
                                 value={email}
-                                onChange={(e) => setEmail(e.target.value)}
+                                helperText={emailErrorMsg}
+                                error={emailError}
+                                onChange={(e) => {
+                                    setEmail(e.target.value);
+                                    const pattern = /[a-zA-Z0-9]+[\.]?([a-zA-Z0-9]+)?[\@][a-z]{3,9}[\.][a-z]{2,5}/g;
+                                    const result = pattern.test(e.target.value);
+                                    if (!result) {
+                                        setEmailError(true);
+                                        setEmailErrorMsg('el email es invalido');
+                                    } else {
+                                        setEmailError(false);
+                                        setEmailErrorMsg('');
+                                    }
+                                }}
                             />
                         </Box>
                         <Box sx={{ mt: 3 }}>
@@ -154,7 +195,9 @@ const StaffProfiles = () => {
                     </DialogContent>
                     <DialogActions>
                         <Button onClick={handleClose}>Cancelar</Button>
-                        <Button onClick={handleSubmit}>Registrar</Button>
+                        <Button disabled={emailError || nameError} onClick={handleSubmit}>
+                            Registrar
+                        </Button>
                     </DialogActions>
                 </Dialog>
             </div>

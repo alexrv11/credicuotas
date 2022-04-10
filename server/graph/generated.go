@@ -82,17 +82,17 @@ type ComplexityRoot struct {
 	}
 
 	LoanType struct {
-		ID        func(childComplexity int) int
-		MaxAmount func(childComplexity int) int
-		MinAmount func(childComplexity int) int
-		Name      func(childComplexity int) int
-		Rate      func(childComplexity int) int
+		ID             func(childComplexity int) int
+		MaxInstallment func(childComplexity int) int
+		MinInstallment func(childComplexity int) int
+		Name           func(childComplexity int) int
+		Rate           func(childComplexity int) int
 	}
 
 	Mutation struct {
 		ChangeDocumentStatus func(childComplexity int, documentID string, note string, status model1.DocumentStatus) int
 		ChangeLoanStatus     func(childComplexity int, loanID string, status model1.LoanStatus) int
-		CreateLoanType       func(childComplexity int, name string, rate string, minAmount int, maxAmount int) int
+		CreateLoanType       func(childComplexity int, name string, rate string, minInstallment int, maxInstallment int) int
 		CreateUser           func(childComplexity int, email string, password string, name string, role model.Role) int
 		Login                func(childComplexity int, email string, password string) int
 		Logout               func(childComplexity int) int
@@ -170,7 +170,7 @@ type MutationResolver interface {
 	Login(ctx context.Context, email string, password string) (*model2.Credential, error)
 	ToggleUserDisable(ctx context.Context, userXid string) (bool, error)
 	CreateUser(ctx context.Context, email string, password string, name string, role model.Role) (bool, error)
-	CreateLoanType(ctx context.Context, name string, rate string, minAmount int, maxAmount int) (bool, error)
+	CreateLoanType(ctx context.Context, name string, rate string, minInstallment int, maxInstallment int) (bool, error)
 	SaveUserInfo(ctx context.Context, name string, identifier string) (bool, error)
 	SendCodeByPhone(ctx context.Context, phone string) (bool, error)
 	SavePhoneNumber(ctx context.Context, phone string, code string) (bool, error)
@@ -359,19 +359,19 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.LoanType.ID(childComplexity), true
 
-	case "LoanType.maxAmount":
-		if e.complexity.LoanType.MaxAmount == nil {
+	case "LoanType.maxInstallment":
+		if e.complexity.LoanType.MaxInstallment == nil {
 			break
 		}
 
-		return e.complexity.LoanType.MaxAmount(childComplexity), true
+		return e.complexity.LoanType.MaxInstallment(childComplexity), true
 
-	case "LoanType.minAmount":
-		if e.complexity.LoanType.MinAmount == nil {
+	case "LoanType.minInstallment":
+		if e.complexity.LoanType.MinInstallment == nil {
 			break
 		}
 
-		return e.complexity.LoanType.MinAmount(childComplexity), true
+		return e.complexity.LoanType.MinInstallment(childComplexity), true
 
 	case "LoanType.name":
 		if e.complexity.LoanType.Name == nil {
@@ -421,7 +421,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Mutation.CreateLoanType(childComplexity, args["name"].(string), args["rate"].(string), args["minAmount"].(int), args["maxAmount"].(int)), true
+		return e.complexity.Mutation.CreateLoanType(childComplexity, args["name"].(string), args["rate"].(string), args["minInstallment"].(int), args["maxInstallment"].(int)), true
 
 	case "Mutation.createUser":
 		if e.complexity.Mutation.CreateUser == nil {
@@ -889,7 +889,7 @@ type Mutation {
   login(email: String!, password: String!): Credential!
   toggleUserDisable(userXid: String!): Boolean! @authenticated @hasRole(role: ADMIN)
   createUser(email: String!, password: String!, name: String!, role: Role!): Boolean! @authenticated @hasRole(role: ADMIN)
-  createLoanType(name: String!, rate: String!, minAmount: Int!, maxAmount: Int!): Boolean! @authenticated
+  createLoanType(name: String!, rate: String!, minInstallment: Int!, maxInstallment: Int!): Boolean! @authenticated
   saveUserInfo(name: String!, identifier: String!): Boolean! @authenticated
   sendCodeByPhone(phone: String!): Boolean! @authenticated
   savePhoneNumber(phone: String!, code: String!): Boolean! @authenticated
@@ -930,8 +930,8 @@ type Loan {
 type LoanType {
   id: String!
   name: String!
-  minAmount: Int!
-  maxAmount: Int!
+  minInstallment: Int!
+  maxInstallment: Int!
   rate: String!
 }
 
@@ -1075,23 +1075,23 @@ func (ec *executionContext) field_Mutation_createLoanType_args(ctx context.Conte
 	}
 	args["rate"] = arg1
 	var arg2 int
-	if tmp, ok := rawArgs["minAmount"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("minAmount"))
+	if tmp, ok := rawArgs["minInstallment"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("minInstallment"))
 		arg2, err = ec.unmarshalNInt2int(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
 	}
-	args["minAmount"] = arg2
+	args["minInstallment"] = arg2
 	var arg3 int
-	if tmp, ok := rawArgs["maxAmount"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("maxAmount"))
+	if tmp, ok := rawArgs["maxInstallment"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("maxInstallment"))
 		arg3, err = ec.unmarshalNInt2int(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
 	}
-	args["maxAmount"] = arg3
+	args["maxInstallment"] = arg3
 	return args, nil
 }
 
@@ -2182,7 +2182,7 @@ func (ec *executionContext) _LoanType_name(ctx context.Context, field graphql.Co
 	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _LoanType_minAmount(ctx context.Context, field graphql.CollectedField, obj *model1.LoanType) (ret graphql.Marshaler) {
+func (ec *executionContext) _LoanType_minInstallment(ctx context.Context, field graphql.CollectedField, obj *model1.LoanType) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -2200,7 +2200,7 @@ func (ec *executionContext) _LoanType_minAmount(ctx context.Context, field graph
 	ctx = graphql.WithFieldContext(ctx, fc)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.MinAmount, nil
+		return obj.MinInstallment, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -2217,7 +2217,7 @@ func (ec *executionContext) _LoanType_minAmount(ctx context.Context, field graph
 	return ec.marshalNInt2int(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _LoanType_maxAmount(ctx context.Context, field graphql.CollectedField, obj *model1.LoanType) (ret graphql.Marshaler) {
+func (ec *executionContext) _LoanType_maxInstallment(ctx context.Context, field graphql.CollectedField, obj *model1.LoanType) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -2235,7 +2235,7 @@ func (ec *executionContext) _LoanType_maxAmount(ctx context.Context, field graph
 	ctx = graphql.WithFieldContext(ctx, fc)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.MaxAmount, nil
+		return obj.MaxInstallment, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -2583,7 +2583,7 @@ func (ec *executionContext) _Mutation_createLoanType(ctx context.Context, field 
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		directive0 := func(rctx context.Context) (interface{}, error) {
 			ctx = rctx // use context from middleware stack in children
-			return ec.resolvers.Mutation().CreateLoanType(rctx, args["name"].(string), args["rate"].(string), args["minAmount"].(int), args["maxAmount"].(int))
+			return ec.resolvers.Mutation().CreateLoanType(rctx, args["name"].(string), args["rate"].(string), args["minInstallment"].(int), args["maxInstallment"].(int))
 		}
 		directive1 := func(ctx context.Context) (interface{}, error) {
 			if ec.directives.Authenticated == nil {
@@ -5629,13 +5629,13 @@ func (ec *executionContext) _LoanType(ctx context.Context, sel ast.SelectionSet,
 			if out.Values[i] == graphql.Null {
 				atomic.AddUint32(&invalids, 1)
 			}
-		case "minAmount":
-			out.Values[i] = ec._LoanType_minAmount(ctx, field, obj)
+		case "minInstallment":
+			out.Values[i] = ec._LoanType_minInstallment(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				atomic.AddUint32(&invalids, 1)
 			}
-		case "maxAmount":
-			out.Values[i] = ec._LoanType_maxAmount(ctx, field, obj)
+		case "maxInstallment":
+			out.Values[i] = ec._LoanType_maxInstallment(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				atomic.AddUint32(&invalids, 1)
 			}

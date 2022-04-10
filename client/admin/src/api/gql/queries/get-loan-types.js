@@ -6,8 +6,8 @@ const GET_LOAN_TYPES = gql`
             name
             id
             rate
-            minAmount
-            maxAmount
+            minInstallment
+            maxInstallment
         }
     }
 `;

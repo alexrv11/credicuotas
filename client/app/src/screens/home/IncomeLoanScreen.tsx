@@ -32,6 +32,7 @@ const IncomeLoanScreen = ({ navigation }) => {
     return options.map(option => {
       return (
         <TouchableOpacity
+          key={option?.id}
           style={styles.incomeContainer}
           onPress={() => {
             onSubmit(option?.id);

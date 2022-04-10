@@ -65,7 +65,7 @@ const LoanDetails = () => {
                                 Duracion
                             </Typography>
                             <Typography variant="h6" gutterBottom component="div">
-                                {data?.getLoanById?.totalInstallments} semanas
+                                {data?.getLoanById?.totalInstallments} Meses
                             </Typography>
                         </DetailWrapper>
                     </Grid>
