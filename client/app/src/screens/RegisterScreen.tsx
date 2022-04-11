@@ -7,6 +7,7 @@ import { SafeAreaView, StyleSheet, View } from 'react-native';
 import { Input, Text, Image } from 'react-native-elements';
 import Loading from 'components/Loading';
 import { useSaveUserMutation } from '../api/graphql/generated/graphql';
+import { validateAlphaNumeric, validatePositiveNumber } from '../utils/fields-validator';
 
 const RegisterScreen = ({ navigation }) => {
   const [name, setName] = useState('');
@@ -14,19 +15,20 @@ const RegisterScreen = ({ navigation }) => {
   const [loading, setLoading] = useState(false);
   const [disable, setDisable] = useState(true);
 
-  const [saveUserInfo, { data }] = useSaveUserMutation({
+  const [saveUserInfo, { data, error }] = useSaveUserMutation({
     variables: { name, identifierNumber },
   });
 
-  const onSubmit = useCallback(() => {
-    saveUserInfo();
+  const onSubmit = useCallback( async () => {
+    await saveUserInfo();
   }, [saveUserInfo]);
 
   useEffect(() => {
+    console.log('data save user', data, error);
     if (data?.saveUserInfo === true) {
       navigation.dispatch(StackActions.replace('LoadingOnboarding'));
     }
-  }, [data, navigation]);
+  }, [data, error, navigation]);
 
   useEffect(() => {
     if (name && identifierNumber) {
@@ -51,7 +53,11 @@ const RegisterScreen = ({ navigation }) => {
           underlineColorAndroid="transparent"
           leftIcon={{ type: 'material', name: 'person', color: '#070D99' }}
           value={name}
-          onChangeText={setName}
+          onChangeText={(text) => {
+            if (validateAlphaNumeric(text)) {
+              setName(text);
+            }
+          }}
         />
         <Spacer />
         <Text style={styles.inputLabel}>Numero de Documento</Text>
@@ -61,7 +67,11 @@ const RegisterScreen = ({ navigation }) => {
           underlineColorAndroid="transparent"
           leftIcon={{ type: 'material', name: 'person', color: '#070D99' }}
           value={identifierNumber}
-          onChangeText={setIdentifierNumber}
+          onChangeText={(text) => {
+            if (validatePositiveNumber(text)) {
+              setIdentifierNumber(text);
+            }
+          }}
         />
         <PrimaryButton onPress={onSubmit} text="Guardar" disabled={disable} />
       </View>

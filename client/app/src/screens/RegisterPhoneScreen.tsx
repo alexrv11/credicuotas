@@ -8,6 +8,7 @@ import { Input, Text, Image, Avatar } from 'react-native-elements';
 import Loading from 'components/Loading';
 import { useAuth } from '../context/AuthContext';
 import { useSendPhoneCodeMutation } from '../api/graphql/generated/graphql';
+import { validatePositiveNumber, validatePhone } from '../utils/fields-validator';
 
 const RegisterPhoneScreen = ({ navigation }) => {
   const [phone, setPhone] = useState('');
@@ -16,7 +17,7 @@ const RegisterPhoneScreen = ({ navigation }) => {
   const [disable, setDisable] = useState(true);
 
   const [sendCodeByPhone] = useSendPhoneCodeMutation({
-    variables: { phone },
+    variables: { phone: '+591' + phone },
   });
 
   const onSubmit = useCallback(() => {
@@ -57,7 +58,11 @@ const RegisterPhoneScreen = ({ navigation }) => {
           underlineColorAndroid="transparent"
           leftIcon={{ type: 'material', name: 'phone', color: '#070D99' }}
           value={phone}
-          onChangeText={setPhone}
+          onChangeText={(phone) => {
+            if (validatePositiveNumber(phone)) {
+              setPhone(phone);
+            }
+          }}
         />
         <PrimaryButton onPress={onSubmit} text="Guardar" disabled={disable} />
       </View>

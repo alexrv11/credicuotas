@@ -29,7 +29,12 @@ const LoanCompletedScreen = ({ route, navigation }) => {
       </View>
       <Spacer />
       <PrimaryButton
-        onPress={() => navigation.dispatch(StackActions.replace('MainFlow'))}
+        onPress={() =>
+          navigation.reset({
+            index: 0,
+            routes: [{ name: 'MainFlow' }],
+          })
+        }
         text="Volver"
         disabled={false}
       />

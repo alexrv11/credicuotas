@@ -7,6 +7,7 @@ import { SafeAreaView, StyleSheet, View } from 'react-native';
 import { Input, Text, Image } from 'react-native-elements';
 import { ScrollView } from 'react-native-gesture-handler';
 import { useLoan } from 'context/LoanContext';
+import { validatePositiveNumber } from '../../utils/fields-validator';
 
 const LoanAmountScreen = ({ navigation }) => {
   const { setAmount, setTotalInstallments } = useLoan();
@@ -32,7 +33,7 @@ const LoanAmountScreen = ({ navigation }) => {
     if (loanAmount) {
       const amountNumber = Number(loanAmount);
       if (amountNumber < 500 || amountNumber > 14000) {
-        setErrorAmount('El monto de ser de 500 hasta 14000bs');
+        setErrorAmount('El monto valido de 500 hasta 14000bs');
         setDisable(true);
         return;
       }
@@ -67,7 +68,11 @@ const LoanAmountScreen = ({ navigation }) => {
             color: '#070D99',
           }}
           value={loanAmount}
-          onChangeText={setLoanAmount}
+          onChangeText={(number) => {
+            if (validatePositiveNumber(number) || number.length === 0) {
+              setLoanAmount(number);
+            }
+          }}
           keyboardType="number-pad"
         />
         <Text style={styles.inputError}>{errorAmount}</Text>
@@ -79,7 +84,11 @@ const LoanAmountScreen = ({ navigation }) => {
           underlineColorAndroid="transparent"
           leftIcon={{ type: 'material', name: 'tag', color: '#070D99' }}
           value={loanTotalInstallments}
-          onChangeText={setLoanTotalInstallments}
+          onChangeText={(amount) => {
+            if (validatePositiveNumber(amount) || amount.length === 0) {
+              setLoanTotalInstallments(amount);
+            }
+          }}
           keyboardType="number-pad"
         />
         <Text style={styles.inputError}>{errorTotalInstallments}</Text>
