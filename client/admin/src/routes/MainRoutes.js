@@ -13,6 +13,7 @@ const ClientLoans = Loadable(lazy(() => import('views/clients/Loans')));
 const ClientLoanDetails = Loadable(lazy(() => import('views/clients/LoanDetails')));
 const ClientProfiles = Loadable(lazy(() => import('views/clients/Profiles')));
 const StaffProfiles = Loadable(lazy(() => import('views/staff/Profiles')));
+const StaffDetails = Loadable(lazy(() => import('views/staff/StaffDetails')));
 
 const LoanTypes = Loadable(lazy(() => import('views/loans/loanTypes')));
 
@@ -47,6 +48,10 @@ const MainRoutes = {
         {
             path: '/staff/profiles',
             element: <StaffProfiles />
+        },
+        {
+            path: '/staff/profiles/:id',
+            element: <StaffDetails />
         },
         {
             path: '/loans/loan-types',

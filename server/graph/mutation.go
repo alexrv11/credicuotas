@@ -120,6 +120,28 @@ func (r *mutationResolver) CreateUser(ctx context.Context, email, password, name
 	return true, nil
 }
 
+func (r *mutationResolver) UpdateUser(ctx context.Context, id, email, name string, role modelgen.Role) (bool, error) {
+
+	db := r.provider.GormClient()
+	var user model1.User
+	err := db.Model(&model1.User{}).Where("xid = ?", id).First(&user).Error
+
+	if err != nil {
+		return false, err
+	}
+	user.Email = email
+	user.Name = name
+	user.Role = string(role)
+
+	err = db.Save(&user).Error
+
+	if err != nil {
+		return false, err
+	}
+
+	return true, nil
+}
+
 func (r *mutationResolver) CreateLoanType(ctx context.Context, name, rate string, minInstallment, maxInstallment int) (bool, error) {
 	db := r.provider.GormClient()
 
@@ -158,4 +180,9 @@ func (r *mutationResolver) ChangeDocumentStatus(ctx context.Context, documentID 
 func (r *mutationResolver) ChangeLoanStatus(ctx context.Context, loanId string, status model1.LoanStatus) (bool, error) {
 
 	return r.core.Loan.ChangeLoanStatus(r.provider, loanId, status)
+}
+
+func (r *mutationResolver) DeleteStaffByID(ctx context.Context, id string) (bool, error) {
+
+	return r.core.User.DeleteUser(r.provider, id)
 }

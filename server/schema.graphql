@@ -81,6 +81,7 @@ type Query  {
   getLoanOrders: [Loan]! @authenticated
   getClients: [User]! @authenticated
   getStaff: [User]! @authenticated @hasRole(role: ADMIN)
+  getStaffById(id: String!): User @authenticated @hasRole(role: ADMIN)
   getLoan: Loan! @authenticated
   getLoanById(id: String!): Loan! @authenticated
   getLoanRequirements(loanId: String!, documentType: DocumentType!): [Requirement]! @authenticated
@@ -93,8 +94,10 @@ type Mutation {
   login(email: String!, password: String!): Credential!
   toggleUserDisable(userXid: String!): Boolean! @authenticated @hasRole(role: ADMIN)
   createUser(email: String!, password: String!, name: String!, role: Role!): Boolean! @authenticated @hasRole(role: ADMIN)
+  updateUser(id: String!, email: String!, name: String!, role: Role!): Boolean! @authenticated @hasRole(role: ADMIN)
   createLoanType(name: String!, rate: String!, minInstallment: Int!, maxInstallment: Int!): Boolean! @authenticated
   saveUserInfo(name: String!, identifier: String!): Boolean! @authenticated
+  deleteStaffById(id: String!): Boolean! @authenticated @hasRole(role: ADMIN)
   sendCodeByPhone(phone: String!): Boolean! @authenticated
   savePhoneNumber(phone: String!, code: String!): Boolean! @authenticated
   saveLoan(amount: Int!, totalInstallments: Int!, loanType: String!, requirementType: String!): String! @authenticated

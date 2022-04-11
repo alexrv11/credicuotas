@@ -11,6 +11,7 @@ import (
 
 type User interface {
 	GetUser(provider *providers.Provider, userXid string) (*model.User, error)
+	DeleteUser(provider *providers.Provider, userXid string) (bool, error)
 	SaveUserInfo(provider *providers.Provider, userXid, name, identifierNumber string) error
 	GetClients(provider *providers.Provider) ([]*model.User, error)
 	GetStaff(provider *providers.Provider) ([]*model.User, error)
@@ -34,6 +35,22 @@ func (u *UserImpl) GetUser(provider *providers.Provider, userXid string) (*model
 	}
 
 	return &user, nil
+}
+
+func (u *UserImpl) DeleteUser(provider *providers.Provider, userXid string) (bool, error) {
+	db := provider.GormClient()
+	var user model.User
+	err := db.Model(&model.User{}).Where("xid = ?", userXid).Delete(&user).Error
+
+	if errors.Is(err, gorm.ErrRecordNotFound) {
+		return false, fmt.Errorf("not found user")
+	}
+
+	if err != nil {
+		return false, err
+	}
+
+	return true, nil
 }
 
 func (u *UserImpl) SaveUserInfo(provider *providers.Provider, userXid, name, identifierNumber string) error {

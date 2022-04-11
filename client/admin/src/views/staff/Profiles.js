@@ -25,11 +25,13 @@ import { useState, useCallback } from 'react';
 import Loader from 'ui-component/Loader';
 import GET_STAFF from 'api/gql/queries/get-staff';
 import CREATE_USER from 'api/gql/mutations/create-user';
+import { useNavigate } from 'react-router';
 
 const StaffProfiles = () => {
     const [pageSize, setPageSize] = useState(25);
     const { loading, error, data } = useQuery(GET_STAFF);
     const [createUser] = useMutation(CREATE_USER);
+    const navigate = useNavigate();
 
     const columns = [
         {
@@ -208,7 +210,7 @@ const StaffProfiles = () => {
                             rows={data?.getStaff}
                             columns={columns}
                             pageSize={pageSize}
-                            onRowClick={(client) => console.log('click row client', client)}
+                            onRowClick={(data) => navigate(`/admin/staff/profiles/${data.id}`)}
                             onPageSizeChange={(newPage) => setPageSize(newPage)}
                             pagination
                         />
